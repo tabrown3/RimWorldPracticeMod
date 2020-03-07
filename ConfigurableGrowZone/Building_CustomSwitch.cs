@@ -36,11 +36,26 @@ namespace ConfigurableGrowZone
 
         public override bool TransmitsPowerNow => true;
 
-        public override void ExposeData()
+        public override string GetInspectString()
         {
-            base.ExposeData();
+            var builder = new StringBuilder();
 
+            string baseInspectString = base.GetInspectString();
+            if (!string.IsNullOrEmpty(baseInspectString))
+            {
+                builder.AppendLine(baseInspectString);
+            }
 
+            if (CompEnergyThreshold.PowerNetStoredEnergyMax > 0f)
+            {
+                builder.AppendLine("Lower Threshold: " + CompEnergyThreshold.LowerEnergyThreshold.ToString("F") + "Wd");
+                builder.Append("Upper Threshold: " + CompEnergyThreshold.UpperEnergyThreshold.ToString("F") + "Wd");
+            }
+
+            builder.AppendLine("Lower Energy Percentage: " + CompEnergyThreshold.EnergyPercentageRange.min.ToStringByStyle(ToStringStyle.PercentOne));
+            builder.AppendLine("Upper Energy Percentage: " + CompEnergyThreshold.EnergyPercentageRange.max.ToStringByStyle(ToStringStyle.PercentOne));
+
+            return builder.ToString();
         }
     }
 }
