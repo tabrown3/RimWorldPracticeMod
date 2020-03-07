@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29728.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigurableGrowZone", "ConfigurableGrowZone\ConfigurableGrowZone.csproj", "{F58E3B81-58D7-4FA9-B3C0-1FE5BA1FC0EB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F58E3B81-58D7-4FA9-B3C0-1FE5BA1FC0EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F58E3B81-58D7-4FA9-B3C0-1FE5BA1FC0EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F58E3B81-58D7-4FA9-B3C0-1FE5BA1FC0EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F58E3B81-58D7-4FA9-B3C0-1FE5BA1FC0EB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {584FC245-65E8-4040-8B7A-AC2BB7361FB5}
+	EndGlobalSection
+EndGlobal
