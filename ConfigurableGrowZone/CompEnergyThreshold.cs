@@ -55,7 +55,7 @@ namespace ConfigurableGrowZone
 
         private void Persist(FloatRange energyPercentageRange, Action<FloatRange> persistCb)
         {
-            Scribe_Values.Look(ref energyPercentageRange, "HZ_energyPercentageRange");
+            Scribe_Values.Look(ref energyPercentageRange, "HZ_energyPercentageRange"); 
 
             persistCb(energyPercentageRange);
         }
