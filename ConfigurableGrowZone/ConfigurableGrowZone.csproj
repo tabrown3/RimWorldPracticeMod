@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="Building_CustomSwitch.cs" />
     <Compile Include="CompEnergyThreshold.cs" />
+    <Compile Include="PowerStatTracker.cs" />
     <Compile Include="CompProperties_EnergyThreshold.cs" />
     <Compile Include="Dialog_ConfigureEnergyThreshold.cs" />
     <Compile Include="PlaceWorker_CustomSwitch.cs" />

@@ -17,6 +17,7 @@ namespace ConfigurableGrowZone
 
         public override void TickRare()
         {
+            base.TickRare();
             var grayCell = Position + IntVec3.East.RotatedBy(Rotation);
             var dependentSwitch = grayCell.GetFirstThing<Building_PowerSwitch>(Map);
             var dependentFlickableComp = dependentSwitch.GetComp<CompFlickable>();
