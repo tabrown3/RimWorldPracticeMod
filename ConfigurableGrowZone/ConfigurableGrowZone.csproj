@@ -53,7 +53,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Building_CustomSwitch.cs" />
+    <Compile Include="Building_PowerStatTracker.cs" />
     <Compile Include="CompEnergyThreshold.cs" />
+    <Compile Include="CompPowerStatTracker.cs" />
+    <Compile Include="CompProperties_PowerStatTracker.cs" />
+    <Compile Include="DataPoint.cs" />
+    <Compile Include="DataPointEventArgs.cs" />
+    <Compile Include="GameTime.cs" />
+    <Compile Include="PowerStatData.cs" />
+    <Compile Include="PowerStatMetric.cs" />
     <Compile Include="PowerStatTracker.cs" />
     <Compile Include="CompProperties_EnergyThreshold.cs" />
     <Compile Include="Dialog_ConfigureEnergyThreshold.cs" />
