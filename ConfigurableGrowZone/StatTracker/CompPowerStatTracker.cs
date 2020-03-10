@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 using Verse;
 
 namespace ConfigurableGrowZone
@@ -49,6 +50,34 @@ namespace ConfigurableGrowZone
             {
                 metric.Tick(ticksGame);
             }
+        }
+
+        public override IEnumerable<Gizmo> CompGetGizmosExtra()
+        {
+            foreach (var gizmo in base.CompGetGizmosExtra())
+            {
+                yield return gizmo;
+            }
+
+            Command_Action command_Action = new Command_Action();
+            command_Action.action = delegate
+            {
+                List<FloatMenuOption> list = new List<FloatMenuOption>();
+                foreach (var metric in Data.Metrics)
+                {
+                    list.Add(new FloatMenuOption(metric.Key, delegate
+                    {
+                        Log.Message(metric.Key);
+                        Find.WindowStack.Add(new Dialog_PowerStatTracker(Data.History[metric.Key]));
+                    }));
+                }
+                Find.WindowStack.Add(new FloatMenu(list));
+            };
+            command_Action.defaultLabel = "View Stats";
+            command_Action.defaultDesc = "View reaouts of stats currently being tracked.";
+            command_Action.hotKey = KeyBindingDefOf.Misc5;
+            command_Action.icon = ContentFinder<Texture2D>.Get("UI/Commands/TempLower");
+            yield return command_Action;
         }
     }
 }

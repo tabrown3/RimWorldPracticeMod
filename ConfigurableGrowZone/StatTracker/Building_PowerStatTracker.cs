@@ -30,7 +30,7 @@ namespace ConfigurableGrowZone
 
             CompPowerStatTracker.AddMetric(
                 new PowerStatMetric(
-                    "AvgEnergyGainEachHour",
+                    "EnergyGainEachHour",
                     () => CompPower.PowerNet.CurrentEnergyGainRate(),
                     reductionFunc: u => u.Sum()
                 )
