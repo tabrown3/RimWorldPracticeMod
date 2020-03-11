@@ -153,7 +153,7 @@ namespace ConfigurableGrowZone
                     barHeight = 0; // scaleDivisor will only be zero if all values are zero
                 }
 
-                DrawBar(xPos, innerGraphRightRect.height / 2, barWidth, barHeight);
+                DrawBar(xPos, innerGraphRightRect.height / 2, barWidth, barHeight); // y is BOTTOM left corner, for my sanity
             }
 
             Widgets.DrawLine(new Vector2(0f, zeroY), new Vector2(innerGraphRightRect.width, zeroY), Color.white, 1f); // chart zero
