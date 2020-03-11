@@ -29,19 +29,22 @@ namespace ConfigurableGrowZone
             GUI.BeginGroup(inRect);
             inRect = inRect.AtZero();
 
-            Text.Font = GameFont.Small;
-
             float curY = 0f;
 
-            Rect titleRect = new Rect((inRect.width / 2) - (Text.CalcSize(metricKey).x / 2), curY, inRect.width, 32f);
+            Rect titleRect = new Rect(0f, curY, inRect.width, 32f);
+
+            var origTextAnchor = Text.Anchor;
+            Text.Anchor = TextAnchor.UpperCenter;
+            Text.Font = GameFont.Medium;
             Widgets.Label(titleRect, metricKey);
+            Text.Font = GameFont.Small;
+            Text.Anchor = origTextAnchor;
             curY += titleRect.height;
 
 
             Rect graphRect = new Rect(inRect);
             graphRect.y = curY;
             graphRect.height -= 64f;
-            //graphRect.width -= 16f;
             GUI.BeginGroup(graphRect);
             graphRect = graphRect.AtZero();
 

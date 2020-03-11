@@ -67,13 +67,13 @@ namespace ConfigurableGrowZone
                 {
                     list.Add(new FloatMenuOption(metric.Key, delegate
                     {
-                        Find.WindowStack.Add(new Dialog_PowerStatTracker(metric.Key, Data.History[metric.Key]));
+                        Find.WindowStack.Add(new Dialog_PowerStatTracker(metric.Key, Data.History[metric.Key])); // TODO: make this not break if key DNE in Dict
                     }));
                 }
                 Find.WindowStack.Add(new FloatMenu(list));
             };
             command_Action.defaultLabel = "View Stats";
-            command_Action.defaultDesc = "View reaouts of stats currently being tracked.";
+            //command_Action.defaultDesc = "View reaouts of stats currently being tracked.";
             command_Action.hotKey = KeyBindingDefOf.Misc5;
             command_Action.icon = ContentFinder<Texture2D>.Get("UI/Commands/TempLower");
             yield return command_Action;
