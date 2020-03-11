@@ -12,16 +12,18 @@ namespace ConfigurableGrowZone
         private string metricKey;
         private GameTime.InTicks resolution;
         private Dictionary<int, DataPoint> history;
+        private string unit;
 
         private float barWidth = 10f;
         private float spaceBetweenBars = 1f;
         private float barElementWidth => barWidth + spaceBetweenBars;
 
-        public Dialog_PowerStatTracker(string metricKey, GameTime.InTicks resolution, Dictionary<int, DataPoint> history)
+        public Dialog_PowerStatTracker(string metricKey, GameTime.InTicks resolution, string unit, Dictionary<int, DataPoint> history)
         {
             this.metricKey = metricKey;
             this.resolution = resolution;
             this.history = history;
+            this.unit = unit;
 
             draggable = true;
             preventCameraMotion = false;
@@ -41,7 +43,7 @@ namespace ConfigurableGrowZone
             Text.Anchor = TextAnchor.UpperCenter;
             Text.Font = GameFont.Medium;
             Widgets.Label(titleRect, metricKey);
-            Text.Font = GameFont.Small;
+            
             Text.Anchor = origTextAnchor;
             curY += titleRect.height;
 
@@ -60,15 +62,14 @@ namespace ConfigurableGrowZone
             GUI.EndGroup(); // inRect end
         }
 
-        private void DrawGraph(Rect graphRect)
+        private void DrawGraph(Rect outerGraphRect)
         {
-            float zeroY = graphRect.height / 2;
+            Text.Font = GameFont.Tiny;
+            float zeroY = outerGraphRect.height / 2;
 
             // The presentation layer should determine how data is presented, so I think it's ok to leave this logic here
             List<DataPoint> historyList = history.Select(u => u.Value).OrderByDescending(u => u.TimeStamp).ToList();
 
-            int numBarsVisibleMax = Mathf.FloorToInt(graphRect.width / barElementWidth);
-            int numBarsVisible = Mathf.Min(numBarsVisibleMax, historyList.Count);
             float maxValue = historyList.Max(u => u.DigestValue);
             float minValue = historyList.Min(u => u.DigestValue);
 
@@ -77,15 +78,46 @@ namespace ConfigurableGrowZone
 
             float scaleDivisor = Mathf.Max(roofValue, Mathf.Abs(basementValue));
 
+            Rect innerGraphRect = new Rect(outerGraphRect);
+            GUI.BeginGroup(innerGraphRect);
+            innerGraphRect = innerGraphRect.AtZero();
+
+            // draw y-axis and labels
+            float bob = scaleDivisor / 10;
+            for (int i = -10; i <= 10; i++)
+            {
+                float valToPrint = scaleDivisor * -i;
+
+                string labelText = Mathf.RoundToInt(valToPrint).ToString();
+
+                float valYPos = (10 + i) * innerGraphRect.height / 20;
+
+                Widgets.Label(new Rect(0f, valYPos, Text.CalcSize(labelText).x, Text.CalcSize(labelText).y), labelText);
+
+                if (i != 0) // zero already has a line: the x-axis
+                {
+                    Widgets.DrawLine(new Vector2(30f, valYPos), new Vector2(innerGraphRect.width, valYPos), Color.gray, 1f); // chart top
+                }
+            }
+            GUI.EndGroup(); // end innerGraphLeftRect
+
+            Rect innerGraphRightRect = new Rect(innerGraphRect);
+            innerGraphRightRect.x += 30f;
+            innerGraphRightRect.width -= 30f;
+            GUI.BeginGroup(innerGraphRightRect);
+            innerGraphRightRect = innerGraphRightRect.AtZero();
+
+            int numBarsVisibleMax = Mathf.FloorToInt(innerGraphRightRect.width / barElementWidth);
+            int numBarsVisible = Mathf.Min(numBarsVisibleMax, historyList.Count);
             int curTick = Find.TickManager.TicksGame;
             int curHour = Mathf.FloorToInt(curTick / (int)GameTime.InTicks.Hour);
 
-            // Draw horizontal ticks along zero line and label them
-            Text.Font = GameFont.Tiny;
+            // Draw x-axis and labels
+
             for (int i = 0; i < numBarsVisibleMax; i++)
             {
                 // TODO: duplicated from below
-                float xPos = (graphRect.width - (i + 1) * barElementWidth);
+                float xPos = (innerGraphRightRect.width - (i + 1) * barElementWidth);
 
                 Widgets.DrawLine(new Vector2(xPos, zeroY - 2f), new Vector2(xPos, zeroY + 4f), Color.white, 1f); // chart top
 
@@ -102,53 +134,34 @@ namespace ConfigurableGrowZone
                 }
             }
 
-            float bob = scaleDivisor / 10;
-            for (int i = -9; i <= 9; i++)
-            {
-                if(i == 0)
-                {
-                    continue;
-                }
-
-                float valToPrint = scaleDivisor * -i;
-
-                string labelText = Mathf.RoundToInt(valToPrint).ToString();
-
-                float valYPos = (10 + i) * graphRect.height / 20;
-
-                if(valToPrint > 0)
-                {
-                    valYPos -= Text.CalcSize(labelText).y;
-                }
-                Widgets.Label(new Rect(0f, valYPos, Text.CalcSize(labelText).x, Text.CalcSize(labelText).y), labelText);
-            }
-            Text.Font = GameFont.Small;
-
             // Draw bars
             for (int i = 0; i < numBarsVisible; i++)
             {
                 DataPoint point = historyList[i];
 
-                float xPos = (graphRect.width - (i + 1) * barElementWidth) + 1f;
+                float xPos = (innerGraphRightRect.width - (i + 1) * barElementWidth) + 1f;
 
                 float barHeight;
                 if (scaleDivisor != 0) // wouldn't want to divide by zero, would we...
                 {
-                    barHeight = (point.DigestValue / scaleDivisor) * graphRect.height / 2;
+                    barHeight = (point.DigestValue / scaleDivisor) * innerGraphRightRect.height / 2;
                 }
                 else
                 {
                     barHeight = 0; // scaleDivisor will only be zero if all values are zero
                 }
 
-                float yPos = graphRect.height / 2 - barHeight;
+                float yPos = innerGraphRightRect.height / 2 - barHeight;
                 Rect barRect = new Rect(xPos, yPos, barWidth, barHeight);
                 Widgets.DrawBoxSolid(barRect, Color.yellow);
             }
 
-            Widgets.DrawLine(new Vector2(0f, 0f), new Vector2(graphRect.width, 0f), Color.white, 1f); // chart top
-            Widgets.DrawLine(new Vector2(0f, zeroY), new Vector2(graphRect.width, zeroY), Color.white, 1f); // chart zero
-            Widgets.DrawLine(new Vector2(0f, graphRect.height - 1f), new Vector2(graphRect.width, graphRect.height - 1f), Color.white, 1f); // chart bottom
+            //Widgets.DrawLine(new Vector2(0f, 0f), new Vector2(innerGraphRightRect.width, 0f), Color.white, 1f); // chart top
+            Widgets.DrawLine(new Vector2(0f, zeroY), new Vector2(innerGraphRightRect.width, zeroY), Color.white, 1f); // chart zero
+            //Widgets.DrawLine(new Vector2(0f, innerGraphRightRect.height - 1f), new Vector2(innerGraphRightRect.width, innerGraphRightRect.height - 1f), Color.white, 1f); // chart bottom
+
+            GUI.EndGroup(); // end innerGraphRightRect
+            GUI.EndGroup(); // end innerGraphRect
         }
     }
 }

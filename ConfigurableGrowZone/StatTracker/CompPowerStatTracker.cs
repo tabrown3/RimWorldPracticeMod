@@ -67,7 +67,7 @@ namespace ConfigurableGrowZone
                 {
                     list.Add(new FloatMenuOption(metric.Key, delegate
                     {
-                        Find.WindowStack.Add(new Dialog_PowerStatTracker(metric.Key, metric.Resolution, Data.History[metric.Key])); // TODO: make this not break if key DNE in Dict
+                        Find.WindowStack.Add(new Dialog_PowerStatTracker(metric.Key, metric.Resolution, metric.Unit, Data.History[metric.Key])); // TODO: make this not break if key DNE in Dict
                     }));
                 }
                 Find.WindowStack.Add(new FloatMenu(list));
