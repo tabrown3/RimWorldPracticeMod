@@ -17,6 +17,8 @@ namespace ConfigurableGrowZone
         private float barWidth = 10f;
         private float spaceBetweenBars = 1f;
         private float graphVerticalPadding = 15f;
+        private float yAxisLabelOffset = -8f;
+        private float scaleOffsetFactor = 0.9f;
         private float barElementWidth => barWidth + spaceBetweenBars;
 
         public Dialog_PowerStatTracker(string metricKey, GameTime.InTicks resolution, string unit, Dictionary<int, DataPoint> history)
@@ -77,7 +79,7 @@ namespace ConfigurableGrowZone
             float roofValue = Mathf.Max(maxValue, 0f);
             float basementValue = Mathf.Min(minValue, 0f);
 
-            float scaleDivisor = Mathf.Max(roofValue, Mathf.Abs(basementValue));
+            float scaleDivisor = Mathf.Max(roofValue, Mathf.Abs(basementValue)) / scaleOffsetFactor;
 
             Rect innerGraphRect = new Rect(outerGraphRect);
             GUI.BeginGroup(innerGraphRect);
@@ -93,7 +95,7 @@ namespace ConfigurableGrowZone
 
                 float valYPos = (((10 + i) * (innerGraphRect.height - graphVerticalPadding * 2)) / 20) + graphVerticalPadding;
 
-                Widgets.Label(new Rect(0f, valYPos, Text.CalcSize(labelText).x, Text.CalcSize(labelText).y), labelText);
+                Widgets.Label(new Rect(0f, valYPos + yAxisLabelOffset, Text.CalcSize(labelText).x, Text.CalcSize(labelText).y), labelText);
 
                 if (i != 0) // zero already has a line: the x-axis
                 {
