@@ -15,11 +15,13 @@ namespace ConfigurableGrowZone
         private string unit;
 
         private float barWidth = 10f;
+        private float barElementWidth => barWidth + spaceBetweenBars;
+
         private float spaceBetweenBars = 1f;
         private float graphVerticalPadding = 15f;
         private float yAxisLabelOffset = -8f;
-        private float scaleOffsetFactor = 0.9f;
-        private float barElementWidth => barWidth + spaceBetweenBars;
+        private float scaleOffsetFactor = 0.9f; // 1f would make the longest bars take up the full height; 0.9f makes them 90% the full height
+        private float yAxisLabelPaneWidth = 55f;
 
         public Dialog_PowerStatTracker(string metricKey, GameTime.InTicks resolution, string unit, Dictionary<int, DataPoint> history)
         {
@@ -95,18 +97,21 @@ namespace ConfigurableGrowZone
 
                 float valYPos = (((10 + i) * (innerGraphRect.height - graphVerticalPadding * 2)) / 20) + graphVerticalPadding;
 
-                Widgets.Label(new Rect(0f, valYPos + yAxisLabelOffset, Text.CalcSize(labelText).x, Text.CalcSize(labelText).y), labelText);
+                Widgets.Label(new Rect(yAxisLabelPaneWidth - 30f, valYPos + yAxisLabelOffset, Text.CalcSize(labelText).x, Text.CalcSize(labelText).y), labelText);
 
                 if (i != 0) // zero already has a line: the x-axis
                 {
-                    Widgets.DrawLine(new Vector2(30f, valYPos), new Vector2(innerGraphRect.width, valYPos), Color.gray, 1f); // chart top
+                    Widgets.DrawLine(new Vector2(yAxisLabelPaneWidth, valYPos), new Vector2(innerGraphRect.width, valYPos), Color.gray, 1f); // chart top
                 }
             }
+
+            string yAxisUnitLabel = unit;
+            Widgets.Label(new Rect(0f, (innerGraphRect.height / 2) + yAxisLabelOffset, Text.CalcSize(yAxisUnitLabel).x, Text.CalcSize(yAxisUnitLabel).y), yAxisUnitLabel);
             GUI.EndGroup(); // end innerGraphLeftRect
 
             Rect innerGraphRightRect = new Rect(innerGraphRect);
-            innerGraphRightRect.x += 30f;
-            innerGraphRightRect.width -= 30f;
+            innerGraphRightRect.x += yAxisLabelPaneWidth;
+            innerGraphRightRect.width -= yAxisLabelPaneWidth;
             GUI.BeginGroup(innerGraphRightRect);
             innerGraphRightRect = innerGraphRightRect.AtZero();
 
