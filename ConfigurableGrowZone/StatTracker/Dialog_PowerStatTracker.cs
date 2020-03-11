@@ -112,11 +112,10 @@ namespace ConfigurableGrowZone
 
             int numBarsVisibleMax = Mathf.FloorToInt(innerGraphRightRect.width / barElementWidth);
             int numBarsVisible = Mathf.Min(numBarsVisibleMax, historyList.Count);
-            int curTick = Find.TickManager.TicksGame;
-            int curHour = Mathf.FloorToInt(curTick / (int)GameTime.InTicks.Hour);
+            int curTimeInTicks = Find.TickManager.TicksGame;
+            int curTimeInChosenUnit = Mathf.FloorToInt(curTimeInTicks / (int)resolution); // hours for right now
 
             // Draw x-axis and labels
-
             for (int i = 0; i < numBarsVisibleMax; i++)
             {
                 // TODO: duplicated from below
@@ -124,7 +123,7 @@ namespace ConfigurableGrowZone
 
                 Widgets.DrawLine(new Vector2(xPos, zeroY - 2f), new Vector2(xPos, zeroY + 4f), Color.white, 1f); // chart top
 
-                int hourToDraw = (6 + curHour - i - 1) % 24;
+                int hourToDraw = (6 + curTimeInChosenUnit - i - 1) % 24;
                 if (hourToDraw < 0)
                 {
                     hourToDraw += 24;
