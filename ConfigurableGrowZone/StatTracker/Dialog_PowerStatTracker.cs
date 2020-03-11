@@ -78,10 +78,9 @@ namespace ConfigurableGrowZone
             float scaleDivisor = Mathf.Max(roofValue, Mathf.Abs(basementValue));
 
             int curTick = Find.TickManager.TicksGame;
-            int tickOfTheDay = (curTick % (int)GameTime.InTicks.Day);
-            int hourOfTheDay = (Mathf.FloorToInt(tickOfTheDay / (int)GameTime.InTicks.Hour) + 6); // 6h is the "first hour of the day"
+            int curHour = Mathf.FloorToInt(curTick / (int)GameTime.InTicks.Hour);
 
-            // Draw horizontal ticks along zero line
+            // Draw horizontal ticks along zero line and label them
             Text.Font = GameFont.Tiny;
             for (int i = 0; i < numBarsVisibleMax; i++)
             {
@@ -90,7 +89,7 @@ namespace ConfigurableGrowZone
 
                 Widgets.DrawLine(new Vector2(xPos, zeroY - 2f), new Vector2(xPos, zeroY + 4f), Color.white, 1f); // chart top
 
-                int hourToDraw = (hourOfTheDay - i - 1) % 24;
+                int hourToDraw = (6 + curHour - i - 1) % 24;
                 if (hourToDraw < 0)
                 {
                     hourToDraw += 24;
@@ -101,6 +100,27 @@ namespace ConfigurableGrowZone
                     string labelText = hourToDraw.ToString();
                     Widgets.Label(new Rect(xPos, zeroY + 4f, Text.CalcSize(labelText).x, Text.CalcSize(labelText).y), labelText);
                 }
+            }
+
+            float bob = scaleDivisor / 10;
+            for (int i = -9; i <= 9; i++)
+            {
+                if(i == 0)
+                {
+                    continue;
+                }
+
+                float valToPrint = scaleDivisor * -i;
+
+                string labelText = Mathf.RoundToInt(valToPrint).ToString();
+
+                float valYPos = (10 + i) * graphRect.height / 20;
+
+                if(valToPrint > 0)
+                {
+                    valYPos -= Text.CalcSize(labelText).y;
+                }
+                Widgets.Label(new Rect(0f, valYPos, Text.CalcSize(labelText).x, Text.CalcSize(labelText).y), labelText);
             }
             Text.Font = GameFont.Small;
 
