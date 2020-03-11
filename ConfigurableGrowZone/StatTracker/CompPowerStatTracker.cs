@@ -67,8 +67,7 @@ namespace ConfigurableGrowZone
                 {
                     list.Add(new FloatMenuOption(metric.Key, delegate
                     {
-                        Log.Message(metric.Key);
-                        Find.WindowStack.Add(new Dialog_PowerStatTracker(Data.History[metric.Key]));
+                        Find.WindowStack.Add(new Dialog_PowerStatTracker(metric.Key, Data.History[metric.Key]));
                     }));
                 }
                 Find.WindowStack.Add(new FloatMenu(list));
