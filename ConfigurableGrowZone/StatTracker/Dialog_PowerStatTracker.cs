@@ -144,24 +144,28 @@ namespace ConfigurableGrowZone
                 float barHeight;
                 if (scaleDivisor != 0) // wouldn't want to divide by zero, would we...
                 {
-                    barHeight = (point.DigestValue / scaleDivisor) * innerGraphRightRect.height / 2;
+                    float normalizedValue = (point.DigestValue / scaleDivisor);
+                    float maxHeight = innerGraphRightRect.height / 2;
+                    barHeight = normalizedValue * maxHeight;
                 }
                 else
                 {
                     barHeight = 0; // scaleDivisor will only be zero if all values are zero
                 }
 
-                float yPos = innerGraphRightRect.height / 2 - barHeight;
-                Rect barRect = new Rect(xPos, yPos, barWidth, barHeight);
-                Widgets.DrawBoxSolid(barRect, Color.yellow);
+                DrawBar(xPos, innerGraphRightRect.height / 2, barWidth, barHeight);
             }
 
-            //Widgets.DrawLine(new Vector2(0f, 0f), new Vector2(innerGraphRightRect.width, 0f), Color.white, 1f); // chart top
             Widgets.DrawLine(new Vector2(0f, zeroY), new Vector2(innerGraphRightRect.width, zeroY), Color.white, 1f); // chart zero
-            //Widgets.DrawLine(new Vector2(0f, innerGraphRightRect.height - 1f), new Vector2(innerGraphRightRect.width, innerGraphRightRect.height - 1f), Color.white, 1f); // chart bottom
 
             GUI.EndGroup(); // end innerGraphRightRect
             GUI.EndGroup(); // end innerGraphRect
+        }
+
+        private void DrawBar(float x, float y, float width, float height)
+        {
+            Rect barRect = new Rect(x, y - height, width, height);
+            Widgets.DrawBoxSolid(barRect, Color.yellow);
         }
     }
 }
