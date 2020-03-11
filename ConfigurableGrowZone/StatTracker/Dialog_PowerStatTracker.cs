@@ -9,14 +9,18 @@ namespace ConfigurableGrowZone
 {
     public class Dialog_PowerStatTracker : Window
     {
-        private Dictionary<int, DataPoint> history;
         private string metricKey;
+        private GameTime.InTicks resolution;
+        private Dictionary<int, DataPoint> history;
 
-        float barWidth = 10f;
+        private float barWidth = 10f;
+        private float spaceBetweenBars = 1f;
+        private float barElementWidth => barWidth + spaceBetweenBars;
 
-        public Dialog_PowerStatTracker(string metricKey, Dictionary<int, DataPoint> history)
+        public Dialog_PowerStatTracker(string metricKey, GameTime.InTicks resolution, Dictionary<int, DataPoint> history)
         {
             this.metricKey = metricKey;
+            this.resolution = resolution;
             this.history = history;
 
             draggable = true;
@@ -58,10 +62,13 @@ namespace ConfigurableGrowZone
 
         private void DrawGraph(Rect graphRect)
         {
+            float zeroY = graphRect.height / 2;
+
             // The presentation layer should determine how data is presented, so I think it's ok to leave this logic here
             List<DataPoint> historyList = history.Select(u => u.Value).OrderByDescending(u => u.TimeStamp).ToList();
 
-            int barCount = Mathf.Min(Mathf.FloorToInt(graphRect.width / barWidth), historyList.Count);
+            int numBarsVisibleMax = Mathf.FloorToInt(graphRect.width / barElementWidth);
+            int numBarsVisible = Mathf.Min(numBarsVisibleMax, historyList.Count);
             float maxValue = historyList.Max(u => u.DigestValue);
             float minValue = historyList.Min(u => u.DigestValue);
 
@@ -70,11 +77,39 @@ namespace ConfigurableGrowZone
 
             float scaleDivisor = Mathf.Max(roofValue, Mathf.Abs(basementValue));
 
-            for (int i = 0; i < barCount; i++)
+            int curTick = Find.TickManager.TicksGame;
+            int tickOfTheDay = (curTick % (int)GameTime.InTicks.Day);
+            int hourOfTheDay = (Mathf.FloorToInt(tickOfTheDay / (int)GameTime.InTicks.Hour) + 6); // 6h is the "first hour of the day"
+
+            // Draw horizontal ticks along zero line
+            Text.Font = GameFont.Tiny;
+            for (int i = 0; i < numBarsVisibleMax; i++)
+            {
+                // TODO: duplicated from below
+                float xPos = (graphRect.width - (i + 1) * barElementWidth);
+
+                Widgets.DrawLine(new Vector2(xPos, zeroY - 2f), new Vector2(xPos, zeroY + 4f), Color.white, 1f); // chart top
+
+                int hourToDraw = (hourOfTheDay - i - 1) % 24;
+                if (hourToDraw < 0)
+                {
+                    hourToDraw += 24;
+                }
+
+                if (hourToDraw % 2 == 0)
+                {
+                    string labelText = hourToDraw.ToString();
+                    Widgets.Label(new Rect(xPos, zeroY + 4f, Text.CalcSize(labelText).x, Text.CalcSize(labelText).y), labelText);
+                }
+            }
+            Text.Font = GameFont.Small;
+
+            // Draw bars
+            for (int i = 0; i < numBarsVisible; i++)
             {
                 DataPoint point = historyList[i];
 
-                float xPos = graphRect.width - (i + 1) * barWidth;
+                float xPos = (graphRect.width - (i + 1) * barElementWidth) + 1f;
 
                 float barHeight;
                 if (scaleDivisor != 0) // wouldn't want to divide by zero, would we...
@@ -92,7 +127,7 @@ namespace ConfigurableGrowZone
             }
 
             Widgets.DrawLine(new Vector2(0f, 0f), new Vector2(graphRect.width, 0f), Color.white, 1f); // chart top
-            Widgets.DrawLine(new Vector2(0f, graphRect.height / 2), new Vector2(graphRect.width, graphRect.height / 2), Color.white, 1f); // chart zero
+            Widgets.DrawLine(new Vector2(0f, zeroY), new Vector2(graphRect.width, zeroY), Color.white, 1f); // chart zero
             Widgets.DrawLine(new Vector2(0f, graphRect.height - 1f), new Vector2(graphRect.width, graphRect.height - 1f), Color.white, 1f); // chart bottom
         }
     }
