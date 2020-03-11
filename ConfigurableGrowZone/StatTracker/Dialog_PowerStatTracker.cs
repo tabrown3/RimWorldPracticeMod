@@ -16,6 +16,7 @@ namespace ConfigurableGrowZone
 
         private float barWidth = 10f;
         private float spaceBetweenBars = 1f;
+        private float graphVerticalPadding = 15f;
         private float barElementWidth => barWidth + spaceBetweenBars;
 
         public Dialog_PowerStatTracker(string metricKey, GameTime.InTicks resolution, string unit, Dictionary<int, DataPoint> history)
@@ -90,7 +91,7 @@ namespace ConfigurableGrowZone
 
                 string labelText = Mathf.RoundToInt(valToPrint).ToString();
 
-                float valYPos = (10 + i) * innerGraphRect.height / 20;
+                float valYPos = (((10 + i) * (innerGraphRect.height - graphVerticalPadding * 2)) / 20) + graphVerticalPadding;
 
                 Widgets.Label(new Rect(0f, valYPos, Text.CalcSize(labelText).x, Text.CalcSize(labelText).y), labelText);
 
@@ -145,7 +146,7 @@ namespace ConfigurableGrowZone
                 if (scaleDivisor != 0) // wouldn't want to divide by zero, would we...
                 {
                     float normalizedValue = (point.DigestValue / scaleDivisor);
-                    float maxHeight = innerGraphRightRect.height / 2;
+                    float maxHeight = (innerGraphRightRect.height / 2) - graphVerticalPadding;
                     barHeight = normalizedValue * maxHeight;
                 }
                 else
