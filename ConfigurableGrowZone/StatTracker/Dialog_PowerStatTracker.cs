@@ -189,7 +189,7 @@ namespace ConfigurableGrowZone
         // This function will cause the y-axis labels to be nice round numbers
         private float AdjustScaleDivisor(float scaleDivisor)
         {
-            float adjustedScaleDivisor = Mathf.Pow(10, Mathf.CeilToInt(Mathf.Log10(scaleDivisor))); // 20 -> 100, 400 -> 1000, etc...
+            float adjustedScaleDivisor = Mathf.Pow(10f, Mathf.Ceil(Mathf.Log10(scaleDivisor))); // 20 -> 100, 400 -> 1000, etc...
 
             float halfDivisor = adjustedScaleDivisor / 2;
 
