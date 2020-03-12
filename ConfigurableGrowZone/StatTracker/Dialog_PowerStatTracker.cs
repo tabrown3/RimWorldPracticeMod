@@ -20,8 +20,9 @@ namespace ConfigurableGrowZone
         private float spaceBetweenBars = 1f;
         private float graphVerticalPadding = 15f;
         private float yAxisLabelOffset = -8f;
-        private float scaleOffsetFactor = 0.9f; // 1f would make the longest bars take up the full height; 0.9f makes them 90% the full height
         private float yAxisLabelPaneWidth = 55f;
+        private float lastScaleDivisor = 1f;
+        private float adjustedScaleDivisor = 1f;
 
         public Dialog_PowerStatTracker(string metricKey, GameTime.InTicks resolution, string unit, Dictionary<int, DataPoint> history)
         {
@@ -81,17 +82,27 @@ namespace ConfigurableGrowZone
             float roofValue = Mathf.Max(maxValue, 0f);
             float basementValue = Mathf.Min(minValue, 0f);
 
-            float scaleDivisor = Mathf.Max(roofValue, Mathf.Abs(basementValue)) / scaleOffsetFactor;
+            float scaleDivisor = Mathf.Max(roofValue, Mathf.Abs(basementValue));
+            if (lastScaleDivisor != scaleDivisor && scaleDivisor != 0)
+            {
+                adjustedScaleDivisor = AdjustScaleDivisor(scaleDivisor);
+
+                lastScaleDivisor = scaleDivisor;
+            }
+            else if(scaleDivisor == 0)
+            {
+                adjustedScaleDivisor = 0;
+            }
 
             Rect innerGraphRect = new Rect(outerGraphRect);
             GUI.BeginGroup(innerGraphRect);
             innerGraphRect = innerGraphRect.AtZero();
 
             // draw y-axis and labels
-            float bob = scaleDivisor / 10;
+            float bob = adjustedScaleDivisor / 10;
             for (int i = -10; i <= 10; i++)
             {
-                float valToPrint = scaleDivisor * -i;
+                float valToPrint = adjustedScaleDivisor * -i;
 
                 string labelText = Mathf.RoundToInt(valToPrint).ToString();
 
@@ -149,9 +160,9 @@ namespace ConfigurableGrowZone
                 float xPos = (innerGraphRightRect.width - (i + 1) * barElementWidth) + 1f;
 
                 float barHeight;
-                if (scaleDivisor != 0) // wouldn't want to divide by zero, would we...
+                if (adjustedScaleDivisor != 0) // wouldn't want to divide by zero, would we...
                 {
-                    float normalizedValue = (point.DigestValue / scaleDivisor);
+                    float normalizedValue = (point.DigestValue / adjustedScaleDivisor);
                     float maxHeight = (innerGraphRightRect.height / 2) - graphVerticalPadding;
                     barHeight = normalizedValue * maxHeight;
                 }
@@ -173,6 +184,21 @@ namespace ConfigurableGrowZone
         {
             Rect barRect = new Rect(x, y - height, width, height);
             Widgets.DrawBoxSolid(barRect, Color.yellow);
+        }
+
+        // This function will cause the y-axis labels to be nice round numbers
+        private float AdjustScaleDivisor(float scaleDivisor)
+        {
+            float adjustedScaleDivisor = Mathf.Pow(10, Mathf.CeilToInt(Mathf.Log10(scaleDivisor))); // 20 -> 100, 400 -> 1000, etc...
+
+            float halfDivisor = adjustedScaleDivisor / 2;
+
+            if (scaleDivisor < halfDivisor)
+            {
+                adjustedScaleDivisor = halfDivisor; // 20 -> 50, 60 -> 100, 255 -> 500, 655 -> 1000, etc...
+            }
+
+            return adjustedScaleDivisor;
         }
     }
 }
