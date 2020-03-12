@@ -148,7 +148,19 @@ namespace ConfigurableGrowZone
                 if (hourToDraw % 2 == 0)
                 {
                     string labelText = hourToDraw.ToString();
-                    Widgets.Label(new Rect(xPos, zeroY + 4f, Text.CalcSize(labelText).x, Text.CalcSize(labelText).y), labelText);
+                    Vector2 labelSize = Text.CalcSize(labelText);
+
+                    float yOffset = 4f;
+                    if(i < history.Count)
+                    {
+                        DataPoint point = historyList[i];
+                        if (point != null && point.DigestValue < 0f)
+                        {
+                            yOffset -= labelSize.y + 4f;
+                        }
+                    }
+                    
+                    Widgets.Label(new Rect(xPos, zeroY + yOffset, labelSize.x, labelSize.y), labelText);
                 }
             }
 
