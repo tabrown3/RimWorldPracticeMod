@@ -99,9 +99,10 @@ namespace ConfigurableGrowZone
             innerGraphRect = innerGraphRect.AtZero();
 
             // draw y-axis and labels
-            for (int i = -10; i <= 10; i++)
+            int numLines = 10;
+            for (int i = -numLines; i <= numLines; i++)
             {
-                float valToPrint = adjustedScaleDivisor * -i;
+                float valToPrint = adjustedScaleDivisor * (-i / (float)numLines);
 
                 string labelText = Mathf.RoundToInt(valToPrint).ToString();
 
