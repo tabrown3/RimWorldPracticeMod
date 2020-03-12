@@ -187,15 +187,26 @@ namespace ConfigurableGrowZone
         }
 
         // This function will cause the y-axis labels to be nice round numbers
+        //  for instance, if for scaleDivisor -> output:
+        //  20 -> 25, 40 -> 50, 60 -> 75, 80 -> 100, 110 -> 250, 300 -> 500, 700 -> 750, 850 -> 1000, etc...
         private float AdjustScaleDivisor(float scaleDivisor)
         {
-            float adjustedScaleDivisor = Mathf.Pow(10f, Mathf.Ceil(Mathf.Log10(scaleDivisor))); // 20 -> 100, 400 -> 1000, etc...
+            float adjustedScaleDivisor = Mathf.Pow(10f, Mathf.Ceil(Mathf.Log10(scaleDivisor)));
 
+            float quarterDivisor = adjustedScaleDivisor / 4;
             float halfDivisor = adjustedScaleDivisor / 2;
 
-            if (scaleDivisor < halfDivisor)
+            if (scaleDivisor < quarterDivisor)
             {
-                adjustedScaleDivisor = halfDivisor; // 20 -> 50, 60 -> 100, 255 -> 500, 655 -> 1000, etc...
+                adjustedScaleDivisor = quarterDivisor;  // one-quarter its order of magnitude
+            }
+            else if(scaleDivisor < halfDivisor)
+            {
+                adjustedScaleDivisor = halfDivisor; // half its order of magnitude
+            }
+            else if(scaleDivisor < quarterDivisor + halfDivisor)
+            {
+                adjustedScaleDivisor = quarterDivisor + halfDivisor; // three-quarters its order of magnitude
             }
 
             return adjustedScaleDivisor;
