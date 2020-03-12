@@ -99,7 +99,6 @@ namespace ConfigurableGrowZone
             innerGraphRect = innerGraphRect.AtZero();
 
             // draw y-axis and labels
-            float bob = adjustedScaleDivisor / 10;
             for (int i = -10; i <= 10; i++)
             {
                 float valToPrint = adjustedScaleDivisor * -i;
@@ -183,7 +182,16 @@ namespace ConfigurableGrowZone
                     barHeight = 0; // scaleDivisor will only be zero if all values are zero
                 }
 
-                DrawBar(xPos, innerGraphRightRect.height / 2, barWidth, barHeight); // y is BOTTOM left corner, for my sanity
+                Rect barRect = DrawBar(xPos, innerGraphRightRect.height / 2, barWidth, barHeight); // y is BOTTOM left corner, for my sanity
+
+                if(Mouse.IsOver(barRect))
+                {
+                    var builder = new StringBuilder();
+                    builder.Append($"Value: {point.DigestValue}{unit}");
+                    //builder.Append($"Time: {point.DigestValue}");
+
+                    TooltipHandler.TipRegion(barRect, builder.ToString());
+                }
             }
 
             Widgets.DrawLine(new Vector2(0f, zeroY), new Vector2(innerGraphRightRect.width, zeroY), Color.white, 1f); // chart zero
@@ -192,10 +200,12 @@ namespace ConfigurableGrowZone
             GUI.EndGroup(); // end innerGraphRect
         }
 
-        private void DrawBar(float x, float y, float width, float height)
+        private Rect DrawBar(float x, float y, float width, float height)
         {
             Rect barRect = new Rect(x, y - height, width, height);
             Widgets.DrawBoxSolid(barRect, Color.yellow);
+
+            return barRect;
         }
 
         // This function will cause the y-axis labels to be nice round numbers
