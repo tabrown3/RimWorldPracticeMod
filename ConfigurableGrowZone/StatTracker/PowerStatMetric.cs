@@ -7,6 +7,7 @@ namespace ConfigurableGrowZone
     public class PowerStatMetric
     {
         public readonly string Key;
+        public readonly string Name;
         public readonly GameTime.InTicks Resolution;
         public event EventHandler<DataPointEventArgs> OnDigest;
         public int InitialTick;
@@ -21,9 +22,10 @@ namespace ConfigurableGrowZone
 
         private int indexPos;
         
-        public PowerStatMetric(string key, Func<float> metricValueFunc, string unit, GameTime.InTicks resolution = GameTime.InTicks.Hour, Func<float[], float> reductionFunc = null)
+        public PowerStatMetric(string key, string name, Func<float> metricValueFunc, string unit, GameTime.InTicks resolution = GameTime.InTicks.Hour, Func<float[], float> reductionFunc = null)
         {
             this.Key = key;
+            this.Name = name;
             this.Resolution = resolution;
 
             this.resInTicks = (int)this.Resolution;
@@ -57,12 +59,7 @@ namespace ConfigurableGrowZone
 
             if (ShouldDigest(gameTick))
             {
-                OnDigest.Invoke(this, new DataPointEventArgs(new DataPoint() {
-                    DigestValue = Digest(),
-                    Key = Key,
-                    Resolution = Resolution,
-                    TimeStamp = gameTick
-                }));
+                OnDigest.Invoke(this, new DataPointEventArgs(new DataPoint(gameTick, Digest())));
 
                 this.values = new float[this.resInTicks];
                 indexPos = 0;

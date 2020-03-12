@@ -63,6 +63,7 @@
     <Compile Include="StatTracker\CompProperties_PowerStatTracker.cs" />
     <Compile Include="StatTracker\DataPoint.cs" />
     <Compile Include="StatTracker\DataPointEventArgs.cs" />
+    <Compile Include="StatTracker\DataVolume.cs" />
     <Compile Include="StatTracker\Dialog_PowerStatTracker.cs" />
     <Compile Include="StatTracker\GameTime.cs" />
     <Compile Include="StatTracker\PowerStatData.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="EnergyThreshold\PlaceWorker_CustomSwitch.cs" />
     <Compile Include="GrowZone\WorkGiver_GrowerHarvestConfigurable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StatTracker\StatHistory.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

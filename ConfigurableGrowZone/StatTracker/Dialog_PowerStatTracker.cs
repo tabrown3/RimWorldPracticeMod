@@ -9,10 +9,7 @@ namespace ConfigurableGrowZone
 {
     public class Dialog_PowerStatTracker : Window
     {
-        private string metricKey;
-        private GameTime.InTicks resolution;
-        private Dictionary<int, DataPoint> history;
-        private string unit;
+        private DataVolume dataVolume;
 
         private float barWidth = 10f;
         private float barElementWidth => barWidth + spaceBetweenBars;
@@ -24,12 +21,9 @@ namespace ConfigurableGrowZone
         private float lastScaleDivisor = 1f;
         private float adjustedScaleDivisor = 1f;
 
-        public Dialog_PowerStatTracker(string metricKey, GameTime.InTicks resolution, string unit, Dictionary<int, DataPoint> history)
+        public Dialog_PowerStatTracker(DataVolume dataVolume)
         {
-            this.metricKey = metricKey;
-            this.resolution = resolution;
-            this.history = history;
-            this.unit = unit;
+            this.dataVolume = dataVolume;
 
             draggable = true;
             preventCameraMotion = false;
@@ -48,7 +42,7 @@ namespace ConfigurableGrowZone
             var origTextAnchor = Text.Anchor;
             Text.Anchor = TextAnchor.UpperCenter;
             Text.Font = GameFont.Medium;
-            Widgets.Label(titleRect, metricKey);
+            Widgets.Label(titleRect, dataVolume.Name);
             
             Text.Anchor = origTextAnchor;
             curY += titleRect.height;
@@ -73,11 +67,14 @@ namespace ConfigurableGrowZone
             Text.Font = GameFont.Tiny;
             float zeroY = outerGraphRect.height / 2;
 
-            // The presentation layer should determine how data is presented, so I think it's ok to leave this logic here
-            List<DataPoint> historyList = history.Select(u => u.Value).OrderByDescending(u => u.TimeStamp).ToList();
+            int curTimeInTicks = Find.TickManager.TicksGame;
+            int curTimeInChosenUnit = Mathf.FloorToInt(curTimeInTicks / (int)dataVolume.Resolution); // hours for right now
 
-            float maxValue = historyList.Max(u => u.DigestValue);
-            float minValue = historyList.Min(u => u.DigestValue);
+            // The presentation layer should determine how data is presented, so I think it's ok to leave this logic here
+            List<DataPoint> historyList = dataVolume.DataPoints.OrderByDescending(u => u.TimeStampGameTicks).ToList();
+
+            float maxValue = historyList.Max(u => u.Value);
+            float minValue = historyList.Min(u => u.Value);
 
             float roofValue = Mathf.Max(maxValue, 0f);
             float basementValue = Mathf.Min(minValue, 0f);
@@ -116,7 +113,7 @@ namespace ConfigurableGrowZone
                 }
             }
 
-            string yAxisUnitLabel = unit;
+            string yAxisUnitLabel = dataVolume.Unit;
             Widgets.Label(new Rect(0f, (innerGraphRect.height / 2) + yAxisLabelOffset, Text.CalcSize(yAxisUnitLabel).x, Text.CalcSize(yAxisUnitLabel).y), yAxisUnitLabel);
             GUI.EndGroup(); // end innerGraphLeftRect
 
@@ -128,8 +125,6 @@ namespace ConfigurableGrowZone
 
             int numBarsVisibleMax = Mathf.FloorToInt(innerGraphRightRect.width / barElementWidth);
             int numBarsVisible = Mathf.Min(numBarsVisibleMax, historyList.Count);
-            int curTimeInTicks = Find.TickManager.TicksGame;
-            int curTimeInChosenUnit = Mathf.FloorToInt(curTimeInTicks / (int)resolution); // hours for right now
 
             // Draw x-axis and labels
             for (int i = 0; i < numBarsVisibleMax; i++)
@@ -151,10 +146,10 @@ namespace ConfigurableGrowZone
                     Vector2 labelSize = Text.CalcSize(labelText);
 
                     float yOffset = 4f;
-                    if(i < history.Count)
+                    if(i < dataVolume.DataPoints.Count)
                     {
                         DataPoint point = historyList[i];
-                        if (point != null && point.DigestValue < 0f)
+                        if (point != null && point.Value < 0f)
                         {
                             yOffset -= labelSize.y + 4f;
                         }
@@ -174,7 +169,7 @@ namespace ConfigurableGrowZone
                 float barHeight;
                 if (adjustedScaleDivisor != 0) // wouldn't want to divide by zero, would we...
                 {
-                    float normalizedValue = (point.DigestValue / adjustedScaleDivisor);
+                    float normalizedValue = (point.Value / adjustedScaleDivisor);
                     float maxHeight = (innerGraphRightRect.height / 2) - graphVerticalPadding;
                     barHeight = normalizedValue * maxHeight;
                 }
@@ -188,7 +183,7 @@ namespace ConfigurableGrowZone
                 if(Mouse.IsOver(barRect))
                 {
                     var builder = new StringBuilder();
-                    builder.Append($"Value: {point.DigestValue}{unit}");
+                    builder.Append($"Value: {point.Value}{dataVolume.Unit}");
                     //builder.Append($"Time: {point.DigestValue}");
 
                     TooltipHandler.TipRegion(barRect, builder.ToString());

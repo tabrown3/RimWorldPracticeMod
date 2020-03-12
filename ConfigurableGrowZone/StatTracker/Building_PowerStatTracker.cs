@@ -24,6 +24,7 @@ namespace ConfigurableGrowZone
             CompPowerStatTracker.AddMetric(
                 new PowerStatMetric(
                     "AvgStoredEnergyEachHour",
+                    "Average Stored Energy Each Hour",
                     () => CompPower.PowerNet.CurrentStoredEnergy(),
                     "Wd"
                 )
@@ -32,6 +33,7 @@ namespace ConfigurableGrowZone
             CompPowerStatTracker.AddMetric(
                 new PowerStatMetric(
                     "EnergyGainEachHour",
+                    "Energy Gain Each Hour",
                     () => CompPower.PowerNet.CurrentEnergyGainRate(),
                     "Wh",
                     reductionFunc: u => u.Sum()
