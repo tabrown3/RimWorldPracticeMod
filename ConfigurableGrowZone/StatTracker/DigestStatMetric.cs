@@ -17,7 +17,7 @@ namespace ConfigurableGrowZone
 
         private int indexPos;
         
-        public DigestStatMetric(string key, string name, Func<float> metricValueFunc, string unit, GameTime.InTicks resolution = GameTime.InTicks.Hour, Func<float[], float> reductionFunc = null) : base(key, name, metricValueFunc, resolution)
+        public DigestStatMetric(string key, string name, Func<float> metricValueFunc, string unit, GameTime.InTicks resolution = GameTime.InTicks.Hour, Func<float[], float> reductionFunc = null) : base(key, name, metricValueFunc, unit, resolution)
         {
             this.resInTicks = (int)this.Resolution;
 
@@ -29,8 +29,6 @@ namespace ConfigurableGrowZone
             {
                 this.reductionFunc = reductionFunc;
             }
-
-            this.Unit = unit;
         }
 
         public override void Tick(int gameTick)

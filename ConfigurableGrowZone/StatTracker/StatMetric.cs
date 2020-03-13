@@ -10,16 +10,17 @@ namespace ConfigurableGrowZone
         public readonly string Key;
         public readonly string Name;
         public readonly GameTime.InTicks Resolution;
-        public string Unit;
+        public readonly string Unit;
 
         public event EventHandler<DataPointEventArgs> ValuePushed;
 
         protected readonly Func<float> metricValueFunc;
 
-        public StatMetric(string key, string name, Func<float> metricValueFunc, GameTime.InTicks resolution)
+        public StatMetric(string key, string name, Func<float> metricValueFunc, string unit, GameTime.InTicks resolution)
         {
             this.Key = key;
             this.Name = name;
+            this.Unit = unit;
             this.Resolution = resolution;
 
             this.metricValueFunc = metricValueFunc;

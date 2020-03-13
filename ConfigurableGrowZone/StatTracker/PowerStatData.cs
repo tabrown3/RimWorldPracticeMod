@@ -15,11 +15,11 @@ namespace ConfigurableGrowZone
             this.latLong = latLong;
         }
 
-        public readonly List<DigestStatMetric> Metrics = new List<DigestStatMetric>();
+        public readonly List<StatMetric> Metrics = new List<StatMetric>();
         //public readonly Dictionary<string, Dictionary<int, DataPoint>> History = new Dictionary<string, Dictionary<int, DataPoint>>();
         public readonly StatHistory History = new StatHistory();
 
-        public void AddMetric(DigestStatMetric metric)
+        public void AddMetric(StatMetric metric)
         {
             metric.ValuePushed += (o, ev) => {
 

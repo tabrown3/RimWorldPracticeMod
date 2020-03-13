@@ -34,7 +34,7 @@ namespace ConfigurableGrowZone
             previousMap.GetComponent<PowerStatTracker>().DeregisterPowerStatTracker(this);
         }
 
-        public void AddMetric(DigestStatMetric metric)
+        public void AddMetric(StatMetric metric)
         {
             metric.ValuePushed += (o, ev) => { Log.Message($"Average of {metric.Name} in last {metric.Resolution} is {ev.DataPoint.Value}"); };
             Data.AddMetric(metric);
@@ -46,7 +46,7 @@ namespace ConfigurableGrowZone
 
             int ticksGame = Find.TickManager.TicksGame;
 
-            foreach (DigestStatMetric metric in Data.Metrics)
+            foreach (StatMetric metric in Data.Metrics)
             {
                 metric.Tick(ticksGame);
             }
