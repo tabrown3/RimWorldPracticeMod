@@ -13,15 +13,15 @@ namespace ConfigurableGrowZone
 
         private int indexPos;
         
-        public DigestStatMetric(string key, string name, Func<float> metricValueFunc, string unit, GameTime.InTicks resolution = GameTime.InTicks.Hour, Func<float[], float> reductionFunc = null) : base(key, name, metricValueFunc, unit, resolution)
+        public DigestStatMetric(string key, string name, Func<float> metricValueFunc, string unit, GameTime.InTicks resolution = GameTime.InTicks.Hour, Func<float[], float> digestFunc = null) : base(key, name, metricValueFunc, unit, resolution)
         {
-            if (reductionFunc == null)
+            if (digestFunc == null)
             {
                 this.reductionFunc = u => u.Average();
             }
             else
             {
-                this.reductionFunc = reductionFunc;
+                this.reductionFunc = digestFunc;
             }
         }
 
@@ -40,16 +40,11 @@ namespace ConfigurableGrowZone
 
             if (ShouldPushValue(gameTick))
             {
-                PushValue(gameTick, Digest());
+                PushValue(gameTick, reductionFunc(values));
 
                 this.values = new float[this.resInTicks];
                 indexPos = 0;
             }
-        }
-
-        private float Digest()
-        {
-            return reductionFunc(values);
         }
     }
 }
