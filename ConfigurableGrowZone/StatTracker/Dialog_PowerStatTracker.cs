@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -183,8 +184,8 @@ namespace ConfigurableGrowZone
                 if(Mouse.IsOver(barRect))
                 {
                     var builder = new StringBuilder();
-                    builder.Append($"Value: {point.Value}{dataVolume.Unit}");
-                    //builder.Append($"Time: {point.DigestValue}");
+                    builder.AppendLine($"Value: {point.Value}{dataVolume.Unit}");
+                    builder.AppendLine($"Date: {GetDateTimeString(point, dataVolume.LatLong)}");
 
                     TooltipHandler.TipRegion(barRect, builder.ToString());
                 }
@@ -228,6 +229,11 @@ namespace ConfigurableGrowZone
             }
 
             return adjustedScaleDivisor;
+        }
+
+        private string GetDateTimeString(DataPoint point, Vector2 latLong)
+        {
+            return GenDate.DateFullStringWithHourAt(GenDate.TickGameToAbs(point.TimeStampGameTicks), latLong);
         }
     }
 }
