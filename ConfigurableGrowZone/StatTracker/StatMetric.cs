@@ -16,6 +16,8 @@ namespace ConfigurableGrowZone
 
         protected readonly Func<float> metricValueFunc;
 
+        protected readonly int resInTicks;
+
         public StatMetric(string key, string name, Func<float> metricValueFunc, string unit, GameTime.InTicks resolution)
         {
             this.Key = key;
@@ -24,10 +26,15 @@ namespace ConfigurableGrowZone
             this.Resolution = resolution;
 
             this.metricValueFunc = metricValueFunc;
+
+            this.resInTicks = (int)this.Resolution;
         }
 
-        public virtual void Tick(int gameTick)
+        public abstract void Tick(int gameTick);
+
+        protected virtual bool ShouldPushValue(int gameTick)
         {
+            return gameTick % resInTicks == resInTicks - 1; // should digest on the last tick of the period
         }
 
         protected void PushValue(int gameTick, float value)
