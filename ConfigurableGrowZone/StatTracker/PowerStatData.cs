@@ -21,7 +21,7 @@ namespace ConfigurableGrowZone
 
         public void AddMetric(DigestStatMetric metric)
         {
-            metric.OnDigest += (o, ev) => {
+            metric.ValuePushed += (o, ev) => {
 
                 var dataPoint = ev.DataPoint;
                 

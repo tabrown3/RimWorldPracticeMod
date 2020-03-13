@@ -4,16 +4,12 @@ using Verse;
 
 namespace ConfigurableGrowZone
 {
-    public class DigestStatMetric
+    public class DigestStatMetric : StatMetric
     {
-        public readonly string Key;
-        public readonly string Name;
-        public readonly GameTime.InTicks Resolution;
-        public event EventHandler<DataPointEventArgs> OnDigest;
-        public string Unit;
+        
 
         private readonly int resInTicks;
-        private readonly Func<float> metricValueFunc;
+        
         private float[] values;
         private readonly Func<float[], float> reductionFunc;
 
@@ -21,14 +17,9 @@ namespace ConfigurableGrowZone
 
         private int indexPos;
         
-        public DigestStatMetric(string key, string name, Func<float> metricValueFunc, string unit, GameTime.InTicks resolution = GameTime.InTicks.Hour, Func<float[], float> reductionFunc = null)
+        public DigestStatMetric(string key, string name, Func<float> metricValueFunc, string unit, GameTime.InTicks resolution = GameTime.InTicks.Hour, Func<float[], float> reductionFunc = null) : base(key, name, metricValueFunc, resolution)
         {
-            this.Key = key;
-            this.Name = name;
-            this.Resolution = resolution;
-
             this.resInTicks = (int)this.Resolution;
-            this.metricValueFunc = metricValueFunc;
 
             if (reductionFunc == null)
             {
@@ -42,7 +33,7 @@ namespace ConfigurableGrowZone
             this.Unit = unit;
         }
 
-        public void Tick(int gameTick)
+        public override void Tick(int gameTick)
         {
             if (isInitialTick)
             {
@@ -57,7 +48,7 @@ namespace ConfigurableGrowZone
 
             if (ShouldDigest(gameTick))
             {
-                OnDigest.Invoke(this, new DataPointEventArgs(new DataPoint(gameTick, Digest())));
+                PushValue(gameTick, Digest());
 
                 this.values = new float[this.resInTicks];
                 indexPos = 0;
