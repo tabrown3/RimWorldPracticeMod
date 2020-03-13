@@ -29,6 +29,7 @@ namespace ConfigurableGrowZone
             draggable = true;
             preventCameraMotion = false;
             doCloseX = true;
+            onlyOneOfTypeAllowed = false;
         }
 
         public override void DoWindowContents(Rect inRect)

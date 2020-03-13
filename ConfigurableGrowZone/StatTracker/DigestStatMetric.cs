@@ -1,28 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Verse;
 
 namespace ConfigurableGrowZone
 {
-    public class DigestStatMetric : StatMetric
+    public class DigestStatMetric : SetStatMetric
     {
         private float[] values;
-        private readonly Func<float[], float> reductionFunc;
-
         private bool isInitialTick = true;
-
         private int indexPos;
         
-        public DigestStatMetric(string key, string name, Func<float> metricValueFunc, string unit, GameTime.InTicks resolution = GameTime.InTicks.Hour, Func<float[], float> digestFunc = null) : base(key, name, metricValueFunc, unit, resolution)
+        public DigestStatMetric(string key, string name, Func<float> metricValueFunc, string unit, GameTime.InTicks resolution = GameTime.InTicks.Hour, Func<IEnumerable<float>, float> aggregator = null) : base(key, name, metricValueFunc, unit, resolution, aggregator)
         {
-            if (digestFunc == null)
-            {
-                this.reductionFunc = u => u.Average();
-            }
-            else
-            {
-                this.reductionFunc = digestFunc;
-            }
         }
 
         public override void Tick(int gameTick)
@@ -40,7 +30,7 @@ namespace ConfigurableGrowZone
 
             if (ShouldPushValue(gameTick))
             {
-                PushValue(gameTick, reductionFunc(values));
+                PushValue(gameTick, aggregator(values));
 
                 this.values = new float[this.resInTicks];
                 indexPos = 0;

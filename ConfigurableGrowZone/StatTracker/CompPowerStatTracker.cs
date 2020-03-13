@@ -36,7 +36,6 @@ namespace ConfigurableGrowZone
 
         public void AddMetric(StatMetric metric)
         {
-            metric.ValuePushed += (o, ev) => { Log.Message($"Average of {metric.Name} in last {metric.Resolution} is {ev.DataPoint.Value}"); };
             Data.AddMetric(metric);
         }
 

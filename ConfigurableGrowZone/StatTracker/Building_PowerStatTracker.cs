@@ -32,11 +32,21 @@ namespace ConfigurableGrowZone
 
             CompPowerStatTracker.AddMetric(
                 new DigestStatMetric(
-                    "EnergyGainEachHour",
-                    "Energy Gain by Hour",
+                    "EnergyGainEachHourDigest",
+                    "Energy Gain by Hour D",
                     () => CompPower.PowerNet.CurrentEnergyGainRate(),
-                    "Wh",
-                    digestFunc: u => u.Sum()
+                    "Wd",
+                    aggregator: u => u.Sum()
+                )
+            );
+
+            CompPowerStatTracker.AddMetric(
+                new WindowStatMetric(
+                    "EnergyGainEachHourWindow",
+                    "Energy Gain by Hour W",
+                    () => CompPower.PowerNet.CurrentEnergyGainRate(),
+                    "Wd",
+                    aggregator: u => u.Sum()
                 )
             );
         }
