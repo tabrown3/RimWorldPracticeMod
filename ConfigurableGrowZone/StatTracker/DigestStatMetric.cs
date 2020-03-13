@@ -4,13 +4,12 @@ using Verse;
 
 namespace ConfigurableGrowZone
 {
-    public class PowerStatMetric
+    public class DigestStatMetric
     {
         public readonly string Key;
         public readonly string Name;
         public readonly GameTime.InTicks Resolution;
         public event EventHandler<DataPointEventArgs> OnDigest;
-        public int InitialTick;
         public string Unit;
 
         private readonly int resInTicks;
@@ -22,7 +21,7 @@ namespace ConfigurableGrowZone
 
         private int indexPos;
         
-        public PowerStatMetric(string key, string name, Func<float> metricValueFunc, string unit, GameTime.InTicks resolution = GameTime.InTicks.Hour, Func<float[], float> reductionFunc = null)
+        public DigestStatMetric(string key, string name, Func<float> metricValueFunc, string unit, GameTime.InTicks resolution = GameTime.InTicks.Hour, Func<float[], float> reductionFunc = null)
         {
             this.Key = key;
             this.Name = name;
@@ -47,8 +46,7 @@ namespace ConfigurableGrowZone
         {
             if (isInitialTick)
             {
-                InitialTick = gameTick;
-                this.values = new float[this.resInTicks - (InitialTick % this.resInTicks)];
+                this.values = new float[this.resInTicks - (gameTick % this.resInTicks)];
                 indexPos = 0;
 
                 isInitialTick = false;

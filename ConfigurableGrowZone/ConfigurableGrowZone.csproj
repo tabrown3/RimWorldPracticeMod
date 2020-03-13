@@ -67,7 +67,7 @@
     <Compile Include="StatTracker\Dialog_PowerStatTracker.cs" />
     <Compile Include="StatTracker\GameTime.cs" />
     <Compile Include="StatTracker\PowerStatData.cs" />
-    <Compile Include="StatTracker\PowerStatMetric.cs" />
+    <Compile Include="StatTracker\DigestStatMetric.cs" />
     <Compile Include="StatTracker\PowerStatTracker.cs" />
     <Compile Include="EnergyThreshold\CompProperties_EnergyThreshold.cs" />
     <Compile Include="EnergyThreshold\Dialog_ConfigureEnergyThreshold.cs" />

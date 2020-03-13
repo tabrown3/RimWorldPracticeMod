@@ -22,18 +22,18 @@ namespace ConfigurableGrowZone
             base.SpawnSetup(map, respawningAfterLoad);
 
             CompPowerStatTracker.AddMetric(
-                new PowerStatMetric(
+                new DigestStatMetric(
                     "AvgStoredEnergyEachHour",
-                    "Average Stored Energy Each Hour",
+                    "Average Stored Energy by Hour",
                     () => CompPower.PowerNet.CurrentStoredEnergy(),
                     "Wd"
                 )
             );
 
             CompPowerStatTracker.AddMetric(
-                new PowerStatMetric(
+                new DigestStatMetric(
                     "EnergyGainEachHour",
-                    "Energy Gain Each Hour",
+                    "Energy Gain by Hour",
                     () => CompPower.PowerNet.CurrentEnergyGainRate(),
                     "Wh",
                     reductionFunc: u => u.Sum()
