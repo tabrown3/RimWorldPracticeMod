@@ -7,7 +7,7 @@ namespace ConfigurableGrowZone
 {
     public class PollStatMetric : StatMetric
     {
-        public PollStatMetric(string key, string name, Func<float> metricValueFunc, string unit, GameTime.InTicks resolution = GameTime.InTicks.Hour) : base(key, name, metricValueFunc, unit, resolution)
+        public PollStatMetric(string key, string name, Func<float> metricValueFunc, string unit, TimeDomain domain) : base(key, name, metricValueFunc, unit, domain)
         {
         }
 

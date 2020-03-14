@@ -10,7 +10,7 @@ namespace ConfigurableGrowZone
         private readonly LinkedList<float> values = new LinkedList<float>();
         private readonly int windowSize;
 
-        public WindowStatMetric(string key, string name, Func<float> metricValueFunc, string unit, GameTime.InTicks resolution = GameTime.InTicks.Hour, Func<IEnumerable<float>, float> aggregator = null, int? windowSize = null) : base(key, name, metricValueFunc, unit, resolution, aggregator)
+        public WindowStatMetric(string key, string name, Func<float> metricValueFunc, string unit, TimeDomain domain, Func<IEnumerable<float>, float> aggregator = null, int? windowSize = null) : base(key, name, metricValueFunc, unit, domain, aggregator)
         {
             if(windowSize.HasValue)
             {
@@ -23,7 +23,7 @@ namespace ConfigurableGrowZone
             }
             else
             {
-                this.windowSize = resInTicks;
+                this.windowSize = this.Domain.ResInTicks;
             }
         }
 

@@ -9,32 +9,34 @@ namespace ConfigurableGrowZone
     {
         public readonly string Key;
         public readonly string Name;
-        public readonly GameTime.InTicks Resolution;
+        //public readonly GameTime.InTicks Resolution;
         public readonly string Unit;
+        public readonly TimeDomain Domain;
 
         public event EventHandler<DataPointEventArgs> ValuePushed;
 
         protected readonly Func<float> metricValueFunc;
 
-        protected readonly int resInTicks;
+        //protected readonly int resInTicks;
 
-        public StatMetric(string key, string name, Func<float> metricValueFunc, string unit, GameTime.InTicks resolution)
+        public StatMetric(string key, string name, Func<float> metricValueFunc, string unit, TimeDomain domain)
         {
             this.Key = key;
             this.Name = name;
             this.Unit = unit;
-            this.Resolution = resolution;
+            //this.Resolution = resolution;
+            this.Domain = domain;
 
             this.metricValueFunc = metricValueFunc;
 
-            this.resInTicks = (int)this.Resolution;
+            //this.resInTicks = (int)this.Resolution;
         }
 
         public abstract void Tick(int gameTick);
 
         protected virtual bool ShouldPushValue(int gameTick)
         {
-            return gameTick % resInTicks == resInTicks - 1; // should digest on the last tick of the period
+            return Domain.IsResolutionBoundary(gameTick); // should digest on the last tick of the period
         }
 
         protected void PushValue(int gameTick, float value)

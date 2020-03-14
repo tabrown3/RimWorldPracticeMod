@@ -26,7 +26,8 @@ namespace ConfigurableGrowZone
                     "StoredEnergyEachHour",
                     "Stored Energy at Hour",
                     () => CompPower.PowerNet.CurrentStoredEnergy(),
-                    "Wd"
+                    "Wd",
+                    new TwentyFourHourDomain()
                 )
             );
 
@@ -36,6 +37,7 @@ namespace ConfigurableGrowZone
                     "Energy per Hour D",
                     () => CompPower.PowerNet.CurrentEnergyGainRate(),
                     "Wd",
+                    new TwentyFourHourDomain(),
                     aggregator: u => u.Sum()
                 )
             );
@@ -47,6 +49,7 @@ namespace ConfigurableGrowZone
                     "Energy per Hour W",
                     () => CompPower.PowerNet.CurrentEnergyGainRate(),
                     "Wd",
+                    new TwentyFourHourDomain(),
                     aggregator: u => u.Sum()
                 )
             );

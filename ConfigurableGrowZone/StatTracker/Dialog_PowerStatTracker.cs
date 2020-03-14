@@ -75,7 +75,7 @@ namespace ConfigurableGrowZone
             float zeroY = outerGraphRect.height / 2;
 
             int curTimeInTicks = Find.TickManager.TicksGame;
-            int curTimeInChosenUnit = Mathf.FloorToInt(curTimeInTicks / (int)dataVolume.Resolution); // hours for right now
+            int curTimeInChosenUnit = Mathf.FloorToInt(curTimeInTicks / (int)dataVolume.Domain.Resolution); // hours for right now
 
             // The presentation layer should determine how data is presented, so I think it's ok to leave this logic here
             List<DataPoint> historyList = dataVolume.DataPoints.OrderByDescending(u => u.TimeStampGameTicks).ToList();
@@ -155,15 +155,17 @@ namespace ConfigurableGrowZone
 
                 Widgets.DrawLine(new Vector2(xPos, zeroY - 2f), new Vector2(xPos, zeroY + 4f), Color.white, 1f); // chart top
 
-                int hourToDraw = (6 + curTimeInChosenUnit - i - 1) % 24;
-                if (hourToDraw < 0)
-                {
-                    hourToDraw += 24;
-                }
+                //int hourToDraw = (6 + curTimeInChosenUnit - i - 1) % 24;
+                //if (hourToDraw < 0)
+                //{
+                //    hourToDraw += 24;
+                //}
 
-                if (hourToDraw % 2 == 0)
+                var xValueToDraw = dataVolume.Domain.DomainFunc(i);
+
+                if (Mathf.RoundToInt(xValueToDraw) % 2 == 0)
                 {
-                    string labelText = hourToDraw.ToString();
+                    string labelText = xValueToDraw.ToString();
                     Vector2 labelSize = Text.CalcSize(labelText);
 
                     float yOffset = 4f;

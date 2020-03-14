@@ -16,7 +16,6 @@ namespace ConfigurableGrowZone
         }
 
         public readonly List<StatMetric> Metrics = new List<StatMetric>();
-        //public readonly Dictionary<string, Dictionary<int, DataPoint>> History = new Dictionary<string, Dictionary<int, DataPoint>>();
         public readonly StatHistory History = new StatHistory();
 
         public void AddMetric(StatMetric metric)
@@ -27,8 +26,7 @@ namespace ConfigurableGrowZone
                 
                 if(!History.ContainsKey(metric.Key)) // if first datapoint for this metric
                 {
-                    //History[dataPoint.Key] = new Dictionary<int, DataPoint>();
-                    History.CreateVolume(metric.Key, new DataVolume(metric.Key, metric.Name, metric.Unit, metric.Resolution, latLong));
+                    History.CreateVolume(metric.Key, new DataVolume(metric.Key, metric.Name, metric.Unit, metric.Domain, latLong));
                 }
 
                 History.Save(metric.Key, dataPoint);
