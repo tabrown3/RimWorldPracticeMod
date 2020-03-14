@@ -14,11 +14,6 @@ namespace ConfigurableGrowZone
             DomainFunc = DomainGenerator;
         }
 
-        public override bool IsResolutionBoundary(int domainElement)
-        {
-            return domainElement % ResInTicks == ResInTicks - 1;
-        }
-
         private float DomainGenerator(int i)
         {
             int curTimeInTicks = Find.TickManager.TicksGame;

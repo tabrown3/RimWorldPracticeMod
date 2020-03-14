@@ -66,6 +66,7 @@
     <Compile Include="StatTracker\DataVolume.cs" />
     <Compile Include="StatTracker\Dialog_PowerStatTracker.cs" />
     <Compile Include="StatTracker\Domain\Domain.cs" />
+    <Compile Include="StatTracker\Domain\QuarterHourDomain.cs" />
     <Compile Include="StatTracker\Domain\TimeDomain.cs" />
     <Compile Include="StatTracker\Domain\TwentyFourHourDomain.cs" />
     <Compile Include="StatTracker\GameTime.cs" />

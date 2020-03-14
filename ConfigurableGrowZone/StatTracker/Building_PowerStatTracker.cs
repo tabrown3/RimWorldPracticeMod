@@ -46,10 +46,10 @@ namespace ConfigurableGrowZone
             CompPowerStatTracker.AddMetric(
                 new WindowStatMetric(
                     "EnergyGainByHourWindow",
-                    "Energy per Hour W",
+                    "Energy per Minute W",
                     () => CompPower.PowerNet.CurrentEnergyGainRate(),
                     "Wd",
-                    new TwentyFourHourDomain(),
+                    new QuarterHourDomain(),
                     aggregator: u => u.Sum()
                 )
             );

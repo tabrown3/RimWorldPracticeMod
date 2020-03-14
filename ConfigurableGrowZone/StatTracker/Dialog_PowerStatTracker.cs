@@ -155,12 +155,6 @@ namespace ConfigurableGrowZone
 
                 Widgets.DrawLine(new Vector2(xPos, zeroY - 2f), new Vector2(xPos, zeroY + 4f), Color.white, 1f); // chart top
 
-                //int hourToDraw = (6 + curTimeInChosenUnit - i - 1) % 24;
-                //if (hourToDraw < 0)
-                //{
-                //    hourToDraw += 24;
-                //}
-
                 var xValueToDraw = dataVolume.Domain.DomainFunc(i);
 
                 if (Mathf.RoundToInt(xValueToDraw) % 2 == 0)

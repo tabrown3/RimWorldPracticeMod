@@ -15,5 +15,10 @@ namespace ConfigurableGrowZone
             Resolution = resolution;
             ResInTicks = (int)Resolution;
         }
+
+        public override bool IsResolutionBoundary(int domainElement)
+        {
+            return domainElement % ResInTicks == ResInTicks - 1;
+        }
     }
 }
