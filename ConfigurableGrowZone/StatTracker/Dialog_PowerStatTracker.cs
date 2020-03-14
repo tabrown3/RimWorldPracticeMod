@@ -16,13 +16,14 @@ namespace ConfigurableGrowZone
         private float barElementWidth => barWidth + spaceBetweenBars;
 
         private float spaceBetweenBars = 1f;
-        private float graphVerticalPadding = 15f;
+        private float graphVerticalPadding => 15f + scrollBarHeight;
         private float yAxisLabelOffset = -8f;
         private float yAxisLabelPaneWidth = 55f;
         private float lastScaleDivisor = 1f;
         private float adjustedScaleDivisor = 1f;
 
         private Vector2 scrollPosition = Vector2.zero;
+        private float scrollBarHeight = 5f;
 
         private int previousBarCount = 0;
 
@@ -142,7 +143,7 @@ namespace ConfigurableGrowZone
             Rect viewPort = new Rect(innerGraphRect);
             viewPort.width = viewPortWidth;
             Widgets.ScrollHorizontal(viewPort, ref scrollPosition, innerGraphRightRect, barElementWidth);
-            Widgets.BeginScrollView(viewPort, ref scrollPosition, innerGraphRightRect, false);
+            BeginScrollView(viewPort, ref scrollPosition, innerGraphRightRect);
 
             int barsToFillViewRect = Mathf.FloorToInt(innerGraphRightRect.width / barElementWidth);
 
@@ -254,6 +255,27 @@ namespace ConfigurableGrowZone
         private string GetDateTimeString(DataPoint point, Vector2 latLong)
         {
             return GenDate.DateFullStringWithHourAt(GenDate.TickGameToAbs(point.TimeStampGameTicks), latLong);
+        }
+
+        // taken and modified from core game code, Widgets.BeginScrollView
+        private static void BeginScrollView(Rect outRect, ref Vector2 scrollPosition, Rect viewRect, bool showVerticalBar = false)
+        {
+            if (Widgets.mouseOverScrollViewStack.Count > 0)
+            {
+                Widgets.mouseOverScrollViewStack.Push(Widgets.mouseOverScrollViewStack.Peek() && outRect.Contains(Event.current.mousePosition));
+            }
+            else
+            {
+                Widgets.mouseOverScrollViewStack.Push(outRect.Contains(Event.current.mousePosition));
+            }
+            if (showVerticalBar)
+            {
+                scrollPosition = GUI.BeginScrollView(outRect, scrollPosition, viewRect);
+            }
+            else
+            {
+                scrollPosition = GUI.BeginScrollView(outRect, scrollPosition, viewRect, GUI.skin.horizontalScrollbar, GUIStyle.none);
+            }
         }
     }
 }
