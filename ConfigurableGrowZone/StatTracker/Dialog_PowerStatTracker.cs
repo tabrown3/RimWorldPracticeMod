@@ -24,6 +24,8 @@ namespace ConfigurableGrowZone
 
         private Vector2 scrollPosition = Vector2.zero;
 
+        private int previousBarCount = 0;
+
         public Dialog_PowerStatTracker(DataVolume dataVolume)
         {
             this.dataVolume = dataVolume;
@@ -122,6 +124,11 @@ namespace ConfigurableGrowZone
             GUI.EndGroup(); // end innerGraphLeftRect
 
             int numBars = historyList.Count;
+            if(previousBarCount != numBars)
+            {
+                scrollPosition.x = float.MaxValue;
+                previousBarCount = numBars;
+            }
 
             var viewPortWidth = innerGraphRect.width - yAxisLabelPaneWidth;
             
