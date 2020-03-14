@@ -22,6 +22,8 @@ namespace ConfigurableGrowZone
         private float lastScaleDivisor = 1f;
         private float adjustedScaleDivisor = 1f;
 
+        private Vector2 scrollPosition = Vector2.zero;
+
         public Dialog_PowerStatTracker(DataVolume dataVolume)
         {
             this.dataVolume = dataVolume;
@@ -119,17 +121,24 @@ namespace ConfigurableGrowZone
             Widgets.Label(new Rect(0f, (innerGraphRect.height / 2) + yAxisLabelOffset, Text.CalcSize(yAxisUnitLabel).x, Text.CalcSize(yAxisUnitLabel).y), yAxisUnitLabel);
             GUI.EndGroup(); // end innerGraphLeftRect
 
+            int numBars = historyList.Count;
+            
+
             Rect innerGraphRightRect = new Rect(innerGraphRect);
             innerGraphRightRect.x += yAxisLabelPaneWidth;
-            innerGraphRightRect.width -= yAxisLabelPaneWidth;
+            innerGraphRightRect.width += barElementWidth * dataVolume.DataPoints.Count - yAxisLabelPaneWidth;
+            Rect viewPort = new Rect(innerGraphRect);
+            viewPort.x += yAxisLabelPaneWidth;
+            viewPort.width -= yAxisLabelPaneWidth;
+            Widgets.ScrollHorizontal(viewPort, ref scrollPosition, innerGraphRightRect);
+            Widgets.BeginScrollView(viewPort, ref scrollPosition, innerGraphRightRect);
             GUI.BeginGroup(innerGraphRightRect);
             innerGraphRightRect = innerGraphRightRect.AtZero();
 
-            int numBarsVisibleMax = Mathf.FloorToInt(innerGraphRightRect.width / barElementWidth);
-            int numBarsVisible = Mathf.Min(numBarsVisibleMax, historyList.Count);
+            int barsToFillLargeRect = Mathf.FloorToInt(innerGraphRightRect.width / barElementWidth);
 
             // Draw x-axis and labels
-            for (int i = 0; i < numBarsVisibleMax; i++)
+            for (int i = 0; i < barsToFillLargeRect; i++)
             {
                 // TODO: duplicated from below
                 float xPos = (innerGraphRightRect.width - (i + 1) * barElementWidth);
@@ -162,7 +171,7 @@ namespace ConfigurableGrowZone
             }
 
             // Draw bars
-            for (int i = 0; i < numBarsVisible; i++)
+            for (int i = 0; i < numBars; i++)
             {
                 DataPoint point = historyList[i];
 
@@ -195,6 +204,7 @@ namespace ConfigurableGrowZone
             Widgets.DrawLine(new Vector2(0f, zeroY), new Vector2(innerGraphRightRect.width, zeroY), Color.white, 1f); // chart zero
 
             GUI.EndGroup(); // end innerGraphRightRect
+            Widgets.EndScrollView();
             GUI.EndGroup(); // end innerGraphRect
         }
 
