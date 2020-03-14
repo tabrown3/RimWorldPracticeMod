@@ -123,19 +123,19 @@ namespace ConfigurableGrowZone
 
             int numBars = historyList.Count;
 
-
-            Rect viewPort = new Rect(innerGraphRect);
-            viewPort.x += yAxisLabelPaneWidth;
-            viewPort.width -= yAxisLabelPaneWidth;
-
+            var viewPortWidth = innerGraphRect.width - yAxisLabelPaneWidth;
+            
             Rect innerGraphRightRect = new Rect(innerGraphRect);
             innerGraphRightRect.x += yAxisLabelPaneWidth;
-            innerGraphRightRect.width = Mathf.Max(barElementWidth * numBars - yAxisLabelPaneWidth, viewPort.width);
-            
-            Widgets.ScrollHorizontal(viewPort, ref scrollPosition, innerGraphRightRect, barElementWidth);
-            Widgets.BeginScrollView(viewPort, ref scrollPosition, innerGraphRightRect, false);
+            innerGraphRightRect.width = Mathf.Max(barElementWidth * numBars, viewPortWidth);
+
             GUI.BeginGroup(innerGraphRightRect);
             innerGraphRightRect = innerGraphRightRect.AtZero();
+
+            Rect viewPort = new Rect(innerGraphRect);
+            viewPort.width = viewPortWidth;
+            Widgets.ScrollHorizontal(viewPort, ref scrollPosition, innerGraphRightRect, barElementWidth);
+            Widgets.BeginScrollView(viewPort, ref scrollPosition, innerGraphRightRect, false);
 
             int barsToFillViewRect = Mathf.FloorToInt(innerGraphRightRect.width / barElementWidth);
 
@@ -205,8 +205,8 @@ namespace ConfigurableGrowZone
 
             Widgets.DrawLine(new Vector2(0f, zeroY), new Vector2(innerGraphRightRect.width, zeroY), Color.white, 1f); // chart zero
 
-            GUI.EndGroup(); // end innerGraphRightRect
             Widgets.EndScrollView();
+            GUI.EndGroup(); // end innerGraphRightRect
             GUI.EndGroup(); // end innerGraphRect
         }
 
