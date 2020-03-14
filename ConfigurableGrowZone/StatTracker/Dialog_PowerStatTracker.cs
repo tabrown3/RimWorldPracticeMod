@@ -132,8 +132,8 @@ namespace ConfigurableGrowZone
             innerGraphRightRect.x += yAxisLabelPaneWidth;
             innerGraphRightRect.width = Mathf.Max(barElementWidth * numBars - yAxisLabelPaneWidth, viewPort.width);
             
-            Widgets.ScrollHorizontal(viewPort, ref scrollPosition, innerGraphRightRect);
-            Widgets.BeginScrollView(viewPort, ref scrollPosition, innerGraphRightRect);
+            Widgets.ScrollHorizontal(viewPort, ref scrollPosition, innerGraphRightRect, barElementWidth);
+            Widgets.BeginScrollView(viewPort, ref scrollPosition, innerGraphRightRect, false);
             GUI.BeginGroup(innerGraphRightRect);
             innerGraphRightRect = innerGraphRightRect.AtZero();
 
