@@ -122,23 +122,25 @@ namespace ConfigurableGrowZone
             GUI.EndGroup(); // end innerGraphLeftRect
 
             int numBars = historyList.Count;
-            
 
-            Rect innerGraphRightRect = new Rect(innerGraphRect);
-            innerGraphRightRect.x += yAxisLabelPaneWidth;
-            innerGraphRightRect.width += barElementWidth * dataVolume.DataPoints.Count - yAxisLabelPaneWidth;
+
             Rect viewPort = new Rect(innerGraphRect);
             viewPort.x += yAxisLabelPaneWidth;
             viewPort.width -= yAxisLabelPaneWidth;
+
+            Rect innerGraphRightRect = new Rect(innerGraphRect);
+            innerGraphRightRect.x += yAxisLabelPaneWidth;
+            innerGraphRightRect.width = Mathf.Max(barElementWidth * numBars - yAxisLabelPaneWidth, viewPort.width);
+            
             Widgets.ScrollHorizontal(viewPort, ref scrollPosition, innerGraphRightRect);
             Widgets.BeginScrollView(viewPort, ref scrollPosition, innerGraphRightRect);
             GUI.BeginGroup(innerGraphRightRect);
             innerGraphRightRect = innerGraphRightRect.AtZero();
 
-            int barsToFillLargeRect = Mathf.FloorToInt(innerGraphRightRect.width / barElementWidth);
+            int barsToFillViewRect = Mathf.FloorToInt(innerGraphRightRect.width / barElementWidth);
 
             // Draw x-axis and labels
-            for (int i = 0; i < barsToFillLargeRect; i++)
+            for (int i = 0; i < Math.Max(numBars, barsToFillViewRect); i++)
             {
                 // TODO: duplicated from below
                 float xPos = (innerGraphRightRect.width - (i + 1) * barElementWidth);
