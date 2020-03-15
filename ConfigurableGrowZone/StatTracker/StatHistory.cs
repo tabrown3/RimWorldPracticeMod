@@ -8,7 +8,7 @@ namespace ConfigurableGrowZone
 {
     public class StatHistory
     {
-        private readonly Dictionary<string, DataVolume> history = new Dictionary<string, DataVolume>();
+        public Dictionary<string, DataVolume> History { get; set; } = new Dictionary<string, DataVolume>();
 
         public void Save(string key, DataPoint dataPoint)
         {
@@ -18,13 +18,13 @@ namespace ConfigurableGrowZone
             }
             else
             {
-                history[key].DataPoints.Add(dataPoint);
+                History[key].DataPoints.Add(dataPoint);
             }
         }
 
         public bool ContainsKey(string key)
         {
-            return history.ContainsKey(key);
+            return History.ContainsKey(key);
         }
 
         public void CreateVolume(string key, DataVolume dataVolume)
@@ -35,7 +35,7 @@ namespace ConfigurableGrowZone
             }
             else
             {
-                history[key] = dataVolume;
+                History[key] = dataVolume;
             }
         }
 
@@ -47,7 +47,7 @@ namespace ConfigurableGrowZone
                 return null;
             }
 
-            return history[key];
+            return History[key];
         }
     }
 }

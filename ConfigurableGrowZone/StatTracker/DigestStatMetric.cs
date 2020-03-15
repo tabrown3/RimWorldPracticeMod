@@ -36,5 +36,18 @@ namespace ConfigurableGrowZone
                 indexPos = 0;
             }
         }
+
+        public override List<float> GetInternalState()
+        {
+            return values.ToList();
+        }
+
+        public override void SetInternalState(List<float> state)
+        {
+            if(state != null)
+            {
+                values = state.ToArray();
+            }
+        }
     }
 }

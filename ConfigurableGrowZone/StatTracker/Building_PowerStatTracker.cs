@@ -24,34 +24,28 @@ namespace ConfigurableGrowZone
             MetricSetup();
         }
 
-        public override void ExposeData()
-        {
-
-
-        }
-
         private void MetricSetup()
         {
-            CompPowerStatTracker.AddMetric(
-                new PollStatMetric(
-                    "StoredEnergyEachHour",
-                    "Stored Energy at Hour",
-                    () => CompPower.PowerNet.CurrentStoredEnergy(),
-                    "Wd",
-                    new TwentyFourHourDomain()
-                )
-            );
+            //CompPowerStatTracker.AddMetric(
+            //    new PollStatMetric(
+            //        "StoredEnergyEachHour",
+            //        "Stored Energy at Hour",
+            //        () => CompPower.PowerNet.CurrentStoredEnergy(),
+            //        "Wd",
+            //        new TwentyFourHourDomain()
+            //    )
+            //);
 
-            CompPowerStatTracker.AddMetric(
-                new DigestStatMetric(
-                    "EnergyGainByHourDigest",
-                    "Energy per Hour D",
-                    () => CompPower.PowerNet.CurrentEnergyGainRate(),
-                    "Wd",
-                    new TwentyFourHourDomain(),
-                    aggregator: u => u.Sum()
-                )
-            );
+            //CompPowerStatTracker.AddMetric(
+            //    new DigestStatMetric(
+            //        "EnergyGainByHourDigest",
+            //        "Energy per Hour D",
+            //        () => CompPower.PowerNet.CurrentEnergyGainRate(),
+            //        "Wd",
+            //        new TwentyFourHourDomain(),
+            //        aggregator: u => u.Sum()
+            //    )
+            //);
 
             // If windowSize is equal to resolution, WindowStatMetric behaves the same as DigestStatMetric
             CompPowerStatTracker.AddMetric(
@@ -64,13 +58,6 @@ namespace ConfigurableGrowZone
                     aggregator: u => u.Sum()
                 )
             );
-        }
-
-        private void Persist<T>(string key, T data, Action<T> persistCb)
-        {
-            Scribe_Deep.Look(ref data, key);
-
-            persistCb(data);
         }
     }
 }

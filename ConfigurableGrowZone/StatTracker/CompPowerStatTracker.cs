@@ -22,9 +22,15 @@ namespace ConfigurableGrowZone
         {
             base.Initialize(props);
 
+            Data = new PowerStatData(GetLatLong(parent));
+        }
+
+        public override void PostSpawnSetup(bool respawningAfterLoad)
+        {
+            base.PostSpawnSetup(respawningAfterLoad);
+
             // Using Find.CurrentMap since parent.Map is still null at this point
             Find.CurrentMap.GetComponent<PowerStatTracker>().RegisterPowerStatTracker(this);
-            Data = new PowerStatData(GetLatLong(parent));
         }
 
         public override void PostDestroy(DestroyMode mode, Map previousMap)
@@ -76,6 +82,14 @@ namespace ConfigurableGrowZone
             command_Action.hotKey = KeyBindingDefOf.Misc5;
             command_Action.icon = ContentFinder<Texture2D>.Get("UI/Commands/TempLower");
             yield return command_Action;
+        }
+
+        public override void PostExposeData()
+        {
+            Log.Message("PostExposeData start");
+            Log.Message("Data is null: " + (Data == null));
+            Data.PersistData();
+            Log.Message("PostExposeData end");
         }
 
         private Vector2 GetLatLong(Thing thing) // taken from game GenLocalDate.LocationForDate

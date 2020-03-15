@@ -10,6 +10,7 @@ namespace ConfigurableGrowZone
     public class PowerStatData
     {
         private readonly Vector2 latLong;
+
         public PowerStatData(Vector2 latLong)
         {
             this.latLong = latLong;
@@ -37,6 +38,33 @@ namespace ConfigurableGrowZone
             };
 
             this.Metrics.Add(metric);
+        }
+
+        public void PersistData()
+        {
+            Log.Message("Metrics is null: " + (Metrics == null));
+            foreach(StatMetric metric in Metrics)
+            {
+                if(metric is SetStatMetric) // at the moment only children of SetStatMetric have state
+                {
+                    SetStatMetric setStatMetric = (SetStatMetric)metric;
+
+                    var tempFloatListRef = setStatMetric.GetInternalState().ToList();
+                    Log.Message("tempFloatListRef is null before Scribe: " + (tempFloatListRef == null));
+                    Scribe_Collections.Look(ref tempFloatListRef, $"{setStatMetric.Key}-partial");
+                    Log.Message("tempFloatListRef is null after Scribe: " + (tempFloatListRef == null));
+
+                    setStatMetric.SetInternalState(tempFloatListRef);
+                }
+            }
+
+            //var tempHistoryRef = History.History;
+            ////var list1 = History.History.Select(u => u.Key);
+            ////var list2 = History.History.Select(u => u.Value);
+            //Scribe_Collections.Look(ref tempHistoryRef, "StatDataHistory", LookMode.Value, LookMode.Value);
+            //History.History = tempHistoryRef;
+
+            Log.Message("Can reach the end of PersistData!!!");
         }
     }
 }

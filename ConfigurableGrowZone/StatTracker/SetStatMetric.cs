@@ -19,5 +19,8 @@ namespace ConfigurableGrowZone
                 this.aggregator = aggregator;
             }
         }
+
+        public abstract List<float> GetInternalState();
+        public abstract void SetInternalState(List<float> state);
     }
 }
