@@ -21,6 +21,17 @@ namespace ConfigurableGrowZone
         {
             base.SpawnSetup(map, respawningAfterLoad);
 
+            MetricSetup();
+        }
+
+        public override void ExposeData()
+        {
+
+
+        }
+
+        private void MetricSetup()
+        {
             CompPowerStatTracker.AddMetric(
                 new PollStatMetric(
                     "StoredEnergyEachHour",
@@ -45,14 +56,21 @@ namespace ConfigurableGrowZone
             // If windowSize is equal to resolution, WindowStatMetric behaves the same as DigestStatMetric
             CompPowerStatTracker.AddMetric(
                 new WindowStatMetric(
-                    "EnergyGainByHourWindow",
-                    "Energy per Minute W",
+                    "EnergyGainByQuarterHourWindow",
+                    "Energy per Quarter Hour W",
                     () => CompPower.PowerNet.CurrentEnergyGainRate(),
                     "Wd",
                     new QuarterHourDomain(),
                     aggregator: u => u.Sum()
                 )
             );
+        }
+
+        private void Persist<T>(string key, T data, Action<T> persistCb)
+        {
+            Scribe_Deep.Look(ref data, key);
+
+            persistCb(data);
         }
     }
 }

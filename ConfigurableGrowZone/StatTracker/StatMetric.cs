@@ -9,7 +9,6 @@ namespace ConfigurableGrowZone
     {
         public readonly string Key;
         public readonly string Name;
-        //public readonly GameTime.InTicks Resolution;
         public readonly string Unit;
         public readonly TimeDomain Domain;
 
@@ -17,19 +16,15 @@ namespace ConfigurableGrowZone
 
         protected readonly Func<float> metricValueFunc;
 
-        //protected readonly int resInTicks;
 
         public StatMetric(string key, string name, Func<float> metricValueFunc, string unit, TimeDomain domain)
         {
             this.Key = key;
             this.Name = name;
             this.Unit = unit;
-            //this.Resolution = resolution;
             this.Domain = domain;
 
             this.metricValueFunc = metricValueFunc;
-
-            //this.resInTicks = (int)this.Resolution;
         }
 
         public abstract void Tick(int gameTick);
