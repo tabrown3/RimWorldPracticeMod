@@ -21,14 +21,14 @@ namespace ConfigurableGrowZone
 
         public void AddMetric(StatMetric metric)
         {
+            if (!History.ContainsKey(metric.Key))
+            {
+                History.CreateVolume(metric.Key, new DataVolume(metric.Key, metric.Name, metric.Unit, metric.Domain, latLong));
+            }
+
             metric.ValuePushed += (o, ev) => {
 
                 var dataPoint = ev.DataPoint;
-                
-                if(!History.ContainsKey(metric.Key)) // if first datapoint for this metric
-                {
-                    History.CreateVolume(metric.Key, new DataVolume(metric.Key, metric.Name, metric.Unit, metric.Domain, latLong));
-                }
 
                 History.Save(metric.Key, dataPoint);
 
@@ -58,11 +58,12 @@ namespace ConfigurableGrowZone
                 }
             }
 
-            var tempHistoryRef = History.History;
-            //var list1 = History.History.Select(u => u.Key);
-            //var list2 = History.History.Select(u => u.Value);
-            Scribe_Collections.Look(ref tempHistoryRef, "StatDataHistory", LookMode.Value, LookMode.Value);
-            History.History = tempHistoryRef;
+            foreach(var kv in History.History)
+            {
+                var tempDataPoints = kv.Value.DataPoints;
+                Scribe_Collections.Look(ref tempDataPoints, kv.Key, LookMode.Deep);
+                History.History[kv.Key].DataPoints = tempDataPoints;
+            }
 
             Log.Message("Can reach the end of PersistData!!!");
         }

@@ -21,6 +21,6 @@ namespace ConfigurableGrowZone
         public string Unit { get; }
         public TimeDomain Domain { get; }
         public Vector2 LatLong { get; } // Latitude and longitude this data was sampled at; useful for generating dates
-        public List<DataPoint> DataPoints { get; } = new List<DataPoint>().ToList();
+        public List<DataPoint> DataPoints { get; set; } = new List<DataPoint>();
     }
 }
