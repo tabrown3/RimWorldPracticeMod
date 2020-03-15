@@ -58,11 +58,11 @@ namespace ConfigurableGrowZone
                 }
             }
 
-            //var tempHistoryRef = History.History;
-            ////var list1 = History.History.Select(u => u.Key);
-            ////var list2 = History.History.Select(u => u.Value);
-            //Scribe_Collections.Look(ref tempHistoryRef, "StatDataHistory", LookMode.Value, LookMode.Value);
-            //History.History = tempHistoryRef;
+            var tempHistoryRef = History.History;
+            //var list1 = History.History.Select(u => u.Key);
+            //var list2 = History.History.Select(u => u.Value);
+            Scribe_Collections.Look(ref tempHistoryRef, "StatDataHistory", LookMode.Value, LookMode.Value);
+            History.History = tempHistoryRef;
 
             Log.Message("Can reach the end of PersistData!!!");
         }

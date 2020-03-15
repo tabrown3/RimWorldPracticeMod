@@ -19,6 +19,7 @@ namespace ConfigurableGrowZone
 
         public override void SpawnSetup(Map map, bool respawningAfterLoad)
         {
+            Log.Message("Building_PowerStatTracker.SpawnSetup called");
             base.SpawnSetup(map, respawningAfterLoad);
 
             MetricSetup();
@@ -48,16 +49,16 @@ namespace ConfigurableGrowZone
             //);
 
             // If windowSize is equal to resolution, WindowStatMetric behaves the same as DigestStatMetric
-            CompPowerStatTracker.AddMetric(
-                new WindowStatMetric(
-                    "EnergyGainByQuarterHourWindow",
-                    "Energy per Quarter Hour W",
-                    () => CompPower.PowerNet.CurrentEnergyGainRate(),
-                    "Wd",
-                    new QuarterHourDomain(),
-                    aggregator: u => u.Sum()
-                )
-            );
+            //CompPowerStatTracker.AddMetric(
+            //    new WindowStatMetric(
+            //        "EnergyGainByQuarterHourWindow",
+            //        "Energy per Quarter Hour W",
+            //        () => CompPower.PowerNet.CurrentEnergyGainRate(),
+            //        "Wd",
+            //        new QuarterHourDomain(),
+            //        aggregator: u => u.Sum()
+            //    )
+            //);
         }
     }
 }

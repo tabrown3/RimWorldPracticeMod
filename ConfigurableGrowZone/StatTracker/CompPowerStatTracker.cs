@@ -23,6 +23,19 @@ namespace ConfigurableGrowZone
             base.Initialize(props);
 
             Data = new PowerStatData(GetLatLong(parent));
+
+            Log.Message("Metrics about to be added");
+            this.AddMetric(
+                new WindowStatMetric(
+                    "EnergyGainByQuarterHourWindow",
+                    "Energy per Quarter Hour W",
+                    () => parent.GetComp<CompPower>().PowerNet.CurrentEnergyGainRate(),
+                    "Wd",
+                    new QuarterHourDomain(),
+                    aggregator: u => u.Sum()
+                )
+            );
+            Log.Message("Metrics have been added");
         }
 
         public override void PostSpawnSetup(bool respawningAfterLoad)
