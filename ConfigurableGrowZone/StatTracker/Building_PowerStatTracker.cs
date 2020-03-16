@@ -19,7 +19,6 @@ namespace ConfigurableGrowZone
 
         public override void SpawnSetup(Map map, bool respawningAfterLoad)
         {
-            Log.Message("Building_PowerStatTracker.SpawnSetup called");
             base.SpawnSetup(map, respawningAfterLoad);
 
             MetricSetup();

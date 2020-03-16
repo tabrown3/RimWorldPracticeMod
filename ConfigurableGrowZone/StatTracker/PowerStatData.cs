@@ -42,7 +42,6 @@ namespace ConfigurableGrowZone
 
         public void PersistData()
         {
-            Log.Message("Metrics is null: " + (Metrics == null));
             foreach(StatMetric metric in Metrics)
             {
                 if(metric is SetStatMetric) // at the moment only children of SetStatMetric have state
@@ -50,9 +49,7 @@ namespace ConfigurableGrowZone
                     SetStatMetric setStatMetric = (SetStatMetric)metric;
 
                     var tempFloatListRef = setStatMetric.GetInternalState().ToList();
-                    Log.Message("tempFloatListRef is null before Scribe: " + (tempFloatListRef == null));
                     Scribe_Collections.Look(ref tempFloatListRef, $"{setStatMetric.Key}-partial");
-                    Log.Message("tempFloatListRef is null after Scribe: " + (tempFloatListRef == null));
 
                     setStatMetric.SetInternalState(tempFloatListRef);
                 }
@@ -64,8 +61,6 @@ namespace ConfigurableGrowZone
                 Scribe_Collections.Look(ref tempDataPoints, kv.Key, LookMode.Deep);
                 History.History[kv.Key].DataPoints = tempDataPoints;
             }
-
-            Log.Message("Can reach the end of PersistData!!!");
         }
     }
 }

@@ -24,7 +24,6 @@ namespace ConfigurableGrowZone
 
             Data = new PowerStatData(GetLatLong(parent));
 
-            Log.Message("Metrics about to be added");
             this.AddMetric(
                 new WindowStatMetric(
                     "EnergyGainByQuarterHourWindow",
@@ -35,7 +34,6 @@ namespace ConfigurableGrowZone
                     aggregator: u => u.Sum()
                 )
             );
-            Log.Message("Metrics have been added");
         }
 
         public override void PostSpawnSetup(bool respawningAfterLoad)
@@ -99,10 +97,7 @@ namespace ConfigurableGrowZone
 
         public override void PostExposeData()
         {
-            Log.Message("PostExposeData start");
-            Log.Message("Data is null: " + (Data == null));
             Data.PersistData();
-            Log.Message("PostExposeData end");
         }
 
         private Vector2 GetLatLong(Thing thing) // taken from game GenLocalDate.LocationForDate
