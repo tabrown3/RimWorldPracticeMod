@@ -10,7 +10,7 @@ namespace ConfigurableGrowZone
 {
     public class CompPowerStatTracker : ThingComp
     {
-        public PowerStatData Data { get; private set; } // TODO: gonna need to save and load this with ExposeData eventually
+        public PowerStatData Data { get; private set; }
         public CompProperties_PowerStatTracker Props => (CompProperties_PowerStatTracker)props;
         public PowerNet PowerNet => parent.GetComp<CompPower>()?.PowerNet;
 
@@ -25,11 +25,32 @@ namespace ConfigurableGrowZone
             Data = new PowerStatData(GetLatLong(parent));
 
             this.AddMetric(
+                new PollStatMetric(
+                    "StoredEnergyEachHourPoll",
+                    "Stored Energy at Hour",
+                    () => parent.GetComp<CompPower>().PowerNet.CurrentStoredEnergy(),
+                    "Wd",
+                    new TwentyFourHourDomain()
+                )
+            );
+
+            this.AddMetric(
+                new DigestStatMetric(
+                    "EnergyGainByHourDigest",
+                    "Energy per Hour",
+                    () => parent.GetComp<CompPower>().PowerNet.CurrentEnergyGainRate(),
+                    "Wd/h",
+                    new TwentyFourHourDomain(),
+                    aggregator: u => u.Sum()
+                )
+            );
+
+            this.AddMetric(
                 new WindowStatMetric(
                     "EnergyGainByQuarterHourWindow",
-                    "Energy per Quarter Hour W",
+                    "Energy per Quarter Hour",
                     () => parent.GetComp<CompPower>().PowerNet.CurrentEnergyGainRate(),
-                    "Wd",
+                    "Wd/qt.h",
                     new QuarterHourDomain(),
                     aggregator: u => u.Sum()
                 )

@@ -10,54 +10,9 @@ namespace ConfigurableGrowZone
     public class Building_PowerStatTracker : Building
     {
         public override bool TransmitsPowerNow => true;
-        public CompPower CompPower => GetComp<CompPower>();
-        public CompPowerStatTracker CompPowerStatTracker => GetComp<CompPowerStatTracker>();
 
         public Building_PowerStatTracker()
         {
-        }
-
-        public override void SpawnSetup(Map map, bool respawningAfterLoad)
-        {
-            base.SpawnSetup(map, respawningAfterLoad);
-
-            MetricSetup();
-        }
-
-        private void MetricSetup()
-        {
-            //CompPowerStatTracker.AddMetric(
-            //    new PollStatMetric(
-            //        "StoredEnergyEachHour",
-            //        "Stored Energy at Hour",
-            //        () => CompPower.PowerNet.CurrentStoredEnergy(),
-            //        "Wd",
-            //        new TwentyFourHourDomain()
-            //    )
-            //);
-
-            //CompPowerStatTracker.AddMetric(
-            //    new DigestStatMetric(
-            //        "EnergyGainByHourDigest",
-            //        "Energy per Hour D",
-            //        () => CompPower.PowerNet.CurrentEnergyGainRate(),
-            //        "Wd",
-            //        new TwentyFourHourDomain(),
-            //        aggregator: u => u.Sum()
-            //    )
-            //);
-
-            // If windowSize is equal to resolution, WindowStatMetric behaves the same as DigestStatMetric
-            //CompPowerStatTracker.AddMetric(
-            //    new WindowStatMetric(
-            //        "EnergyGainByQuarterHourWindow",
-            //        "Energy per Quarter Hour W",
-            //        () => CompPower.PowerNet.CurrentEnergyGainRate(),
-            //        "Wd",
-            //        new QuarterHourDomain(),
-            //        aggregator: u => u.Sum()
-            //    )
-            //);
         }
     }
 }
