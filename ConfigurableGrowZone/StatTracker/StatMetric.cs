@@ -14,17 +14,17 @@ namespace ConfigurableGrowZone
 
         public event EventHandler<DataPointEventArgs> ValuePushed;
 
-        protected readonly Func<float> metricValueFunc;
+        protected readonly IPullable<float> source;
 
 
-        public StatMetric(string key, string name, Func<float> metricValueFunc, string unit, TimeDomain domain)
+        public StatMetric(string key, string name, IPullable<float> source, string unit, TimeDomain domain)
         {
             this.Key = key;
             this.Name = name;
             this.Unit = unit;
             this.Domain = domain;
 
-            this.metricValueFunc = metricValueFunc;
+            this.source = source;
         }
 
         public abstract void Tick(int gameTick);

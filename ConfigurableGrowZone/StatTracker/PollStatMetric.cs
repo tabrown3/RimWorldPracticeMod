@@ -7,7 +7,7 @@ namespace ConfigurableGrowZone
 {
     public class PollStatMetric : StatMetric
     {
-        public PollStatMetric(string key, string name, Func<float> metricValueFunc, string unit, TimeDomain domain) : base(key, name, metricValueFunc, unit, domain)
+        public PollStatMetric(string key, string name, IPullable<float> source, string unit, TimeDomain domain) : base(key, name, source, unit, domain)
         {
         }
 
@@ -15,7 +15,7 @@ namespace ConfigurableGrowZone
         {
             if(ShouldPushValue(gameTick))
             {
-                PushValue(gameTick, metricValueFunc());
+                PushValue(gameTick, source.PullValue());
             }
         }
     }

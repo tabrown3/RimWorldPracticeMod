@@ -28,7 +28,7 @@ namespace ConfigurableGrowZone
                 new PollStatMetric(
                     "StoredEnergyEachHourPoll",
                     "Stored Energy at Hour",
-                    () => parent.GetComp<CompPower>().PowerNet.CurrentStoredEnergy(),
+                    new CurrentStoredEnergyPullable(parent),
                     "Wd",
                     new TwentyFourHourDomain()
                 )
@@ -38,10 +38,10 @@ namespace ConfigurableGrowZone
                 new DigestStatMetric(
                     "EnergyGainByHourDigest",
                     "Energy per Hour",
-                    () => parent.GetComp<CompPower>().PowerNet.CurrentEnergyGainRate(),
+                    new CurrentEnergyGainRatePullable(parent),
                     "Wd/h",
                     new TwentyFourHourDomain(),
-                    aggregator: u => u.Sum()
+                    new SumAggregator()
                 )
             );
 
@@ -49,10 +49,10 @@ namespace ConfigurableGrowZone
                 new WindowStatMetric(
                     "EnergyGainByQuarterHourWindow",
                     "Energy per Quarter Hour",
-                    () => parent.GetComp<CompPower>().PowerNet.CurrentEnergyGainRate(),
+                    new CurrentEnergyGainRatePullable(parent),
                     "Wd/qt.h",
                     new QuarterHourDomain(),
-                    aggregator: u => u.Sum()
+                    new SumAggregator()
                 )
             );
         }

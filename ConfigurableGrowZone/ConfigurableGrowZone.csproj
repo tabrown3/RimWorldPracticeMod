@@ -60,6 +60,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EnergyThreshold\Building_CustomSwitch.cs" />
+    <Compile Include="StatTracker\Aggregator\AverageAggregator.cs" />
+    <Compile Include="StatTracker\Aggregator\SumAggregator.cs" />
     <Compile Include="StatTracker\Building_PowerStatTracker.cs" />
     <Compile Include="EnergyThreshold\CompEnergyThreshold.cs" />
     <Compile Include="StatTracker\CompPowerStatTracker.cs" />
@@ -82,9 +84,13 @@
     <Compile Include="EnergyThreshold\PlaceWorker_CustomSwitch.cs" />
     <Compile Include="GrowZone\WorkGiver_GrowerHarvestConfigurable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StatTracker\Pullable\CompPower\CurrentEnergyGainRatePullable.cs" />
+    <Compile Include="StatTracker\Pullable\CompPower\CurrentStoredEnergyPullable.cs" />
+    <Compile Include="StatTracker\Pullable\IPullableValue.cs" />
     <Compile Include="StatTracker\SetStatMetric.cs" />
     <Compile Include="StatTracker\StatHistory.cs" />
     <Compile Include="StatTracker\StatMetric.cs" />
+    <Compile Include="StatTracker\Aggregator\IAggregator.cs" />
     <Compile Include="StatTracker\WindowStatMetric.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

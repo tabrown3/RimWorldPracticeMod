@@ -7,12 +7,12 @@ namespace ConfigurableGrowZone
 {
     public abstract class SetStatMetric : StatMetric
     {
-        protected readonly Func<IEnumerable<float>, float> aggregator;
-        public SetStatMetric(string key, string name, Func<float> metricValueFunc, string unit, TimeDomain domain, Func<IEnumerable<float>, float> aggregator = null) : base(key, name, metricValueFunc, unit, domain)
+        protected readonly IAggregator<float> aggregator;
+        public SetStatMetric(string key, string name, IPullable<float> source, string unit, TimeDomain domain, IAggregator<float> aggregator = null) : base(key, name, source, unit, domain)
         {
             if (aggregator == null)
             {
-                this.aggregator = u => u.Average();
+                this.aggregator = new AverageAggregator();
             }
             else
             {

@@ -10,7 +10,7 @@ namespace ConfigurableGrowZone
         private LinkedList<float> values = new LinkedList<float>();
         private readonly int windowSize;
 
-        public WindowStatMetric(string key, string name, Func<float> metricValueFunc, string unit, TimeDomain domain, Func<IEnumerable<float>, float> aggregator = null, int? windowSize = null) : base(key, name, metricValueFunc, unit, domain, aggregator)
+        public WindowStatMetric(string key, string name, IPullable<float> source, string unit, TimeDomain domain, IAggregator<float> aggregator = null, int? windowSize = null) : base(key, name, source, unit, domain, aggregator)
         {
             if(windowSize.HasValue)
             {
@@ -29,7 +29,7 @@ namespace ConfigurableGrowZone
 
         public override void Tick(int gameTick)
         {
-            values.AddFirst(metricValueFunc());
+            values.AddFirst(source.PullValue());
 
             if (values.Count > windowSize)
             {
@@ -38,7 +38,7 @@ namespace ConfigurableGrowZone
 
             if (ShouldPushValue(gameTick))
             {
-                PushValue(gameTick, aggregator(values));
+                PushValue(gameTick, aggregator.Aggregate(values));
             }
         }
 

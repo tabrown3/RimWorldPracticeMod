@@ -11,7 +11,7 @@ namespace ConfigurableGrowZone
         private bool isInitialTick = true;
         private int indexPos;
         
-        public DigestStatMetric(string key, string name, Func<float> metricValueFunc, string unit, TimeDomain domain, Func<IEnumerable<float>, float> aggregator = null) : base(key, name, metricValueFunc, unit, domain, aggregator)
+        public DigestStatMetric(string key, string name, IPullable<float> source, string unit, TimeDomain domain, IAggregator<float> aggregator = null) : base(key, name, source, unit, domain, aggregator)
         {
         }
 
@@ -25,12 +25,12 @@ namespace ConfigurableGrowZone
                 isInitialTick = false;
             }
 
-            values[indexPos] = metricValueFunc();
+            values[indexPos] = source.PullValue();
             indexPos++;
 
             if (ShouldPushValue(gameTick))
             {
-                PushValue(gameTick, aggregator(values));
+                PushValue(gameTick, aggregator.Aggregate(values));
 
                 this.values = new float[this.Domain.ResInTicks];
                 indexPos = 0;
