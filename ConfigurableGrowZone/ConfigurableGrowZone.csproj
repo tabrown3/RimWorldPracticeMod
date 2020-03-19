@@ -75,6 +75,9 @@
     <Compile Include="StatTracker\Domain\TimeDomain.cs" />
     <Compile Include="StatTracker\Domain\TwentyFourHourDomain.cs" />
     <Compile Include="StatTracker\GameTime.cs" />
+    <Compile Include="StatTracker\Operator\BinaryOperator.cs" />
+    <Compile Include="StatTracker\Operator\IOperator.cs" />
+    <Compile Include="StatTracker\Operator\UnaryOperator.cs" />
     <Compile Include="StatTracker\PollStatMetric.cs" />
     <Compile Include="StatTracker\PowerStatData.cs" />
     <Compile Include="StatTracker\DigestStatMetric.cs" />
