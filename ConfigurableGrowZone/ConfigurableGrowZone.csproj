@@ -75,14 +75,16 @@
     <Compile Include="StatTracker\Domain\TimeDomain.cs" />
     <Compile Include="StatTracker\Domain\TwentyFourHourDomain.cs" />
     <Compile Include="StatTracker\GameTime.cs" />
+    <Compile Include="StatTracker\Metric\DerivedMetric\DerivedMetric.cs" />
+    <Compile Include="StatTracker\Metric\IMetric.cs" />
     <Compile Include="StatTracker\Operator\BinaryOperator.cs" />
     <Compile Include="StatTracker\Operator\IOperator.cs" />
     <Compile Include="StatTracker\Operator\NegateOperator.cs" />
     <Compile Include="StatTracker\Operator\PlusOperator.cs" />
     <Compile Include="StatTracker\Operator\UnaryOperator.cs" />
-    <Compile Include="StatTracker\PollStatMetric.cs" />
+    <Compile Include="StatTracker\Metric\SourceMetric\PollStatMetric.cs" />
     <Compile Include="StatTracker\PowerStatData.cs" />
-    <Compile Include="StatTracker\DigestStatMetric.cs" />
+    <Compile Include="StatTracker\Metric\SourceMetric\DigestStatMetric.cs" />
     <Compile Include="StatTracker\PowerStatTracker.cs" />
     <Compile Include="EnergyThreshold\CompProperties_EnergyThreshold.cs" />
     <Compile Include="EnergyThreshold\Dialog_ConfigureEnergyThreshold.cs" />
@@ -91,12 +93,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StatTracker\Pullable\CompPower\CurrentEnergyGainRatePullable.cs" />
     <Compile Include="StatTracker\Pullable\CompPower\CurrentStoredEnergyPullable.cs" />
-    <Compile Include="StatTracker\Pullable\IPullableValue.cs" />
-    <Compile Include="StatTracker\SetStatMetric.cs" />
+    <Compile Include="StatTracker\Pullable\IPullable.cs" />
+    <Compile Include="StatTracker\Metric\SourceMetric\SetStatMetric.cs" />
     <Compile Include="StatTracker\StatHistory.cs" />
-    <Compile Include="StatTracker\SourceMetric.cs" />
+    <Compile Include="StatTracker\Metric\SourceMetric\SourceMetric.cs" />
     <Compile Include="StatTracker\Aggregator\IAggregator.cs" />
-    <Compile Include="StatTracker\WindowStatMetric.cs" />
+    <Compile Include="StatTracker\Metric\SourceMetric\WindowStatMetric.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

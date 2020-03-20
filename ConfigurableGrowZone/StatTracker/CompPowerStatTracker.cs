@@ -10,6 +10,7 @@ namespace ConfigurableGrowZone
 {
     public class CompPowerStatTracker : ThingComp
     {
+        public string Name { get; set; }
         public PowerStatData Data { get; private set; }
         public CompProperties_PowerStatTracker Props => (CompProperties_PowerStatTracker)props;
         public PowerNet PowerNet => parent.GetComp<CompPower>()?.PowerNet;
@@ -22,7 +23,10 @@ namespace ConfigurableGrowZone
         {
             base.Initialize(props);
 
-            Data = new PowerStatData(GetLatLong(parent));
+            var latLong = GetLatLong(parent);
+
+            Name = nameof(CompPowerStatTracker) + latLong;
+            Data = new PowerStatData(latLong);
 
             this.AddMetric(
                 new PollStatMetric(
@@ -83,7 +87,7 @@ namespace ConfigurableGrowZone
 
             int ticksGame = Find.TickManager.TicksGame;
 
-            foreach (SourceMetric metric in Data.Metrics)
+            foreach (SourceMetric metric in Data.SourceMetrics)
             {
                 metric.Tick(ticksGame);
             }
@@ -100,7 +104,7 @@ namespace ConfigurableGrowZone
             command_Action.action = delegate
             {
                 List<FloatMenuOption> list = new List<FloatMenuOption>();
-                foreach (var metric in Data.Metrics)
+                foreach (var metric in Data.SourceMetrics)
                 {
                     list.Add(new FloatMenuOption(metric.Name, delegate
                     {

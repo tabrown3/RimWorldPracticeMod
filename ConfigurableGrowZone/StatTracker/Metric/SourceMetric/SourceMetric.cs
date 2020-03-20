@@ -5,12 +5,12 @@ using System.Text;
 
 namespace ConfigurableGrowZone
 {
-    public abstract class SourceMetric
+    public abstract class SourceMetric : IMetric
     {
-        public readonly string Key;
-        public readonly string Name;
-        public readonly string Unit;
-        public readonly TimeDomain Domain;
+        public string Key { get; }
+        public string Name { get; }
+        public string Unit { get; }
+        public TimeDomain Domain { get; }
 
         public event EventHandler<DataPointEventArgs> ValuePushed;
 

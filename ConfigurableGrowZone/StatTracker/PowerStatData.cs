@@ -16,7 +16,8 @@ namespace ConfigurableGrowZone
             this.latLong = latLong;
         }
 
-        public readonly List<SourceMetric> Metrics = new List<SourceMetric>();
+        public readonly List<SourceMetric> SourceMetrics = new List<SourceMetric>();
+        public readonly List<DerivedMetric<float>> DerivedMetrics = new List<DerivedMetric<float>>();
         public readonly StatHistory History = new StatHistory();
 
         public void AddMetric(SourceMetric metric)
@@ -37,12 +38,12 @@ namespace ConfigurableGrowZone
                 /*** Above line throwing errors for some reason ***/
             };
 
-            this.Metrics.Add(metric);
+            this.SourceMetrics.Add(metric);
         }
 
         public void PersistData()
         {
-            foreach(SourceMetric metric in Metrics)
+            foreach(SourceMetric metric in SourceMetrics)
             {
                 if(metric is SetStatMetric) // at the moment only children of SetStatMetric have state
                 {
