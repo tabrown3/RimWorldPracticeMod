@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ConfigurableGrowZone
 {
-    public abstract class StatMetric
+    public abstract class SourceMetric
     {
         public readonly string Key;
         public readonly string Name;
@@ -17,7 +17,7 @@ namespace ConfigurableGrowZone
         protected readonly IPullable<float> source;
 
 
-        public StatMetric(string key, string name, IPullable<float> source, string unit, TimeDomain domain)
+        public SourceMetric(string key, string name, IPullable<float> source, string unit, TimeDomain domain)
         {
             this.Key = key;
             this.Name = name;

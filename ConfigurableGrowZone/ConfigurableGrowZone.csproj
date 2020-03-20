@@ -94,7 +94,7 @@
     <Compile Include="StatTracker\Pullable\IPullableValue.cs" />
     <Compile Include="StatTracker\SetStatMetric.cs" />
     <Compile Include="StatTracker\StatHistory.cs" />
-    <Compile Include="StatTracker\StatMetric.cs" />
+    <Compile Include="StatTracker\SourceMetric.cs" />
     <Compile Include="StatTracker\Aggregator\IAggregator.cs" />
     <Compile Include="StatTracker\WindowStatMetric.cs" />
   </ItemGroup>

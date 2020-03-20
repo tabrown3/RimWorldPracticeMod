@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ConfigurableGrowZone
 {
-    public abstract class SetStatMetric : StatMetric
+    public abstract class SetStatMetric : SourceMetric
     {
         protected readonly IAggregator<float> aggregator;
         public SetStatMetric(string key, string name, IPullable<float> source, string unit, TimeDomain domain, IAggregator<float> aggregator = null) : base(key, name, source, unit, domain)

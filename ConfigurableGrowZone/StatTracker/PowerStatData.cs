@@ -16,10 +16,10 @@ namespace ConfigurableGrowZone
             this.latLong = latLong;
         }
 
-        public readonly List<StatMetric> Metrics = new List<StatMetric>();
+        public readonly List<SourceMetric> Metrics = new List<SourceMetric>();
         public readonly StatHistory History = new StatHistory();
 
-        public void AddMetric(StatMetric metric)
+        public void AddMetric(SourceMetric metric)
         {
             if (!History.ContainsKey(metric.Key))
             {
@@ -42,7 +42,7 @@ namespace ConfigurableGrowZone
 
         public void PersistData()
         {
-            foreach(StatMetric metric in Metrics)
+            foreach(SourceMetric metric in Metrics)
             {
                 if(metric is SetStatMetric) // at the moment only children of SetStatMetric have state
                 {

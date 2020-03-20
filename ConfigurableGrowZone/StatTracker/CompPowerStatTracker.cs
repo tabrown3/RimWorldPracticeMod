@@ -72,7 +72,7 @@ namespace ConfigurableGrowZone
             previousMap.GetComponent<PowerStatTracker>().DeregisterPowerStatTracker(this);
         }
 
-        public void AddMetric(StatMetric metric)
+        public void AddMetric(SourceMetric metric)
         {
             Data.AddMetric(metric);
         }
@@ -83,7 +83,7 @@ namespace ConfigurableGrowZone
 
             int ticksGame = Find.TickManager.TicksGame;
 
-            foreach (StatMetric metric in Data.Metrics)
+            foreach (SourceMetric metric in Data.Metrics)
             {
                 metric.Tick(ticksGame);
             }
