@@ -20,12 +20,9 @@ namespace ConfigurableGrowZone
         public readonly List<DerivedMetric<float>> DerivedMetrics = new List<DerivedMetric<float>>();
         public readonly StatHistory History = new StatHistory();
 
-        public void AddMetric(SourceMetric metric)
+        public void AddSourceMetric(SourceMetric metric)
         {
-            if (!History.ContainsKey(metric.Key))
-            {
-                History.CreateVolume(metric.Key, new DataVolume(metric.Key, metric.Name, metric.Unit, metric.Domain, latLong));
-            }
+            CreateVolume(metric);
 
             metric.ValuePushed += (o, ev) => {
 
@@ -39,6 +36,17 @@ namespace ConfigurableGrowZone
             };
 
             this.SourceMetrics.Add(metric);
+        }
+
+        public void AddDerivedMetric(DerivedMetric<float> derivedMetric)
+        {
+            var anchorSource = derivedMetric.Sources[0];
+            CreateVolume(derivedMetric);
+
+            foreach(var sourceMetric in derivedMetric.Sources)
+            {
+
+            }
         }
 
         public void PersistData()
@@ -61,6 +69,14 @@ namespace ConfigurableGrowZone
                 var tempDataPoints = kv.Value.DataPoints;
                 Scribe_Collections.Look(ref tempDataPoints, kv.Key, LookMode.Deep);
                 History.History[kv.Key].DataPoints = tempDataPoints;
+            }
+        }
+
+        private void CreateVolume(IMetric metric)
+        {
+            if (!History.ContainsKey(metric.Key))
+            {
+                History.CreateVolume(metric.Key, new DataVolume(metric.Key, metric.Name, metric.Unit, metric.Domain, latLong));
             }
         }
     }

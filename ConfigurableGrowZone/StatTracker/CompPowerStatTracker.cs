@@ -28,7 +28,7 @@ namespace ConfigurableGrowZone
             Name = nameof(CompPowerStatTracker) + latLong;
             Data = new PowerStatData(latLong);
 
-            this.AddMetric(
+            this.AddSourceMetric(
                 new PollStatMetric(
                     "StoredEnergyEachHourPoll",
                     "Stored Energy at Hour",
@@ -38,7 +38,7 @@ namespace ConfigurableGrowZone
                 )
             );
 
-            this.AddMetric(
+            this.AddSourceMetric(
                 new DigestStatMetric(
                     "EnergyGainByHourDigest",
                     "Energy per Hour",
@@ -49,7 +49,7 @@ namespace ConfigurableGrowZone
                 )
             );
 
-            this.AddMetric(
+            this.AddSourceMetric(
                 new WindowStatMetric(
                     "EnergyGainByQuarterHourWindow",
                     "Energy per Quarter Hour",
@@ -59,6 +59,8 @@ namespace ConfigurableGrowZone
                     new SumAggregator()
                 )
             );
+
+            
         }
 
         public override void PostSpawnSetup(bool respawningAfterLoad)
@@ -76,9 +78,14 @@ namespace ConfigurableGrowZone
             previousMap.GetComponent<PowerStatTracker>().DeregisterPowerStatTracker(this);
         }
 
-        public void AddMetric(SourceMetric metric)
+        public void AddSourceMetric(SourceMetric metric)
         {
-            Data.AddMetric(metric);
+            Data.AddSourceMetric(metric);
+        }
+
+        public void AddDerivedMetric(DerivedMetric<float> derivedMetric)
+        {
+            Data.AddDerivedMetric(derivedMetric);
         }
 
         public override void CompTick()
