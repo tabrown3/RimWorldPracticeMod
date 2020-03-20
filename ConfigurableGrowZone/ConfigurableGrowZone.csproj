@@ -77,6 +77,8 @@
     <Compile Include="StatTracker\GameTime.cs" />
     <Compile Include="StatTracker\Operator\BinaryOperator.cs" />
     <Compile Include="StatTracker\Operator\IOperator.cs" />
+    <Compile Include="StatTracker\Operator\NegateOperator.cs" />
+    <Compile Include="StatTracker\Operator\PlusOperator.cs" />
     <Compile Include="StatTracker\Operator\UnaryOperator.cs" />
     <Compile Include="StatTracker\PollStatMetric.cs" />
     <Compile Include="StatTracker\PowerStatData.cs" />
