@@ -37,16 +37,15 @@ namespace ConfigurableGrowZone
                 );
             this.AddSourceMetric(firstMetric);
 
-            this.AddSourceMetric(
-                new DigestStatMetric(
+            var secondMetric = new DigestStatMetric(
                     "EnergyGainByHourDigest",
                     "Energy per Hour",
                     new CurrentEnergyGainRatePullable(parent),
                     "Wd/h",
                     new TwentyFourHourDomain(),
                     new SumAggregator()
-                )
-            );
+                );
+            this.AddSourceMetric(secondMetric);
 
             this.AddSourceMetric(
                 new WindowStatMetric(
@@ -65,6 +64,15 @@ namespace ConfigurableGrowZone
                     "Negative Stored Energy at Hour",
                     new List<SourceMetric>() { firstMetric },
                     new List<IOperator<float>>() { new NegateOperator() }
+                )
+            );
+
+            this.AddDerivedMetric(
+                new DerivedMetric(
+                    "DoubleStoredEnergyNegatedEachHourPoll",
+                    "Summed Negative Stored Something at Hour",
+                    new List<SourceMetric>() { firstMetric, secondMetric },
+                    new List<IOperator<float>>() { new PlusOperator(), new NegateOperator() }
                 )
             );
         }
