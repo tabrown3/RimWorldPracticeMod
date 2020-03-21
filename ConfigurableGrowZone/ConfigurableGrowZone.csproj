@@ -69,7 +69,7 @@
     <Compile Include="StatTracker\DataPoint.cs" />
     <Compile Include="StatTracker\DataPointEventArgs.cs" />
     <Compile Include="StatTracker\DataVolume.cs" />
-    <Compile Include="StatTracker\Dialog_PowerStatTracker.cs" />
+    <Compile Include="StatTracker\Gui\Dialog_PowerStatTracker.cs" />
     <Compile Include="StatTracker\Domain\Domain.cs" />
     <Compile Include="StatTracker\Domain\QuarterHourDomain.cs" />
     <Compile Include="StatTracker\Domain\TimeDomain.cs" />
