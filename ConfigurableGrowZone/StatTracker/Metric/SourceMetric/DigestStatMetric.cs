@@ -28,7 +28,7 @@ namespace ConfigurableGrowZone
             values[indexPos] = source.PullValue();
             indexPos++;
 
-            if (ShouldPushValue(gameTick))
+            if (Domain.IsResolutionBoundary(gameTick))
             {
                 PushValue(gameTick, aggregator.Aggregate(values));
 

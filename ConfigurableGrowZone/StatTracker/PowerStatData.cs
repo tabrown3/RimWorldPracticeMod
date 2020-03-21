@@ -17,7 +17,7 @@ namespace ConfigurableGrowZone
         }
 
         public readonly List<SourceMetric> SourceMetrics = new List<SourceMetric>();
-        public readonly List<DerivedMetric<float>> DerivedMetrics = new List<DerivedMetric<float>>();
+        public readonly List<DerivedMetric> DerivedMetrics = new List<DerivedMetric>();
         public readonly StatHistory History = new StatHistory();
 
         public void AddSourceMetric(SourceMetric metric)
@@ -29,24 +29,23 @@ namespace ConfigurableGrowZone
                 var dataPoint = ev.DataPoint;
 
                 History.Save(metric.Key, dataPoint);
-
-                /*** Below line throwing errors for some reason ***/
-                //OnHistoryAdded.Invoke(this, ev);
-                /*** Above line throwing errors for some reason ***/
             };
 
             this.SourceMetrics.Add(metric);
         }
 
-        public void AddDerivedMetric(DerivedMetric<float> derivedMetric)
+        public void AddDerivedMetric(DerivedMetric derivedMetric)
         {
-            var anchorSource = derivedMetric.Sources[0];
             CreateVolume(derivedMetric);
 
-            foreach(var sourceMetric in derivedMetric.Sources)
-            {
+            derivedMetric.ValuePushed += (o, ev) => {
 
-            }
+                var dataPoint = ev.DataPoint;
+
+                History.Save(derivedMetric.Key, dataPoint);
+            };
+
+            this.DerivedMetrics.Add(derivedMetric);
         }
 
         public void PersistData()

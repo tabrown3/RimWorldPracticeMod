@@ -1,4 +1,6 @@
-﻿namespace ConfigurableGrowZone
+﻿using System;
+
+namespace ConfigurableGrowZone
 {
     public interface IMetric
     {
@@ -6,5 +8,7 @@
         string Name { get; }
         string Unit { get; }
         TimeDomain Domain { get; }
+
+        event EventHandler<DataPointEventArgs> ValuePushed;
     }
 }

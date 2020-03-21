@@ -28,15 +28,14 @@ namespace ConfigurableGrowZone
             Name = nameof(CompPowerStatTracker) + latLong;
             Data = new PowerStatData(latLong);
 
-            this.AddSourceMetric(
-                new PollStatMetric(
+            var firstMetric = new PollStatMetric(
                     "StoredEnergyEachHourPoll",
                     "Stored Energy at Hour",
                     new CurrentStoredEnergyPullable(parent),
                     "Wd",
                     new TwentyFourHourDomain()
-                )
-            );
+                );
+            this.AddSourceMetric(firstMetric);
 
             this.AddSourceMetric(
                 new DigestStatMetric(
@@ -60,7 +59,14 @@ namespace ConfigurableGrowZone
                 )
             );
 
-            
+            this.AddDerivedMetric(
+                new DerivedMetric(
+                    "NegativeStoredEnergyEachHourPoll",
+                    "Negative Stored Energy at Hour",
+                    new List<SourceMetric>() { firstMetric },
+                    new List<IOperator<float>>() { new NegateOperator() }
+                )
+            );
         }
 
         public override void PostSpawnSetup(bool respawningAfterLoad)
@@ -83,7 +89,7 @@ namespace ConfigurableGrowZone
             Data.AddSourceMetric(metric);
         }
 
-        public void AddDerivedMetric(DerivedMetric<float> derivedMetric)
+        public void AddDerivedMetric(DerivedMetric derivedMetric)
         {
             Data.AddDerivedMetric(derivedMetric);
         }
@@ -97,6 +103,11 @@ namespace ConfigurableGrowZone
             foreach (SourceMetric metric in Data.SourceMetrics)
             {
                 metric.Tick(ticksGame);
+            }
+
+            foreach (DerivedMetric derivedMetric in Data.DerivedMetrics)
+            {
+                derivedMetric.Tick(ticksGame, Data.History.History);
             }
         }
 
@@ -116,6 +127,13 @@ namespace ConfigurableGrowZone
                     list.Add(new FloatMenuOption(metric.Name, delegate
                     {
                         Find.WindowStack.Add(new Dialog_PowerStatTracker(Data.History.Get(metric.Key))); // TODO: make this not break if key DNE in Dict
+                    }));
+                }
+                foreach (var derivedMetric in Data.DerivedMetrics)
+                {
+                    list.Add(new FloatMenuOption(derivedMetric.Name, delegate
+                    {
+                        Find.WindowStack.Add(new Dialog_PowerStatTracker(Data.History.Get(derivedMetric.Key))); // TODO: make this not break if key DNE in Dict
                     }));
                 }
                 Find.WindowStack.Add(new FloatMenu(list));

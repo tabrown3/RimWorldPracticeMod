@@ -36,7 +36,7 @@ namespace ConfigurableGrowZone
                 values.RemoveLast();
             }
 
-            if (ShouldPushValue(gameTick))
+            if (Domain.IsResolutionBoundary(gameTick))
             {
                 PushValue(gameTick, aggregator.Aggregate(values));
             }

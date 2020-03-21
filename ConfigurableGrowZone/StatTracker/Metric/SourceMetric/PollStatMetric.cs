@@ -13,7 +13,7 @@ namespace ConfigurableGrowZone
 
         public override void Tick(int gameTick)
         {
-            if(ShouldPushValue(gameTick))
+            if(Domain.IsResolutionBoundary(gameTick))
             {
                 PushValue(gameTick, source.PullValue());
             }
