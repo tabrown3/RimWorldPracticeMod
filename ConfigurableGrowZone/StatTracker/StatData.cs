@@ -7,11 +7,11 @@ using Verse;
 
 namespace ConfigurableGrowZone
 {
-    public class PowerStatData
+    public class StatData
     {
         private readonly Vector2 latLong;
 
-        public PowerStatData(Vector2 latLong)
+        public StatData(Vector2 latLong)
         {
             this.latLong = latLong;
         }

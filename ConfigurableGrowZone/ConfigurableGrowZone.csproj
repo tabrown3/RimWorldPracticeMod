@@ -64,8 +64,9 @@
     <Compile Include="StatTracker\Aggregator\SumAggregator.cs" />
     <Compile Include="StatTracker\Building_PowerStatTracker.cs" />
     <Compile Include="EnergyThreshold\CompEnergyThreshold.cs" />
-    <Compile Include="StatTracker\CompPowerStatTracker.cs" />
+    <Compile Include="StatTracker\CompStatTracker\CompPowerStatTracker.cs" />
     <Compile Include="StatTracker\CompProperties_PowerStatTracker.cs" />
+    <Compile Include="StatTracker\CompStatTracker\CompStatTracker.cs" />
     <Compile Include="StatTracker\DataPoint.cs" />
     <Compile Include="StatTracker\DataPointEventArgs.cs" />
     <Compile Include="StatTracker\DataVolume.cs" />
@@ -83,9 +84,9 @@
     <Compile Include="StatTracker\Operator\PlusOperator.cs" />
     <Compile Include="StatTracker\Operator\UnaryOperator.cs" />
     <Compile Include="StatTracker\Metric\SourceMetric\PollStatMetric.cs" />
-    <Compile Include="StatTracker\PowerStatData.cs" />
+    <Compile Include="StatTracker\StatData.cs" />
     <Compile Include="StatTracker\Metric\SourceMetric\DigestStatMetric.cs" />
-    <Compile Include="StatTracker\PowerStatTracker.cs" />
+    <Compile Include="StatTracker\MapStatTracker.cs" />
     <Compile Include="EnergyThreshold\CompProperties_EnergyThreshold.cs" />
     <Compile Include="EnergyThreshold\Dialog_ConfigureEnergyThreshold.cs" />
     <Compile Include="EnergyThreshold\PlaceWorker_CustomSwitch.cs" />
