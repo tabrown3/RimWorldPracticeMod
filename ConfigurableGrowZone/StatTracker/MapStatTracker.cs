@@ -13,11 +13,6 @@ namespace ConfigurableGrowZone
         {
         }
 
-        public override void FinalizeInit()
-        {
-            base.FinalizeInit();
-        }
-
         public void RegisterPowerStatTracker(CompStatTracker trackerComp)
         {
             if(!TrackerComps.Contains(trackerComp))

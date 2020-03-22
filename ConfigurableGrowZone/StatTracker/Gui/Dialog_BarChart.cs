@@ -8,7 +8,7 @@ using Verse;
 
 namespace ConfigurableGrowZone
 {
-    public class Dialog_PowerStatTracker : Window
+    public class Dialog_BarChart : Window
     {
         private DataVolume dataVolume;
 
@@ -27,7 +27,7 @@ namespace ConfigurableGrowZone
 
         private int previousBarCount = 0;
 
-        public Dialog_PowerStatTracker(DataVolume dataVolume)
+        public Dialog_BarChart(DataVolume dataVolume)
         {
             this.dataVolume = dataVolume;
 

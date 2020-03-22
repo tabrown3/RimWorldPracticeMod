@@ -114,14 +114,14 @@ namespace ConfigurableGrowZone
                 {
                     list.Add(new FloatMenuOption(metric.Name, delegate
                     {
-                        Find.WindowStack.Add(new Dialog_PowerStatTracker(Data.History.Get(metric.Key))); // TODO: make this not break if key DNE in Dict
+                        Find.WindowStack.Add(new Dialog_BarChart(Data.History.Get(metric.Key))); // TODO: make this not break if key DNE in Dict
                     }));
                 }
                 foreach (var derivedMetric in Data.DerivedMetrics)
                 {
                     list.Add(new FloatMenuOption(derivedMetric.Name, delegate
                     {
-                        Find.WindowStack.Add(new Dialog_PowerStatTracker(Data.History.Get(derivedMetric.Key))); // TODO: make this not break if key DNE in Dict
+                        Find.WindowStack.Add(new Dialog_BarChart(Data.History.Get(derivedMetric.Key))); // TODO: make this not break if key DNE in Dict
                     }));
                 }
                 Find.WindowStack.Add(new FloatMenu(list));
