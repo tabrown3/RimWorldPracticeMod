@@ -14,6 +14,7 @@ namespace ConfigurableGrowZone
             base.Initialize(props);
 
             Data = new StatData(LatLong);
+            Name = this.GetType().Name + "@" + LatLong;
         }
 
         public override void PostExposeData()

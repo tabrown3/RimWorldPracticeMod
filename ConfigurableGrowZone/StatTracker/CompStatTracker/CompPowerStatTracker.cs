@@ -21,8 +21,6 @@ namespace ConfigurableGrowZone
         {
             base.Initialize(props);
 
-            Name = nameof(CompPowerStatTracker) + LatLong;
-
             var firstMetric = new PollStatMetric(
                     "StoredEnergyEachHourPoll",
                     "Stored Energy at Hour",
