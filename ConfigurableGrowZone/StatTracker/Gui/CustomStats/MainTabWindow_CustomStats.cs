@@ -16,8 +16,8 @@ namespace ConfigurableGrowZone
         private readonly MetricsTab MetricsTab = new MetricsTab();
         private readonly DerivedTab DerivedTab = new DerivedTab();
 
-        private ICustomStatsTab leftTabActive;
-        private ICustomStatsTab rightTabActive;
+        private ITabDrawable<CustomStatsTab> leftTabActive;
+        private ITabDrawable<CustomStatsTab> rightTabActive;
 
         public override void PreOpen()
         {
@@ -40,28 +40,27 @@ namespace ConfigurableGrowZone
             base.DoWindowContents(inRect);
 
             Rect leftTabRect = inRect.AtZero();
-            leftTabRect.width /= 2;
+            leftTabRect.width = leftTabRect.width/2f - 5f;
             leftTabRect.yMin += 45f;
             TabDrawer.DrawTabs(leftTabRect, leftTabs);
 
             DrawPane(leftTabRect, leftTabActive);
 
             Rect rightTabRect = inRect.AtZero();
-            rightTabRect.width /= 2;
-            rightTabRect.x = rightTabRect.width + 5f;
-            rightTabRect.width -= 5f;
+            rightTabRect.width = rightTabRect.width/2f - 5f;
+            rightTabRect.x = rightTabRect.width + 10f;
             rightTabRect.yMin += 45f;
             TabDrawer.DrawTabs(rightTabRect, rightTabs);
             
             DrawPane(rightTabRect, rightTabActive);
         }
 
-        private void DrawPane(Rect outerPane, ICustomStatsTab activeTab)
+        private void DrawPane(Rect outerPane, ITabDrawable<CustomStatsTab> activeTab)
         {
             using (new GuiGroup(outerPane))
             {
                 outerPane = outerPane.AtZero();
-                Widgets.DrawBoxSolid(outerPane, Color.gray);
+                Widgets.DrawBox(outerPane);
 
                 Rect innerPane = new Rect(outerPane);
                 innerPane.width -= 10f;

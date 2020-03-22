@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ConfigurableGrowZone
 {
-    public enum ActiveTab
+    public enum CustomStatsTab
     {
         Trackers,
         Signals,

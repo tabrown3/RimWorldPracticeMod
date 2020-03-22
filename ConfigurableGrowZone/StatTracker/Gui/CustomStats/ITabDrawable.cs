@@ -7,9 +7,9 @@ using UnityEngine;
 
 namespace ConfigurableGrowZone
 {
-    public interface ICustomStatsTab
+    public interface ITabDrawable<T>
     {
-        ActiveTab TabType { get; }
+        T TabType { get; }
         void DrawTab(Rect pane);
     }
 }

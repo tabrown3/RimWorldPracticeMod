@@ -8,9 +8,9 @@ using Verse;
 
 namespace ConfigurableGrowZone
 {
-    public class TrackersTab : ICustomStatsTab
+    public class TrackersTab : ITabDrawable<CustomStatsTab>
     {
-        public ActiveTab TabType => ActiveTab.Trackers;
+        public CustomStatsTab TabType => CustomStatsTab.Trackers;
 
         public void DrawTab(Rect pane)
         {

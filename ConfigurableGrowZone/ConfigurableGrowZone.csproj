@@ -72,7 +72,7 @@
     <Compile Include="StatTracker\DataVolume.cs" />
     <Compile Include="StatTracker\Gui\CustomStats\ActiveTab.cs" />
     <Compile Include="StatTracker\Gui\CustomStats\DerivedTab.cs" />
-    <Compile Include="StatTracker\Gui\CustomStats\ICustomStatsTab.cs" />
+    <Compile Include="StatTracker\Gui\CustomStats\ITabDrawable.cs" />
     <Compile Include="StatTracker\Gui\CustomStats\MetricsTab.cs" />
     <Compile Include="StatTracker\Gui\CustomStats\SignalsTab.cs" />
     <Compile Include="StatTracker\Gui\CustomStats\TrackersTab.cs" />
