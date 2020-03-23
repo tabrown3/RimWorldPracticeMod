@@ -13,19 +13,21 @@ namespace ConfigurableGrowZone
         {
         }
 
-        public void RegisterPowerStatTracker(CompStatTracker trackerComp)
+        public int RegisterStatTracker(CompStatTracker trackerComp)
         {
             if(!TrackerComps.Contains(trackerComp))
             {
                 TrackerComps.Add(trackerComp);
+                return TrackerComps.Count;
             }
             else
             {
                 Log.Message("TrackerComps already contains this trackerComp; why did it try to add itself again?");
+                return -1;
             }
         }
 
-        public void DeregisterPowerStatTracker(CompStatTracker trackerComp)
+        public void DeregisterStatTracker(CompStatTracker trackerComp)
         {
             if (TrackerComps.Contains(trackerComp))
             {

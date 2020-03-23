@@ -8,13 +8,14 @@ namespace ConfigurableGrowZone
         public string Name { get; set; }
         public StatData Data { get; private set; }
         public Vector2 LatLong => GetLatLong(parent);
+        protected MapStatTracker MapStatTracker => Find.CurrentMap.GetComponent<MapStatTracker>();
 
         public override void Initialize(CompProperties props)
         {
             base.Initialize(props);
 
             Data = new StatData(LatLong);
-            Name = this.GetType().Name + "@" + LatLong;
+            Name = this.GetType().Name + ":" + MapStatTracker.RegisterStatTracker(this);
         }
 
         public override void PostExposeData()
@@ -24,19 +25,11 @@ namespace ConfigurableGrowZone
             Data.PersistData();
         }
 
-        public override void PostSpawnSetup(bool respawningAfterLoad)
-        {
-            base.PostSpawnSetup(respawningAfterLoad);
-
-            // Using Find.CurrentMap since parent.Map is still null at this point
-            Find.CurrentMap.GetComponent<MapStatTracker>().RegisterPowerStatTracker(this);
-        }
-
         public override void PostDestroy(DestroyMode mode, Map previousMap)
         {
             base.PostDestroy(mode, previousMap);
 
-            previousMap.GetComponent<MapStatTracker>().DeregisterPowerStatTracker(this);
+            previousMap.GetComponent<MapStatTracker>().DeregisterStatTracker(this);
         }
 
         private Vector2 GetLatLong(Thing thing) // taken from game GenLocalDate.LocationForDate
