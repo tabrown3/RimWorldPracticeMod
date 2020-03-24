@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UniRx;
 using Verse;
 
 namespace ConfigurableGrowZone
@@ -13,7 +14,9 @@ namespace ConfigurableGrowZone
         public string Name { get; }
         public string Unit { get; }
         public TimeDomain Domain { get; }
-        public event EventHandler<DataPointEventArgs> ValuePushed;
+        //public event EventHandler<DataPointEventArgs> ValuePushed;
+        private Subject<DataPoint> valuePushed = new Subject<DataPoint>();
+        public IObservable<DataPoint> ValuePushed => valuePushed;
 
         public List<SourceMetric> Sources { get; }
         public List<IOperator<float>> Operators { get; }
@@ -74,7 +77,8 @@ namespace ConfigurableGrowZone
                     }
                 }
 
-                ValuePushed.Invoke(this, new DataPointEventArgs(new DataPoint(gameTick, runningValue)));
+                //ValuePushed.Invoke(this, new DataPointEventArgs(new DataPoint(gameTick, runningValue)));
+                valuePushed.OnNext(new DataPoint(gameTick, runningValue));
             }
         }
     }

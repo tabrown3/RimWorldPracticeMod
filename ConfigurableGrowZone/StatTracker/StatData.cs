@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using Verse;
+using UniRx;
 
 namespace ConfigurableGrowZone
 {
@@ -24,12 +25,10 @@ namespace ConfigurableGrowZone
         {
             CreateVolume(metric);
 
-            metric.ValuePushed += (o, ev) => {
-
-                var dataPoint = ev.DataPoint;
-
+            metric.ValuePushed.Subscribe(dataPoint =>
+            {
                 History.Save(metric.Key, dataPoint);
-            };
+            });
 
             this.SourceMetrics.Add(metric);
         }
@@ -38,12 +37,10 @@ namespace ConfigurableGrowZone
         {
             CreateVolume(derivedMetric);
 
-            derivedMetric.ValuePushed += (o, ev) => {
-
-                var dataPoint = ev.DataPoint;
-
+            derivedMetric.ValuePushed.Subscribe(dataPoint =>
+            {
                 History.Save(derivedMetric.Key, dataPoint);
-            };
+            });
 
             this.DerivedMetrics.Add(derivedMetric);
         }
