@@ -72,9 +72,9 @@
     <Compile Include="StatTracker\CompProperties_PowerStatTracker.cs" />
     <Compile Include="StatTracker\CompStatTracker\CompStatTracker.cs" />
     <Compile Include="StatTracker\DataPoint.cs" />
-    <Compile Include="StatTracker\DataPointEventArgs.cs" />
     <Compile Include="StatTracker\DataVolume.cs" />
     <Compile Include="StatTracker\Gui\CustomStats\ActiveTab.cs" />
+    <Compile Include="StatTracker\Gui\CustomStats\CustomStatTabs.cs" />
     <Compile Include="StatTracker\Gui\CustomStats\DerivedTab.cs" />
     <Compile Include="StatTracker\Gui\CustomStats\ITabDrawable.cs" />
     <Compile Include="StatTracker\Gui\CustomStats\MetricsTab.cs" />

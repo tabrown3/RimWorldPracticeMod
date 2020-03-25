@@ -12,13 +12,12 @@ namespace ConfigurableGrowZone
         public string Name { get; }
         public string Unit { get; }
         public TimeDomain Domain { get; }
-
-        //public event EventHandler<DataPointEventArgs> ValuePushed;
-        private Subject<DataPoint> valuePushed = new Subject<DataPoint>();
+        
         public IObservable<DataPoint> ValuePushed => valuePushed;
 
         protected readonly IPullable<float> source;
 
+        private Subject<DataPoint> valuePushed = new Subject<DataPoint>();
 
         public SourceMetric(string key, string name, IPullable<float> source, string unit, TimeDomain domain)
         {
@@ -34,7 +33,6 @@ namespace ConfigurableGrowZone
 
         protected void PushValue(int gameTick, float value)
         {
-            //ValuePushed.Invoke(this, new DataPointEventArgs(new DataPoint(gameTick, value)));
             valuePushed.OnNext(new DataPoint(gameTick, value));
         }
     }

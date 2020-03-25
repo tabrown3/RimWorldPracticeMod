@@ -10,8 +10,6 @@ namespace ConfigurableGrowZone
         string Unit { get; }
         TimeDomain Domain { get; }
 
-        //event EventHandler<DataPointEventArgs> ValuePushed;
-
         IObservable<DataPoint> ValuePushed { get; }
     }
 }
