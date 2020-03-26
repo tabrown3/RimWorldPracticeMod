@@ -21,15 +21,26 @@ namespace ConfigurableGrowZone
         private readonly MetricsTab MetricsTab = new MetricsTab();
         private readonly DerivedTab DerivedTab = new DerivedTab();
 
+        private readonly List<IDisposable> unsubscribes;
+
         public CustomStatTabs()
         {
-            Observable.Merge(TrackersTab.OnListItemClick, SignalsTab.OnListItemClick).Subscribe(compStatTracker =>
+            var disp1 = Observable.Merge(TrackersTab.OnListItemClick, SignalsTab.OnListItemClick).Subscribe(compStatTracker =>
             {
                 MetricsTab.SetSource(compStatTracker.Data.SourceMetrics, compStatTracker.Data.History);
                 DerivedTab.SetSource(compStatTracker.Data.DerivedMetrics, compStatTracker.Data.History);
-
-                Log.Message($"Line item with name '{compStatTracker.Name}' clicked!");
             });
+
+            var disp2 = MetricsTab.OnAddMetricClicked.Subscribe(u =>
+            {
+                Log.Message("Add Metric button clicked!");
+            });
+
+            unsubscribes = new List<IDisposable>()
+            {
+                disp1,
+                disp2
+            };
         }
 
         public void PreOpen()
@@ -45,6 +56,11 @@ namespace ConfigurableGrowZone
 
             RightTabs.Add(new TabRecord("Metrics", () => RightActiveTab = MetricsTab, () => RightActiveTab == MetricsTab));
             RightTabs.Add(new TabRecord("Derived", () => RightActiveTab = DerivedTab, () => RightActiveTab == DerivedTab));
+        }
+
+        public void PostClose()
+        {
+            unsubscribes.ForEach(u => u.Dispose());
         }
     }
 }

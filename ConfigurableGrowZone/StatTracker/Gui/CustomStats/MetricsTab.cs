@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UniRx;
 using UnityEngine;
 using Verse;
 
@@ -11,7 +12,9 @@ namespace ConfigurableGrowZone
     public class MetricsTab : ITabDrawable<CustomStatsTab>
     {
         public CustomStatsTab TabType => CustomStatsTab.Metrics;
+        public IObservable<bool> OnAddMetricClicked => onAddMetricClicked;
 
+        private readonly Subject<bool> onAddMetricClicked = new Subject<bool>();
         private List<SourceMetric> metrics = new List<SourceMetric>();
 
         public void DrawTab(Rect pane)
@@ -31,6 +34,19 @@ namespace ConfigurableGrowZone
                 metricRect.height = trackerRectHeight;
 
                 Widgets.Label(metricRect, sourceMetric.Name);
+            }
+            float curY = trackerRectHeight * metrics.Count;
+
+            if(metrics.Count > 0)
+            {
+                float addMetricButtonHeight = 35f;
+                Rect addMetricButtonRect = new Rect(0f, curY, 60f, addMetricButtonHeight);
+                curY += addMetricButtonHeight;
+
+                if (Widgets.ButtonText(addMetricButtonRect, "Add metric"))
+                {
+                    onAddMetricClicked.OnNext(true); // TODO: Hmm, just sending true? That's weird...
+                }
             }
         }
 

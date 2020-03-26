@@ -16,6 +16,14 @@ namespace ConfigurableGrowZone
 
             tabs.PreOpen();
         }
+
+        public override void PostClose()
+        {
+            base.PostClose();
+
+            tabs.PostClose();
+        }
+
         public override void DoWindowContents(Rect inRect)
         {
             base.DoWindowContents(inRect);
