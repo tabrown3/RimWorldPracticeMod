@@ -49,9 +49,9 @@ namespace ConfigurableGrowZone
         {
             foreach(SourceMetric metric in SourceMetrics)
             {
-                if(metric is SetStatMetric) // at the moment only children of SetStatMetric have state
+                if(metric is SetSourceMetric) // at the moment only children of SetStatMetric have state
                 {
-                    SetStatMetric setStatMetric = (SetStatMetric)metric;
+                    SetSourceMetric setStatMetric = (SetSourceMetric)metric;
 
                     var tempFloatListRef = setStatMetric.GetInternalState().ToList();
                     Scribe_Collections.Look(ref tempFloatListRef, $"{setStatMetric.Key}-partial");

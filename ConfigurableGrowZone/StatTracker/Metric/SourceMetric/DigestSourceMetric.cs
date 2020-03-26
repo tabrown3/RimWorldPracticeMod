@@ -5,13 +5,13 @@ using Verse;
 
 namespace ConfigurableGrowZone
 {
-    public class DigestStatMetric : SetStatMetric
+    public class DigestSourceMetric : SetSourceMetric
     {
         private float[] values;
         private bool isInitialTick = true;
         private int indexPos;
         
-        public DigestStatMetric(string key, string name, IPullable<float> source, string unit, TimeDomain domain, IAggregator<float> aggregator = null) : base(key, name, source, unit, domain, aggregator)
+        public DigestSourceMetric(string key, string name, IPullable<float> source, string unit, TimeDomain domain, IAggregator<float> aggregator = null) : base(key, name, source, unit, domain, aggregator)
         {
         }
 

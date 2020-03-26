@@ -68,8 +68,9 @@
     <Compile Include="StatTracker\Aggregator\SumAggregator.cs" />
     <Compile Include="StatTracker\Building_PowerStatTracker.cs" />
     <Compile Include="EnergyThreshold\CompEnergyThreshold.cs" />
+    <Compile Include="StatTracker\CompProperties\SourceMetricProperties.cs" />
     <Compile Include="StatTracker\CompStatTracker\CompPowerStatTracker.cs" />
-    <Compile Include="StatTracker\CompProperties_PowerStatTracker.cs" />
+    <Compile Include="StatTracker\CompProperties\CompProperties_PowerStatTracker.cs" />
     <Compile Include="StatTracker\CompStatTracker\CompStatTracker.cs" />
     <Compile Include="StatTracker\DataPoint.cs" />
     <Compile Include="StatTracker\DataVolume.cs" />
@@ -94,9 +95,9 @@
     <Compile Include="StatTracker\Operator\NegateOperator.cs" />
     <Compile Include="StatTracker\Operator\PlusOperator.cs" />
     <Compile Include="StatTracker\Operator\UnaryOperator.cs" />
-    <Compile Include="StatTracker\Metric\SourceMetric\PollStatMetric.cs" />
+    <Compile Include="StatTracker\Metric\SourceMetric\PollSourceMetric.cs" />
     <Compile Include="StatTracker\StatData.cs" />
-    <Compile Include="StatTracker\Metric\SourceMetric\DigestStatMetric.cs" />
+    <Compile Include="StatTracker\Metric\SourceMetric\DigestSourceMetric.cs" />
     <Compile Include="StatTracker\MapStatTracker.cs" />
     <Compile Include="EnergyThreshold\CompProperties_EnergyThreshold.cs" />
     <Compile Include="EnergyThreshold\Dialog_ConfigureEnergyThreshold.cs" />
@@ -106,11 +107,11 @@
     <Compile Include="StatTracker\Pullable\CompPower\CurrentEnergyGainRatePullable.cs" />
     <Compile Include="StatTracker\Pullable\CompPower\CurrentStoredEnergyPullable.cs" />
     <Compile Include="StatTracker\Pullable\IPullable.cs" />
-    <Compile Include="StatTracker\Metric\SourceMetric\SetStatMetric.cs" />
+    <Compile Include="StatTracker\Metric\SourceMetric\SetSourceMetric.cs" />
     <Compile Include="StatTracker\StatHistory.cs" />
     <Compile Include="StatTracker\Metric\SourceMetric\SourceMetric.cs" />
     <Compile Include="StatTracker\Aggregator\IAggregator.cs" />
-    <Compile Include="StatTracker\Metric\SourceMetric\WindowStatMetric.cs" />
+    <Compile Include="StatTracker\Metric\SourceMetric\WindowSourceMetric.cs" />
     <Compile Include="StatTracker\Util\DialogHelper.cs" />
     <Compile Include="StatTracker\Gui\GuiGroup.cs" />
   </ItemGroup>

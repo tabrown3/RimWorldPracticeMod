@@ -5,10 +5,10 @@ using System.Text;
 
 namespace ConfigurableGrowZone
 {
-    public abstract class SetStatMetric : SourceMetric
+    public abstract class SetSourceMetric : SourceMetric
     {
         protected readonly IAggregator<float> aggregator;
-        public SetStatMetric(string key, string name, IPullable<float> source, string unit, TimeDomain domain, IAggregator<float> aggregator = null) : base(key, name, source, unit, domain)
+        public SetSourceMetric(string key, string name, IPullable<float> source, string unit, TimeDomain domain, IAggregator<float> aggregator = null) : base(key, name, source, unit, domain)
         {
             if (aggregator == null)
             {

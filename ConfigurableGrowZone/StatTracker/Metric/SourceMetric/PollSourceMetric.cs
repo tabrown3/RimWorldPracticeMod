@@ -5,9 +5,9 @@ using System.Text;
 
 namespace ConfigurableGrowZone
 {
-    public class PollStatMetric : SourceMetric
+    public class PollSourceMetric : SourceMetric
     {
-        public PollStatMetric(string key, string name, IPullable<float> source, string unit, TimeDomain domain) : base(key, name, source, unit, domain)
+        public PollSourceMetric(string key, string name, IPullable<float> source, string unit, TimeDomain domain) : base(key, name, source, unit, domain)
         {
         }
 
