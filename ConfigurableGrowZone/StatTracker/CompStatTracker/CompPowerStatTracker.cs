@@ -20,70 +20,39 @@ namespace ConfigurableGrowZone
         public override void Initialize(CompProperties baseProps)
         {
             base.Initialize(baseProps);
-            CompProperties_PowerStatTracker props = (CompProperties_PowerStatTracker)baseProps;
+            //CompProperties_PowerStatTracker props = (CompProperties_PowerStatTracker)baseProps;
 
+            //foreach(var sourceMetricProps in props.SourceMetrics)
+            //{
 
+            //}
 
-            //var firstMetric = new PollStatMetric(
-            //        "StoredEnergyEachHourPoll",
-            //        "Stored Energy at Hour",
-            //        new CurrentStoredEnergyPullable(parent),
-            //        "Wd",
-            //        new TwentyFourHourDomain()
-            //    );
-            var metricTypeName = typeof(PollSourceMetric).FullName;
-            var metricType = Type.GetType(metricTypeName);
-            var pullableTypeName = typeof(CurrentStoredEnergyPullable).FullName;
-            var pullableType = Type.GetType(pullableTypeName);
-            var domainTypeName = typeof(TwentyFourHourDomain).FullName;
-            var domainType = Type.GetType(domainTypeName);
-            var firstMetric = (PollSourceMetric)Activator.CreateInstance(metricType, new object[] {
-                "StoredEnergyEachHourPoll",
-                "Stored Energy at Hour",
-                Activator.CreateInstance(pullableType, new object[] { parent }),
-                "Wd",
-                Activator.CreateInstance(domainType)
-            });
+            var firstMetric = SpitOutMetric("ConfigurableGrowZone.PollSourceMetric", "StoredEnergyEachHourPoll", "Stored Energy at Hour", "ConfigurableGrowZone.CurrentStoredEnergyPullable", "Wd", "ConfigurableGrowZone.TwentyFourHourDomain");
             this.AddSourceMetric(firstMetric);
 
-            //var secondMetric = new DigestStatMetric(
-            //        "EnergyGainByHourDigest",
-            //        "Energy per Hour",
-            //        new CurrentEnergyGainRatePullable(parent),
-            //        "Wd/h",
-            //        new TwentyFourHourDomain(),
-            //        new SumAggregator()
-            //    );
-            //this.AddSourceMetric(secondMetric);
+            var secondMetric = SpitOutMetric("ConfigurableGrowZone.DigestSourceMetric", "EnergyGainByHourDigest", "Energy per Hour", "ConfigurableGrowZone.CurrentEnergyGainRatePullable", "Wd/h", "ConfigurableGrowZone.TwentyFourHourDomain", "ConfigurableGrowZone.SumAggregator");
+            this.AddSourceMetric(secondMetric);
 
-            //this.AddSourceMetric(
-            //    new WindowStatMetric(
-            //        "EnergyGainByQuarterHourWindow",
-            //        "Energy per Quarter Hour",
-            //        new CurrentEnergyGainRatePullable(parent),
-            //        "Wd/qt.h",
-            //        new QuarterHourDomain(),
-            //        new SumAggregator()
-            //    )
-            //);
+            var thirdMetric = SpitOutMetric("ConfigurableGrowZone.WindowSourceMetric", "EnergyGainByQuarterHourWindow", "Energy per Quarter Hour", "ConfigurableGrowZone.CurrentEnergyGainRatePullable", "Wd/qt.h", "ConfigurableGrowZone.QuarterHourDomain", "ConfigurableGrowZone.SumAggregator");
+            this.AddSourceMetric(thirdMetric);
 
-            //this.AddDerivedMetric(
-            //    new DerivedMetric(
-            //        "NegativeStoredEnergyEachHourPoll",
-            //        "Negative Stored Energy at Hour",
-            //        new List<SourceMetric>() { firstMetric },
-            //        new List<IOperator<float>>() { new NegateOperator() }
-            //    )
-            //);
+            this.AddDerivedMetric(
+                new DerivedMetric(
+                    "NegativeStoredEnergyEachHourPoll",
+                    "Negative Stored Energy at Hour",
+                    new List<SourceMetric>() { firstMetric },
+                    new List<IOperator<float>>() { new NegateOperator() }
+                )
+            );
 
-            //this.AddDerivedMetric(
-            //    new DerivedMetric(
-            //        "DoubleStoredEnergyNegatedEachHourPoll",
-            //        "Summed Negative Stored Something at Hour",
-            //        new List<SourceMetric>() { firstMetric, secondMetric },
-            //        new List<IOperator<float>>() { new PlusOperator(), new NegateOperator() }
-            //    )
-            //);
+            this.AddDerivedMetric(
+                new DerivedMetric(
+                    "DoubleStoredEnergyNegatedEachHourPoll",
+                    "Summed Negative Stored Something at Hour",
+                    new List<SourceMetric>() { firstMetric, secondMetric },
+                    new List<IOperator<float>>() { new PlusOperator(), new NegateOperator() }
+                )
+            );
         }
 
         public void AddSourceMetric(SourceMetric metric)
@@ -145,6 +114,57 @@ namespace ConfigurableGrowZone
             command_Action.hotKey = KeyBindingDefOf.Misc5;
             command_Action.icon = ContentFinder<Texture2D>.Get("UI/Commands/TempLower");
             yield return command_Action;
+        }
+
+        private SourceMetric SpitOutMetric(string metricTypeName, string key, string name, string sourceTypeName, string unit, string domainTypeName, string aggregatorTypeName = null)
+        {
+            var metricType = Type.GetType(metricTypeName);
+            var sourceType = Type.GetType(sourceTypeName);
+            var domainType = Type.GetType(domainTypeName);
+
+            SourceMetric metric;
+            if (metricType == typeof(PollSourceMetric))
+            {
+                metric = new PollSourceMetric(
+                    key,
+                    name,
+                    (IPullable<float>)Activator.CreateInstance(sourceType, new object[] { parent }),
+                    unit,
+                    (TimeDomain)Activator.CreateInstance(domainType)
+                );
+            }
+            else if (metricType == typeof(DigestSourceMetric))
+            {
+                var aggregatorType = Type.GetType(aggregatorTypeName);
+
+                metric = new DigestSourceMetric(
+                    key,
+                    name,
+                    (IPullable<float>)Activator.CreateInstance(sourceType, new object[] { parent }),
+                    unit,
+                    (TimeDomain)Activator.CreateInstance(domainType),
+                    (IAggregator<float>)Activator.CreateInstance(aggregatorType)
+                );
+            }
+            else if (metricType == typeof(WindowSourceMetric))
+            {
+                var aggregatorType = Type.GetType(aggregatorTypeName);
+
+                metric = new WindowSourceMetric(
+                    key,
+                    name,
+                    (IPullable<float>)Activator.CreateInstance(sourceType, new object[] { parent }),
+                    unit,
+                    (TimeDomain)Activator.CreateInstance(domainType),
+                    (IAggregator<float>)Activator.CreateInstance(aggregatorType)
+                );
+            }
+            else
+            {
+                throw new Exception($"Error creating type {metricTypeName}: Custom metric types not supported at this time");
+            }
+
+            return metric;
         }
     }
 }

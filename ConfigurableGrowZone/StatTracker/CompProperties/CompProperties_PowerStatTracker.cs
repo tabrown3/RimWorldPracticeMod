@@ -8,6 +8,6 @@ namespace ConfigurableGrowZone
 {
     public class CompProperties_PowerStatTracker : CompProperties
     {
-        public List<SourceMetricProperties> SourceMetricProperties;
+        public List<SourceMetricProperties> SourceMetrics;
     }
 }
