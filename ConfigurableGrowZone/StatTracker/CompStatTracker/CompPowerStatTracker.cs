@@ -22,37 +22,29 @@ namespace ConfigurableGrowZone
             base.Initialize(baseProps);
             CompProperties_PowerStatTracker props = (CompProperties_PowerStatTracker)baseProps;
 
-            //foreach(var sourceMetricProps in props.SourceMetrics)
-            //{
+            foreach (var el in props.SourceMetrics)
+            {
+                var metric = SpitOutMetric(el.MetricType, el.Key, el.Name, el.SourceType, el.Unit, el.DomainType, el.AggregatorType);
+                this.AddSourceMetric(metric);
+            }
 
-            //}
+            //this.AddDerivedMetric(
+            //    new DerivedMetric(
+            //        "NegativeStoredEnergyEachHourPoll",
+            //        "Negative Stored Energy at Hour",
+            //        new List<SourceMetric>() { firstMetric },
+            //        new List<IOperator<float>>() { new NegateOperator() }
+            //    )
+            //);
 
-            var firstMetric = SpitOutMetric("ConfigurableGrowZone.PollSourceMetric", "StoredEnergyEachHourPoll", "Stored Energy at Hour", "ConfigurableGrowZone.CurrentStoredEnergyPullable", "Wd", "ConfigurableGrowZone.TwentyFourHourDomain");
-            this.AddSourceMetric(firstMetric);
-
-            var secondMetric = SpitOutMetric("ConfigurableGrowZone.DigestSourceMetric", "EnergyGainByHourDigest", "Energy per Hour", "ConfigurableGrowZone.CurrentEnergyGainRatePullable", "Wd/h", "ConfigurableGrowZone.TwentyFourHourDomain", "ConfigurableGrowZone.SumAggregator");
-            this.AddSourceMetric(secondMetric);
-
-            var thirdMetric = SpitOutMetric("ConfigurableGrowZone.WindowSourceMetric", "EnergyGainByQuarterHourWindow", "Energy per Quarter Hour", "ConfigurableGrowZone.CurrentEnergyGainRatePullable", "Wd/qt.h", "ConfigurableGrowZone.QuarterHourDomain", "ConfigurableGrowZone.SumAggregator");
-            this.AddSourceMetric(thirdMetric);
-
-            this.AddDerivedMetric(
-                new DerivedMetric(
-                    "NegativeStoredEnergyEachHourPoll",
-                    "Negative Stored Energy at Hour",
-                    new List<SourceMetric>() { firstMetric },
-                    new List<IOperator<float>>() { new NegateOperator() }
-                )
-            );
-
-            this.AddDerivedMetric(
-                new DerivedMetric(
-                    "DoubleStoredEnergyNegatedEachHourPoll",
-                    "Summed Negative Stored Something at Hour",
-                    new List<SourceMetric>() { firstMetric, secondMetric },
-                    new List<IOperator<float>>() { new PlusOperator(), new NegateOperator() }
-                )
-            );
+            //this.AddDerivedMetric(
+            //    new DerivedMetric(
+            //        "DoubleStoredEnergyNegatedEachHourPoll",
+            //        "Summed Negative Stored Something at Hour",
+            //        new List<SourceMetric>() { firstMetric, secondMetric },
+            //        new List<IOperator<float>>() { new PlusOperator(), new NegateOperator() }
+            //    )
+            //);
         }
 
         public void AddSourceMetric(SourceMetric metric)
