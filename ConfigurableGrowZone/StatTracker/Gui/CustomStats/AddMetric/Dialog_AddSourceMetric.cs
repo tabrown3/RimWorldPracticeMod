@@ -13,9 +13,9 @@ namespace ConfigurableGrowZone
         private string name = "";
         private string key = "";
 
-        private List<Type> domains;
-        private List<Type> sources;
-        private List<Type> aggregators;
+        private readonly List<Type> domains;
+        private readonly List<Type> sources;
+        private readonly List<Type> aggregators;
 
         public Dialog_AddSourceMetric(List<Type> domains, List<Type> sources, List<Type> aggregators)
         {
@@ -31,121 +31,65 @@ namespace ConfigurableGrowZone
 
         public override void DoWindowContents(Rect inRect)
         {
-            float textInputHeight = 30f;
-
-            new RectStacker(inRect).Then(u =>
-            {
-                Rect nameEntryRect = new Rect(u);
-                nameEntryRect.height = textInputHeight;
-                nameEntryRect.width = 200f;
-                name = Widgets.TextEntryLabeled(nameEntryRect, "Name", name);
-
-                return nameEntryRect;
-            })
-            .ThenGap(15f)
-            .Then(u =>
-            {
-                Rect keyEntryRect = new Rect(u);
-                keyEntryRect.height = textInputHeight;
-                keyEntryRect.width = 200f;
-                key = Widgets.TextEntryLabeled(keyEntryRect, "Key", key);
-
-                return keyEntryRect;
-            })
-            .ThenGap(15f)
-            .Then(u =>
-            {
-                return new RectStacker(u).Then(v =>
+            new RectStacker(inRect)
+                .Then(u => DrawTextEntry(u, "Name", name, v => name = v))
+                .ThenGap(15f)
+                .Then(u => DrawTextEntry(u, "Key", key, v => key = v))
+                .ThenGap(15f)
+                .Then(u =>
                 {
-                    Rect radioButtonRect = new Rect(v);
-                    radioButtonRect.width = 100f;
-                    radioButtonRect.height = 20f;
-                    if(Widgets.RadioButtonLabeled(radioButtonRect, "Poll", false))
-                    {
-
-                    }
-
-                    return radioButtonRect;
+                    return new RectStacker(u)
+                        .Then(v => DrawRadioButton(v, "Poll"))
+                        .ThenGap(10f)
+                        .Then(v => DrawRadioButton(v, "Digest"))
+                        .ThenGap(10f)
+                        .Then(v => DrawRadioButton(v, "Window"));
                 })
-                .ThenGap(10f)
-                .Then(v =>
-                {
-                    Rect radioButtonRect = new Rect(v);
-                    radioButtonRect.width = 100f;
-                    radioButtonRect.height = 20f;
-                    if(Widgets.RadioButtonLabeled(radioButtonRect, "Digest", false))
-                    {
+                .ThenGap(15f)
+                .Then(u => DrawTextButton(u, "Domain", domains))
+                .Then(u => DrawTextButton(u, "Source", sources))
+                .Then(u => DrawTextButton(u, "Aggregator", aggregators));
+        }
 
-                    }
+        private Rect DrawTextEntry(Rect inRect, string label, string inVal, Action<string> outValCb)
+        {
+            Rect nameEntryRect = new Rect(inRect);
+            nameEntryRect.height = 30f;
+            nameEntryRect.width = 200f;
+            outValCb(Widgets.TextEntryLabeled(nameEntryRect, label, inVal));
 
-                    return radioButtonRect;
-                })
-                .ThenGap(10f)
-                .Then(v =>
-                {
-                    Rect radioButtonRect = new Rect(v);
-                    radioButtonRect.width = 100f;
-                    radioButtonRect.height = 20f;
-                    if(Widgets.RadioButtonLabeled(radioButtonRect, "Window", false))
-                    {
+            return nameEntryRect;
+        }
 
-                    }
-
-                    return radioButtonRect;
-                });
-            })
-            .ThenGap(15f)
-            .Then(u =>
+        private Rect DrawRadioButton(Rect inRect, string label)
+        {
+            Rect radioButtonRect = new Rect(inRect);
+            radioButtonRect.width = 100f;
+            radioButtonRect.height = 20f;
+            if (Widgets.RadioButtonLabeled(radioButtonRect, label, false))
             {
-                Rect textButtonRect = new Rect(u);
-                textButtonRect.width = 100f;
-                textButtonRect.height = 35f;
-                if(Widgets.ButtonText(textButtonRect, "Domain"))
-                {
-                    List<FloatMenuOption> list = domains.Select(v => new FloatMenuOption(v.FullName, delegate
-                    {
-                        Log.Message($"Chosed domain: {v.FullName}");
-                    })).ToList();
 
-                    Find.WindowStack.Add(new FloatMenu(list));
-                }
+            }
 
-                return textButtonRect;
-            })
-            .Then(u =>
+            return radioButtonRect;
+        }
+
+        private Rect DrawTextButton(Rect inRect, string label, List<Type> typeList)
+        {
+            Rect textButtonRect = new Rect(inRect);
+            textButtonRect.width = 100f;
+            textButtonRect.height = 35f;
+            if (Widgets.ButtonText(textButtonRect, label))
             {
-                Rect textButtonRect = new Rect(u);
-                textButtonRect.width = 100f;
-                textButtonRect.height = 35f;
-                if (Widgets.ButtonText(textButtonRect, "Source"))
+                List<FloatMenuOption> list = typeList.Select(v => new FloatMenuOption(v.Name, delegate
                 {
-                    List<FloatMenuOption> list = sources.Select(v => new FloatMenuOption(v.FullName, delegate
-                    {
-                        Log.Message($"Chosed source: {v.FullName}");
-                    })).ToList();
+                    Log.Message($"Chosen thinger: {v.FullName}");
+                })).ToList();
 
-                    Find.WindowStack.Add(new FloatMenu(list));
-                }
+                Find.WindowStack.Add(new FloatMenu(list));
+            }
 
-                return textButtonRect;
-            })
-            .Then(u =>
-            {
-                Rect textButtonRect = new Rect(u);
-                textButtonRect.width = 100f;
-                textButtonRect.height = 35f;
-                if (Widgets.ButtonText(textButtonRect, "Aggregator"))
-                {
-                    List<FloatMenuOption> list = aggregators.Select(v => new FloatMenuOption(v.FullName, delegate
-                    {
-                        Log.Message($"Chosed aggregator: {v.FullName}");
-                    })).ToList();
-
-                    Find.WindowStack.Add(new FloatMenu(list));
-                }
-
-                return textButtonRect;
-            });
+            return textButtonRect;
         }
     }
 }
