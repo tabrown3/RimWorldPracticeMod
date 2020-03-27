@@ -13,8 +13,16 @@ namespace ConfigurableGrowZone
         private string name = "";
         private string key = "";
 
-        public Dialog_AddSourceMetric()
+        private List<Type> domains;
+        private List<Type> sources;
+        private List<Type> aggregators;
+
+        public Dialog_AddSourceMetric(List<Type> domains, List<Type> sources, List<Type> aggregators)
         {
+            this.domains = domains;
+            this.sources = sources;
+            this.aggregators = aggregators;
+
             this.closeOnClickedOutside = true;
             this.doCloseX = true;
             this.focusWhenOpened = true;
@@ -29,7 +37,7 @@ namespace ConfigurableGrowZone
             {
                 Rect nameEntryRect = new Rect(u);
                 nameEntryRect.height = textInputHeight;
-                nameEntryRect.width = 400f;
+                nameEntryRect.width = 200f;
                 name = Widgets.TextEntryLabeled(nameEntryRect, "Name", name);
 
                 return nameEntryRect;
@@ -39,7 +47,7 @@ namespace ConfigurableGrowZone
             {
                 Rect keyEntryRect = new Rect(u);
                 keyEntryRect.height = textInputHeight;
-                keyEntryRect.width = 400f;
+                keyEntryRect.width = 200f;
                 key = Widgets.TextEntryLabeled(keyEntryRect, "Key", key);
 
                 return keyEntryRect;
@@ -52,7 +60,10 @@ namespace ConfigurableGrowZone
                     Rect radioButtonRect = new Rect(v);
                     radioButtonRect.width = 100f;
                     radioButtonRect.height = 20f;
-                    Widgets.RadioButtonLabeled(radioButtonRect, "Poll", false);
+                    if(Widgets.RadioButtonLabeled(radioButtonRect, "Poll", false))
+                    {
+
+                    }
 
                     return radioButtonRect;
                 })
@@ -62,7 +73,10 @@ namespace ConfigurableGrowZone
                     Rect radioButtonRect = new Rect(v);
                     radioButtonRect.width = 100f;
                     radioButtonRect.height = 20f;
-                    Widgets.RadioButtonLabeled(radioButtonRect, "Digest", false);
+                    if(Widgets.RadioButtonLabeled(radioButtonRect, "Digest", false))
+                    {
+
+                    }
 
                     return radioButtonRect;
                 })
@@ -72,7 +86,10 @@ namespace ConfigurableGrowZone
                     Rect radioButtonRect = new Rect(v);
                     radioButtonRect.width = 100f;
                     radioButtonRect.height = 20f;
-                    Widgets.RadioButtonLabeled(radioButtonRect, "Window", false);
+                    if(Widgets.RadioButtonLabeled(radioButtonRect, "Window", false))
+                    {
+
+                    }
 
                     return radioButtonRect;
                 });
@@ -85,7 +102,12 @@ namespace ConfigurableGrowZone
                 textButtonRect.height = 35f;
                 if(Widgets.ButtonText(textButtonRect, "Domain"))
                 {
+                    List<FloatMenuOption> list = domains.Select(v => new FloatMenuOption(v.FullName, delegate
+                    {
+                        Log.Message($"Chosed domain: {v.FullName}");
+                    })).ToList();
 
+                    Find.WindowStack.Add(new FloatMenu(list));
                 }
 
                 return textButtonRect;
@@ -97,7 +119,12 @@ namespace ConfigurableGrowZone
                 textButtonRect.height = 35f;
                 if (Widgets.ButtonText(textButtonRect, "Source"))
                 {
+                    List<FloatMenuOption> list = sources.Select(v => new FloatMenuOption(v.FullName, delegate
+                    {
+                        Log.Message($"Chosed source: {v.FullName}");
+                    })).ToList();
 
+                    Find.WindowStack.Add(new FloatMenu(list));
                 }
 
                 return textButtonRect;
@@ -109,7 +136,12 @@ namespace ConfigurableGrowZone
                 textButtonRect.height = 35f;
                 if (Widgets.ButtonText(textButtonRect, "Aggregator"))
                 {
+                    List<FloatMenuOption> list = aggregators.Select(v => new FloatMenuOption(v.FullName, delegate
+                    {
+                        Log.Message($"Chosed aggregator: {v.FullName}");
+                    })).ToList();
 
+                    Find.WindowStack.Add(new FloatMenu(list));
                 }
 
                 return textButtonRect;

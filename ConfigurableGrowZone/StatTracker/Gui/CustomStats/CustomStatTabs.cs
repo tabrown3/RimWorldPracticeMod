@@ -34,7 +34,11 @@ namespace ConfigurableGrowZone
             var disp2 = MetricsTab.OnAddMetricClicked.Subscribe(u =>
             {
                 Log.Message("Clicked 'Add SourceMetric' button");
-                Find.WindowStack.Add(new Dialog_AddSourceMetric());
+                Find.WindowStack.Add(new Dialog_AddSourceMetric(
+                    new List<Type>() { typeof(QuarterHourDomain), typeof(TwentyFourHourDomain) },
+                    new List<Type>() { typeof(CurrentEnergyGainRatePullable), typeof(CurrentStoredEnergyPullable) },
+                    new List<Type>() { typeof(SumAggregator), typeof(NegateOperator) })
+                );
                 Log.Message("Executed 'Add SourceMetric' cb");
             });
 
