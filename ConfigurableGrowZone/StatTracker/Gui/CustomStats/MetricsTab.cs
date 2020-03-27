@@ -37,10 +37,10 @@ namespace ConfigurableGrowZone
             }
             float curY = trackerRectHeight * metrics.Count;
 
-            if(metrics.Count > 0)
+            if (metrics.Count > 0)
             {
                 float addMetricButtonHeight = 35f;
-                Rect addMetricButtonRect = new Rect(0f, curY, 60f, addMetricButtonHeight);
+                Rect addMetricButtonRect = new Rect(0f, curY, 80f, addMetricButtonHeight);
                 curY += addMetricButtonHeight;
 
                 if (Widgets.ButtonText(addMetricButtonRect, "Add metric"))

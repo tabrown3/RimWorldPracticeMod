@@ -33,13 +33,19 @@ namespace ConfigurableGrowZone
 
             var disp2 = MetricsTab.OnAddMetricClicked.Subscribe(u =>
             {
-                Log.Message("Add Metric button clicked!");
+                Find.WindowStack.Add(new Dialog_AddSourceMetric());
+            });
+
+            var disp3 = DerivedTab.OnAddMetricClicked.Subscribe(u =>
+            {
+                Find.WindowStack.Add(new Dialog_AddDerivedMetric());
             });
 
             unsubscribes = new List<IDisposable>()
             {
                 disp1,
-                disp2
+                disp2,
+                disp3
             };
         }
 
