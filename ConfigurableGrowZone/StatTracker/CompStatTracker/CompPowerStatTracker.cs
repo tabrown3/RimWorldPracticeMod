@@ -28,23 +28,35 @@ namespace ConfigurableGrowZone
                 this.AddSourceMetric(metric);
             }
 
-            //this.AddDerivedMetric(
-            //    new DerivedMetric(
-            //        "NegativeStoredEnergyEachHourPoll",
-            //        "Negative Stored Energy at Hour",
-            //        new List<SourceMetric>() { firstMetric },
-            //        new List<IOperator<float>>() { new NegateOperator() }
-            //    )
-            //);
+            var firstDerivedMetric = DeriveMetric(
+                "NegativeStoredEnergyEachHourPoll",
+                "Negative Stored Energy at Hour",
+                new List<Tuple<string, string>>()
+                {
+                    Tuple.Create(this.Name, "StoredEnergyEachHourPoll")
+                },
+                new List<string>()
+                {
+                    "ConfigurableGrowZone.NegateOperator"
+                }
+            );
+            this.AddDerivedMetric(firstDerivedMetric);
 
-            //this.AddDerivedMetric(
-            //    new DerivedMetric(
-            //        "DoubleStoredEnergyNegatedEachHourPoll",
-            //        "Summed Negative Stored Something at Hour",
-            //        new List<SourceMetric>() { firstMetric, secondMetric },
-            //        new List<IOperator<float>>() { new PlusOperator(), new NegateOperator() }
-            //    )
-            //);
+            var secondDerivedMetric = DeriveMetric(
+                "DoubleStoredEnergyNegatedEachHourPoll",
+                "Summed Negative Stored Something at Hour",
+                new List<Tuple<string, string>>()
+                {
+                    Tuple.Create(this.Name, "StoredEnergyEachHourPoll"),
+                    Tuple.Create(this.Name, "EnergyGainByHourDigest")
+                },
+                new List<string>()
+                {
+                    "ConfigurableGrowZone.PlusOperator",
+                    "ConfigurableGrowZone.NegateOperator"
+                }
+            );
+            this.AddDerivedMetric(secondDerivedMetric);
         }
 
         public void AddSourceMetric(SourceMetric metric)
@@ -164,6 +176,26 @@ namespace ConfigurableGrowZone
             }
 
             return metric;
+        }
+
+        private DerivedMetric DeriveMetric(string key, string name, List<Tuple<string, string>> trackerMetricKv, List<string> operatorTypeNames)
+        {
+            var sourceMetrics = trackerMetricKv.Select(u => MapStatTracker.GetMetric(u.Item1, u.Item2)).ToList();
+            var operators = operatorTypeNames.Select(u => (IOperator<float>)Activator.CreateInstance(Type.GetType(u))).ToList();
+
+            return DeriveMetric(key, name, sourceMetrics, operators);
+        }
+
+        private DerivedMetric DeriveMetric(string key, string name, List<SourceMetric> sourceMetrics, List<IOperator<float>> operators)
+        {
+            var derivedMetric = new DerivedMetric(
+                key,
+                name,
+                sourceMetrics,
+                operators
+            );
+
+            return derivedMetric;
         }
     }
 }

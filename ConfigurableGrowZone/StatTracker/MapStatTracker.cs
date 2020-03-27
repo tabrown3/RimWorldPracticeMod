@@ -38,5 +38,10 @@ namespace ConfigurableGrowZone
                 Log.Message("TrackerComps tried to remove a trackerComp it does not contain");
             }
         }
+
+        public SourceMetric GetMetric(string trackerName, string metricKey)
+        {
+            return TrackerComps.SingleOrDefault(u => u.Name == trackerName)?.Data.SourceMetrics.SingleOrDefault(u => u.Key == metricKey);
+        }
     }
 }
