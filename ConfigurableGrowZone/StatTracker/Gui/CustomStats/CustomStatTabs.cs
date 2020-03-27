@@ -27,6 +27,7 @@ namespace ConfigurableGrowZone
         {
             var disp1 = Observable.Merge(TrackersTab.OnListItemClick, SignalsTab.OnListItemClick).Subscribe(compStatTracker =>
             {
+                Log.Message("Clicked TrackersTab item or SignalsTab item");
                 MetricsTab.SetSource(compStatTracker.Data.SourceMetrics, compStatTracker.Data.History);
                 DerivedTab.SetSource(compStatTracker.Data.DerivedMetrics, compStatTracker.Data.History);
             });
@@ -35,9 +36,9 @@ namespace ConfigurableGrowZone
             {
                 Log.Message("Clicked 'Add SourceMetric' button");
                 Find.WindowStack.Add(new Dialog_AddSourceMetric(
-                    new List<Type>() { typeof(QuarterHourDomain), typeof(TwentyFourHourDomain) },
-                    new List<Type>() { typeof(CurrentEnergyGainRatePullable), typeof(CurrentStoredEnergyPullable) },
-                    new List<Type>() { typeof(SumAggregator), typeof(NegateOperator) })
+                    StatTypesHelper.DomainTypes,
+                    StatTypesHelper.SourceTypes,
+                    StatTypesHelper.AggregatorTypes)
                 );
                 Log.Message("Executed 'Add SourceMetric' cb");
             });
