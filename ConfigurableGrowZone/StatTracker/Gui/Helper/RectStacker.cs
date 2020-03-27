@@ -12,10 +12,13 @@ namespace ConfigurableGrowZone
     {
         private float curY = 0f;
         private float curHeight = 0f;
+        public RectStacker(float startingY)
+        {
+            curY = startingY;
+        }
         public RectStacker(Rect outerRect)
         {
             curY = outerRect.y;
-            curHeight = outerRect.height;
         }
 
         public RectStacker Then(Func<Rect, Rect> thenFunc)
@@ -24,8 +27,20 @@ namespace ConfigurableGrowZone
             newRect.y = this.curY;
             var bob = thenFunc(newRect);
 
-            curY += bob.y + bob.height;
-            curHeight += bob.y + bob.height;
+            curY += bob.height;
+            curHeight += bob.height;
+
+            return this;
+        }
+
+        public RectStacker Then(Func<Rect, RectStacker> thenFunc)
+        {
+            var newRect = new Rect();
+            newRect.y = this.curY;
+            var bob = thenFunc(newRect);
+
+            curY += bob.curHeight;
+            curHeight += bob.curHeight;
 
             return this;
         }
@@ -34,6 +49,14 @@ namespace ConfigurableGrowZone
         {
             curY += rectStacker.curHeight;
             curHeight += rectStacker.curHeight;
+            return this;
+        }
+
+        public RectStacker ThenGap(float gapSize)
+        {
+            curY += gapSize;
+            curHeight += gapSize;
+
             return this;
         }
     }
