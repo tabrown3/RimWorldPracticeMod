@@ -27,13 +27,13 @@ namespace ConfigurableGrowZone
 
             //}
 
-            var firstMetric = SpitOutMetric(typeof(PollSourceMetric), "StoredEnergyEachHourPoll", "Stored Energy at Hour", "ConfigurableGrowZone.CurrentStoredEnergyPullable", "Wd", "ConfigurableGrowZone.TwentyFourHourDomain");
+            var firstMetric = SpitOutMetric("ConfigurableGrowZone.PollSourceMetric", "StoredEnergyEachHourPoll", "Stored Energy at Hour", "ConfigurableGrowZone.CurrentStoredEnergyPullable", "Wd", "ConfigurableGrowZone.TwentyFourHourDomain");
             this.AddSourceMetric(firstMetric);
 
-            var secondMetric = SpitOutMetric(typeof(DigestSourceMetric), "EnergyGainByHourDigest", "Energy per Hour", "ConfigurableGrowZone.CurrentEnergyGainRatePullable", "Wd/h", "ConfigurableGrowZone.TwentyFourHourDomain", "ConfigurableGrowZone.SumAggregator");
+            var secondMetric = SpitOutMetric("ConfigurableGrowZone.DigestSourceMetric", "EnergyGainByHourDigest", "Energy per Hour", "ConfigurableGrowZone.CurrentEnergyGainRatePullable", "Wd/h", "ConfigurableGrowZone.TwentyFourHourDomain", "ConfigurableGrowZone.SumAggregator");
             this.AddSourceMetric(secondMetric);
 
-            var thirdMetric = SpitOutMetric(typeof(WindowSourceMetric), "EnergyGainByQuarterHourWindow", "Energy per Quarter Hour", "ConfigurableGrowZone.CurrentEnergyGainRatePullable", "Wd/qt.h", "ConfigurableGrowZone.QuarterHourDomain", "ConfigurableGrowZone.SumAggregator");
+            var thirdMetric = SpitOutMetric("ConfigurableGrowZone.WindowSourceMetric", "EnergyGainByQuarterHourWindow", "Energy per Quarter Hour", "ConfigurableGrowZone.CurrentEnergyGainRatePullable", "Wd/qt.h", "ConfigurableGrowZone.QuarterHourDomain", "ConfigurableGrowZone.SumAggregator");
             this.AddSourceMetric(thirdMetric);
 
             this.AddDerivedMetric(
@@ -116,8 +116,9 @@ namespace ConfigurableGrowZone
             yield return command_Action;
         }
 
-        private SourceMetric SpitOutMetric(Type metricType, string key, string name, string sourceTypeName, string unit, string domainTypeName, string aggregatorTypeName = null)
+        private SourceMetric SpitOutMetric(string metricTypeName, string key, string name, string sourceTypeName, string unit, string domainTypeName, string aggregatorTypeName = null)
         {
+            var metricType = Type.GetType(metricTypeName);
             var sourceType = Type.GetType(sourceTypeName);
             var domainType = Type.GetType(domainTypeName);
 
