@@ -24,7 +24,7 @@ namespace ConfigurableGrowZone
 
             foreach (var el in props.SourceMetrics)
             {
-                var metric = SpitOutMetric(el.MetricType, el.Key, el.Name, el.SourceType, el.Unit, el.DomainType, el.AggregatorType);
+                var metric = CreateMetric(el.MetricType, el.Key, el.Name, el.SourceType, el.Unit, el.DomainType, el.AggregatorType);
                 this.AddSourceMetric(metric);
             }
 
@@ -102,18 +102,29 @@ namespace ConfigurableGrowZone
                 Find.WindowStack.Add(new FloatMenu(list));
             };
             command_Action.defaultLabel = "View Stats";
-            //command_Action.defaultDesc = "View reaouts of stats currently being tracked.";
+            //command_Action.defaultDesc = "View readouts of stats currently being tracked.";
             command_Action.hotKey = KeyBindingDefOf.Misc5;
             command_Action.icon = ContentFinder<Texture2D>.Get("UI/Commands/TempLower");
             yield return command_Action;
         }
 
-        private SourceMetric SpitOutMetric(string metricTypeName, string key, string name, string sourceTypeName, string unit, string domainTypeName, string aggregatorTypeName = null)
+        private SourceMetric CreateMetric(string metricTypeName, string key, string name, string sourceTypeName, string unit, string domainTypeName, string aggregatorTypeName = null)
         {
             var metricType = Type.GetType(metricTypeName);
             var sourceType = Type.GetType(sourceTypeName);
             var domainType = Type.GetType(domainTypeName);
 
+            Type aggregatorType = null;
+            if (!string.IsNullOrEmpty(aggregatorTypeName))
+            {
+                aggregatorType = Type.GetType(aggregatorTypeName);
+            }
+            
+            return CreateMetric(metricType, key, name, sourceType, unit, domainType, aggregatorType);
+        }
+
+        private SourceMetric CreateMetric(Type metricType, string key, string name, Type sourceType, string unit, Type domainType, Type aggregatorType = null)
+        {
             SourceMetric metric;
             if (metricType == typeof(PollSourceMetric))
             {
@@ -127,8 +138,6 @@ namespace ConfigurableGrowZone
             }
             else if (metricType == typeof(DigestSourceMetric))
             {
-                var aggregatorType = Type.GetType(aggregatorTypeName);
-
                 metric = new DigestSourceMetric(
                     key,
                     name,
@@ -140,8 +149,6 @@ namespace ConfigurableGrowZone
             }
             else if (metricType == typeof(WindowSourceMetric))
             {
-                var aggregatorType = Type.GetType(aggregatorTypeName);
-
                 metric = new WindowSourceMetric(
                     key,
                     name,
