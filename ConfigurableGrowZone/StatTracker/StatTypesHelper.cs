@@ -28,5 +28,10 @@ namespace ConfigurableGrowZone
             AggregatorTypes.ForEach(u => Log.Message($"From AggregatorTypes: {u.Name}"));
             OperatorTypes.ForEach(u => Log.Message($"From OperatorTypes: {u.Name}"));
         }
+
+        public static bool IsSetMetric(Type inType)
+        {
+            return inType == typeof(DigestSourceMetric) || inType == typeof(WindowSourceMetric);
+        }
     }
 }

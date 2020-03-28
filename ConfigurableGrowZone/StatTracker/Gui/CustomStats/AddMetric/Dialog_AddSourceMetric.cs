@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -50,9 +51,12 @@ namespace ConfigurableGrowZone
                         .Then(v => DrawRadioButton(v, "Window", typeof(WindowSourceMetric)));
                 })
                 .ThenGap(15f)
-                .Then(u => DrawTextButton(u, "Domain", domains, v => form.DomainType = v))
-                .Then(u => DrawTextButton(u, "Source", sources, v => form.SourceType = v))
-                .Then(u => DrawTextButton(u, "Aggregator", aggregators, v => form.AggregatorType = v))
+                .Then(u => DrawTextButton(u, "Domain", domains, form.DomainType, v => form.DomainType = v))
+                .Then(u => DrawTextButton(u, "Source", sources, form.SourceType, v => form.SourceType = v))
+                .IfThen(
+                    () => StatTypesHelper.IsSetMetric(form.MetricType),
+                    u => DrawTextButton(u, "Aggregator", aggregators, form.AggregatorType, v => form.AggregatorType = v)
+                )
                 .Then(u => DrawSubmitButton(u));
         }
 
@@ -79,11 +83,14 @@ namespace ConfigurableGrowZone
             return radioButtonRect;
         }
 
-        private Rect DrawTextButton(Rect inRect, string label, List<Type> typeList, Action<Type> typeCb)
+        private Rect DrawTextButton(Rect inRect, string label, List<Type> typeList, Type selectedType, Action<Type> typeCb)
         {
-            Rect textButtonRect = new Rect(inRect);
+            Rect outerRect = new Rect(inRect);
+            outerRect.height = 35f;
+
+            Rect textButtonRect = new Rect(outerRect);
             textButtonRect.width = 100f;
-            textButtonRect.height = 35f;
+            
             if (Widgets.ButtonText(textButtonRect, label))
             {
                 List<FloatMenuOption> list = typeList.Select(v => new FloatMenuOption(v.Name, () => typeCb(v))).ToList();
@@ -91,7 +98,15 @@ namespace ConfigurableGrowZone
                 Find.WindowStack.Add(new FloatMenu(list));
             }
 
-            return textButtonRect;
+            if(selectedType != null)
+            {
+                Rect typeNameRect = new Rect(outerRect);
+                typeNameRect.x = textButtonRect.x + textButtonRect.width;
+                typeNameRect.width = Text.CalcSize(selectedType.Name).x;
+                Widgets.Label(typeNameRect, selectedType.Name);
+            }
+
+            return outerRect;
         }
 
         private Rect DrawSubmitButton(Rect inRect)
