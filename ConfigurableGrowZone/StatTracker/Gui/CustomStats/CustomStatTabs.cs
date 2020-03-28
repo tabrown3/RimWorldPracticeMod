@@ -68,20 +68,23 @@ namespace ConfigurableGrowZone
             {
                 var tracker = u.Item1;
                 var form = u.Item2;
-                Log.Message($"Metric Type: {form.MetricType.Name}");
-                Log.Message($"Name: {form.Name}");
-                Log.Message($"Key: {form.Key}");
-                Log.Message($"Unit: {form.Unit}");
-                Log.Message($"Domain: {form.DomainType.Name}");
-                Log.Message($"Source: {form.SourceType.Name}");
-                Log.Message($"Aggregator: {u.Item2.AggregatorType?.Name}");
 
                 tracker.AddSourceMetric(form.MetricType, form.Key, form.Name, form.SourceType, form.Unit, form.DomainType, form.AggregatorType);
             });
 
-            var disp3 = DerivedTab.OnAddMetricClicked.Subscribe(u =>
+            var disp3 = DerivedTab.OnAddMetricClicked.SelectMany(tracker =>
             {
-                Find.WindowStack.Add(new Dialog_AddDerivedMetric());
+                var dialog = new Dialog_AddDerivedMetric(tracker);
+
+                Find.WindowStack.Add(dialog);
+
+                return dialog.OnSubmit;
+            }).Subscribe(u =>
+            {
+                var tracker = u.Item1;
+                var form = u.Item2;
+
+                tracker.AddDerivedMetric(form.Key, form.Name, form.SourceMetrics, form.Operators);
             });
 
             unsubscribes = new List<IDisposable>()

@@ -3,48 +3,48 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UniRx;
 using UnityEngine;
 using Verse;
 
 namespace ConfigurableGrowZone
 {
-    public class Dialog_AddDerivedMetric : Window
+    public class Dialog_AddDerivedMetric : Dialog_AddMetric
     {
-        private string name = "";
-        private string key = "";
+        private readonly AddDerivedMetricForm form = new AddDerivedMetricForm();
 
-        public Dialog_AddDerivedMetric()
+        private Subject<Tuple<CompStatTracker, AddDerivedMetricForm>> onSubmit { get; } = new Subject<Tuple<CompStatTracker, AddDerivedMetricForm>>();
+        public IObservable<Tuple<CompStatTracker, AddDerivedMetricForm>> OnSubmit => onSubmit;
+
+        public Dialog_AddDerivedMetric(CompStatTracker tracker) : base(tracker)
         {
-            this.closeOnClickedOutside = true;
-            this.doCloseX = true;
-            this.focusWhenOpened = true;
-            this.absorbInputAroundWindow = true;
-            this.forcePause = true;
+            
         }
 
         public override void DoWindowContents(Rect inRect)
         {
-            float textInputHeight = 30f;
+            base.DoWindowContents(inRect);
 
-            new RectStacker(inRect).Then(u =>
+            new RectStacker(inRect).Then(u => DrawTextEntry(u, "Name", form.Name, v => form.Name = v))
+                .ThenGap(15f)
+                .Then(u => DrawTextEntry(u, "Key", form.Key, v => form.Key = v))
+                .ThenGap(15f);
+        }
+
+        private Rect DrawSubmitButton(Rect inRect)
+        {
+            Rect submitButtonRect = new Rect(inRect);
+            submitButtonRect.width = 150f;
+            submitButtonRect.height = 40f;
+
+            if (Widgets.ButtonText(submitButtonRect, "Submit") && form.IsValid())
             {
-                Rect nameEntryRect = new Rect(u);
-                nameEntryRect.height = textInputHeight;
-                nameEntryRect.width = 400f;
-                name = Widgets.TextEntryLabeled(nameEntryRect, "Name", name);
+                onSubmit.OnNext(Tuple.Create(tracker, form));
+                onSubmit.OnCompleted();
+                Close();
+            }
 
-                return nameEntryRect;
-            })
-            .ThenGap(15f)
-            .Then(u =>
-            {
-                Rect keyEntryRect = new Rect(u);
-                keyEntryRect.height = textInputHeight;
-                keyEntryRect.width = 400f;
-                key = Widgets.TextEntryLabeled(keyEntryRect, "Key", key);
-
-                return keyEntryRect;
-            });
+            return submitButtonRect;
         }
     }
 }
