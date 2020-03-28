@@ -44,18 +44,56 @@ namespace ConfigurableGrowZone
             return ThenInt(rectStacker.curHeight);
         }
 
-        private RectStacker ThenInt(float height)
+        public RectStacker IfThen(Func<bool> isTrue, Func<Rect, Rect> thenFunc, Func<Rect, Rect> elseFunc = null)
         {
-            curY += height;
-            curHeight += height;
+            if (isTrue())
+            {
+                return Then(thenFunc);
+            }
+            else
+            {
+                if (elseFunc != null)
+                {
+                    return Then(elseFunc);
+                }
+                else
+                {
+                    return this;
+                }
+            }
+        }
 
-            return this;
+        public RectStacker IfThen(Func<bool> isTrue, Func<Rect, RectStacker> thenFunc, Func<Rect, RectStacker> elseFunc = null)
+        {
+            if (isTrue())
+            {
+                return Then(thenFunc);
+            }
+            else
+            {
+                if (elseFunc != null)
+                {
+                    return Then(elseFunc);
+                }
+                else
+                {
+                    return this;
+                }
+            }
         }
 
         public RectStacker ThenGap(float gapSize)
         {
             curY += gapSize;
             curHeight += gapSize;
+
+            return this;
+        }
+
+        private RectStacker ThenInt(float height)
+        {
+            curY += height;
+            curHeight += height;
 
             return this;
         }
