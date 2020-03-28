@@ -12,9 +12,10 @@ namespace ConfigurableGrowZone
     public class DerivedTab : ITabDrawable<CustomStatsTab>
     {
         public CustomStatsTab TabType => CustomStatsTab.Derived;
-        public IObservable<bool> OnAddMetricClicked => onAddMetricClicked;
+        public IObservable<CompStatTracker> OnAddMetricClicked => onAddMetricClicked;
 
-        private readonly Subject<bool> onAddMetricClicked = new Subject<bool>();
+        private readonly Subject<CompStatTracker> onAddMetricClicked = new Subject<CompStatTracker>();
+        private CompStatTracker tracker;
         private List<DerivedMetric> metrics = new List<DerivedMetric>();
 
         public void DrawTab(Rect pane)
@@ -45,14 +46,15 @@ namespace ConfigurableGrowZone
 
                 if (Widgets.ButtonText(addMetricButtonRect, "Add metric"))
                 {
-                    onAddMetricClicked.OnNext(true); // TODO: Hmm, just sending true? That's weird...
+                    onAddMetricClicked.OnNext(tracker); // TODO: Hmm, just sending true? That's weird...
                 }
             }
         }
 
-        public void SetSource(List<DerivedMetric> derivedMetrics, StatHistory history)
+        public void SetSource(CompStatTracker tracker)
         {
-            metrics = derivedMetrics;
+            this.tracker = tracker;
+            metrics = tracker.Data.DerivedMetrics;
         }
     }
 }

@@ -14,15 +14,17 @@ namespace ConfigurableGrowZone
     {
         private readonly AddSourceMetricForm form = new AddSourceMetricForm();
 
+        private readonly CompStatTracker tracker;
         private readonly List<Type> domains;
         private readonly List<Type> sources;
         private readonly List<Type> aggregators;
 
-        private readonly Subject<AddSourceMetricForm> onSubmit = new Subject<AddSourceMetricForm>();
-        public IObservable<AddSourceMetricForm> OnSubmit => onSubmit;
+        private readonly Subject<Tuple<CompStatTracker, AddSourceMetricForm>> onSubmit = new Subject<Tuple<CompStatTracker, AddSourceMetricForm>>();
+        public IObservable<Tuple<CompStatTracker, AddSourceMetricForm>> OnSubmit => onSubmit;
 
-        public Dialog_AddSourceMetric(List<Type> domains, List<Type> sources, List<Type> aggregators)
+        public Dialog_AddSourceMetric(CompStatTracker tracker, List<Type> domains, List<Type> sources, List<Type> aggregators)
         {
+            this.tracker = tracker;
             this.domains = domains;
             this.sources = sources;
             this.aggregators = aggregators;
@@ -40,6 +42,8 @@ namespace ConfigurableGrowZone
                 .Then(u => DrawTextEntry(u, "Name", form.Name, v => form.Name = v))
                 .ThenGap(15f)
                 .Then(u => DrawTextEntry(u, "Key", form.Key, v => form.Key = v))
+                .ThenGap(15f)
+                .Then(u => DrawTextEntry(u, "Unit", form.Unit, v => form.Unit = v))
                 .ThenGap(15f)
                 .Then(u =>
                 {
@@ -117,7 +121,8 @@ namespace ConfigurableGrowZone
             
             if (Widgets.ButtonText(submitButtonRect, "Submit") && form.IsValid())
             {
-                onSubmit.OnNext(form);
+                onSubmit.OnNext(Tuple.Create(tracker, form));
+                onSubmit.OnCompleted();
                 Close();
             }
 

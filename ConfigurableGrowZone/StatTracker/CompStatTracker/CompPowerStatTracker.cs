@@ -59,16 +59,6 @@ namespace ConfigurableGrowZone
             this.AddDerivedMetric(secondDerivedMetric);
         }
 
-        public void AddSourceMetric(SourceMetric metric)
-        {
-            Data.AddSourceMetric(metric);
-        }
-
-        public void AddDerivedMetric(DerivedMetric derivedMetric)
-        {
-            Data.AddDerivedMetric(derivedMetric);
-        }
-
         public override void CompTick()
         {
             base.CompTick();
@@ -120,82 +110,82 @@ namespace ConfigurableGrowZone
             yield return command_Action;
         }
 
-        private SourceMetric CreateMetric(string metricTypeName, string key, string name, string sourceTypeName, string unit, string domainTypeName, string aggregatorTypeName = null)
-        {
-            var metricType = Type.GetType(metricTypeName);
-            var sourceType = Type.GetType(sourceTypeName);
-            var domainType = Type.GetType(domainTypeName);
+        //private SourceMetric CreateMetric(string metricTypeName, string key, string name, string sourceTypeName, string unit, string domainTypeName, string aggregatorTypeName = null)
+        //{
+        //    var metricType = Type.GetType(metricTypeName);
+        //    var sourceType = Type.GetType(sourceTypeName);
+        //    var domainType = Type.GetType(domainTypeName);
 
-            Type aggregatorType = null;
-            if (!string.IsNullOrEmpty(aggregatorTypeName))
-            {
-                aggregatorType = Type.GetType(aggregatorTypeName);
-            }
+        //    Type aggregatorType = null;
+        //    if (!string.IsNullOrEmpty(aggregatorTypeName))
+        //    {
+        //        aggregatorType = Type.GetType(aggregatorTypeName);
+        //    }
             
-            return CreateMetric(metricType, key, name, sourceType, unit, domainType, aggregatorType);
-        }
+        //    return CreateMetric(metricType, key, name, sourceType, unit, domainType, aggregatorType);
+        //}
 
-        private SourceMetric CreateMetric(Type metricType, string key, string name, Type sourceType, string unit, Type domainType, Type aggregatorType = null)
-        {
-            SourceMetric metric;
-            if (metricType == typeof(PollSourceMetric))
-            {
-                metric = new PollSourceMetric(
-                    key,
-                    name,
-                    (IPullable<float>)Activator.CreateInstance(sourceType, new object[] { parent }),
-                    unit,
-                    (TimeDomain)Activator.CreateInstance(domainType)
-                );
-            }
-            else if (metricType == typeof(DigestSourceMetric))
-            {
-                metric = new DigestSourceMetric(
-                    key,
-                    name,
-                    (IPullable<float>)Activator.CreateInstance(sourceType, new object[] { parent }),
-                    unit,
-                    (TimeDomain)Activator.CreateInstance(domainType),
-                    (IAggregator<float>)Activator.CreateInstance(aggregatorType)
-                );
-            }
-            else if (metricType == typeof(WindowSourceMetric))
-            {
-                metric = new WindowSourceMetric(
-                    key,
-                    name,
-                    (IPullable<float>)Activator.CreateInstance(sourceType, new object[] { parent }),
-                    unit,
-                    (TimeDomain)Activator.CreateInstance(domainType),
-                    (IAggregator<float>)Activator.CreateInstance(aggregatorType)
-                );
-            }
-            else
-            {
-                throw new Exception($"Error creating type {nameof(metricType)}: Custom metric types not supported at this time");
-            }
+        //private SourceMetric CreateMetric(Type metricType, string key, string name, Type sourceType, string unit, Type domainType, Type aggregatorType = null)
+        //{
+        //    SourceMetric metric;
+        //    if (metricType == typeof(PollSourceMetric))
+        //    {
+        //        metric = new PollSourceMetric(
+        //            key,
+        //            name,
+        //            (IPullable<float>)Activator.CreateInstance(sourceType, new object[] { parent }),
+        //            unit,
+        //            (TimeDomain)Activator.CreateInstance(domainType)
+        //        );
+        //    }
+        //    else if (metricType == typeof(DigestSourceMetric))
+        //    {
+        //        metric = new DigestSourceMetric(
+        //            key,
+        //            name,
+        //            (IPullable<float>)Activator.CreateInstance(sourceType, new object[] { parent }),
+        //            unit,
+        //            (TimeDomain)Activator.CreateInstance(domainType),
+        //            (IAggregator<float>)Activator.CreateInstance(aggregatorType)
+        //        );
+        //    }
+        //    else if (metricType == typeof(WindowSourceMetric))
+        //    {
+        //        metric = new WindowSourceMetric(
+        //            key,
+        //            name,
+        //            (IPullable<float>)Activator.CreateInstance(sourceType, new object[] { parent }),
+        //            unit,
+        //            (TimeDomain)Activator.CreateInstance(domainType),
+        //            (IAggregator<float>)Activator.CreateInstance(aggregatorType)
+        //        );
+        //    }
+        //    else
+        //    {
+        //        throw new Exception($"Error creating type {nameof(metricType)}: Custom metric types not supported at this time");
+        //    }
 
-            return metric;
-        }
+        //    return metric;
+        //}
 
-        private DerivedMetric DeriveMetric(string key, string name, List<Tuple<string, string>> trackerMetricKv, List<string> operatorTypeNames)
-        {
-            var sourceMetrics = trackerMetricKv.Select(u => MapStatTracker.GetMetric(u.Item1, u.Item2)).ToList();
-            var operators = operatorTypeNames.Select(u => (IOperator<float>)Activator.CreateInstance(Type.GetType(u))).ToList();
+        //private DerivedMetric DeriveMetric(string key, string name, List<Tuple<string, string>> trackerMetricKv, List<string> operatorTypeNames)
+        //{
+        //    var sourceMetrics = trackerMetricKv.Select(u => MapStatTracker.GetMetric(u.Item1, u.Item2)).ToList();
+        //    var operators = operatorTypeNames.Select(u => (IOperator<float>)Activator.CreateInstance(Type.GetType(u))).ToList();
 
-            return DeriveMetric(key, name, sourceMetrics, operators);
-        }
+        //    return DeriveMetric(key, name, sourceMetrics, operators);
+        //}
 
-        private DerivedMetric DeriveMetric(string key, string name, List<SourceMetric> sourceMetrics, List<IOperator<float>> operators)
-        {
-            var derivedMetric = new DerivedMetric(
-                key,
-                name,
-                sourceMetrics,
-                operators
-            );
+        //private DerivedMetric DeriveMetric(string key, string name, List<SourceMetric> sourceMetrics, List<IOperator<float>> operators)
+        //{
+        //    var derivedMetric = new DerivedMetric(
+        //        key,
+        //        name,
+        //        sourceMetrics,
+        //        operators
+        //    );
 
-            return derivedMetric;
-        }
+        //    return derivedMetric;
+        //}
     }
 }

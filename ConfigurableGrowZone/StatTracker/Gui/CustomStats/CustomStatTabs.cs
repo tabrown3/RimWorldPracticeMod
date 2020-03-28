@@ -49,35 +49,14 @@ namespace ConfigurableGrowZone
         {
             var disp1 = Observable.Merge(TrackersTab.OnListItemClick, SignalsTab.OnListItemClick).Subscribe(compStatTracker =>
             {
-                Log.Message("Clicked TrackersTab item or SignalsTab item");
-                MetricsTab.SetSource(compStatTracker.Data.SourceMetrics, compStatTracker.Data.History);
-                DerivedTab.SetSource(compStatTracker.Data.DerivedMetrics, compStatTracker.Data.History);
+                MetricsTab.SetSource(compStatTracker);
+                DerivedTab.SetSource(compStatTracker);
             });
 
-            //var disp2 = MetricsTab.OnAddMetricClicked.Subscribe(u =>
-            //{
-            //    var dialog = new Dialog_AddSourceMetric(
-            //        StatTypesHelper.DomainTypes,
-            //        StatTypesHelper.SourceTypes,
-            //        StatTypesHelper.AggregatorTypes);
-
-            //    Find.WindowStack.Add(dialog);
-
-            //    var disp4 = dialog.OnSubmit.Subscribe(v =>
-            //    {
-            //        Log.Message($"Name: {v.Name}");
-            //        Log.Message($"Key: {v.Key}");
-            //        Log.Message($"Domain: {v.DomainType.Name}");
-            //        Log.Message($"Source: {v.SourceType.Name}");
-            //        Log.Message($"Aggregator: {v.AggregatorType?.Name}");
-            //    });
-
-            //    unsubscribes.Add(disp4);
-            //});
-
-            var disp2 = MetricsTab.OnAddMetricClicked.SelectMany(u =>
+            var disp2 = MetricsTab.OnAddMetricClicked.SelectMany(tracker => // SelectMany just merges Observables into a single Observable
             {
                 var dialog = new Dialog_AddSourceMetric(
+                    tracker,
                     StatTypesHelper.DomainTypes,
                     StatTypesHelper.SourceTypes,
                     StatTypesHelper.AggregatorTypes);
@@ -87,11 +66,17 @@ namespace ConfigurableGrowZone
                 return dialog.OnSubmit;
             }).Subscribe(u =>
             {
-                Log.Message($"Name: {u.Name}");
-                Log.Message($"Key: {u.Key}");
-                Log.Message($"Domain: {u.DomainType.Name}");
-                Log.Message($"Source: {u.SourceType.Name}");
-                Log.Message($"Aggregator: {u.AggregatorType?.Name}");
+                var tracker = u.Item1;
+                var form = u.Item2;
+                Log.Message($"Metric Type: {form.MetricType.Name}");
+                Log.Message($"Name: {form.Name}");
+                Log.Message($"Key: {form.Key}");
+                Log.Message($"Unit: {form.Unit}");
+                Log.Message($"Domain: {form.DomainType.Name}");
+                Log.Message($"Source: {form.SourceType.Name}");
+                Log.Message($"Aggregator: {u.Item2.AggregatorType?.Name}");
+
+                tracker.AddSourceMetric(form.MetricType, form.Key, form.Name, form.SourceType, form.Unit, form.DomainType, form.AggregatorType);
             });
 
             var disp3 = DerivedTab.OnAddMetricClicked.Subscribe(u =>

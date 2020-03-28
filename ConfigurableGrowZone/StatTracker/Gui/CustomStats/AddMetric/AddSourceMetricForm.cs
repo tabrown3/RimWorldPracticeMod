@@ -10,6 +10,7 @@ namespace ConfigurableGrowZone
     {
         public string Name { get; set; } = "";
         public string Key { get; set; } = "";
+        public string Unit { get; set; } = "";
         public Type MetricType { get; set; }
         public Type DomainType { get; set; }
         public Type SourceType { get; set; }
