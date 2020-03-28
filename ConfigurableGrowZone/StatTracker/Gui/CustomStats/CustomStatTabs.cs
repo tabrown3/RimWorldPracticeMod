@@ -21,45 +21,12 @@ namespace ConfigurableGrowZone
         private readonly MetricsTab MetricsTab = new MetricsTab();
         private readonly DerivedTab DerivedTab = new DerivedTab();
 
-        private readonly List<IDisposable> unsubscribes;
-
-        public CustomStatTabs()
-        {
-            var disp1 = Observable.Merge(TrackersTab.OnListItemClick, SignalsTab.OnListItemClick).Subscribe(compStatTracker =>
-            {
-                Log.Message("Clicked TrackersTab item or SignalsTab item");
-                MetricsTab.SetSource(compStatTracker.Data.SourceMetrics, compStatTracker.Data.History);
-                DerivedTab.SetSource(compStatTracker.Data.DerivedMetrics, compStatTracker.Data.History);
-            });
-
-            var disp2 = MetricsTab.OnAddMetricClicked.Subscribe(u =>
-            {
-                Log.Message("Clicked 'Add SourceMetric' button");
-                Find.WindowStack.Add(new Dialog_AddSourceMetric(
-                    StatTypesHelper.DomainTypes,
-                    StatTypesHelper.SourceTypes,
-                    StatTypesHelper.AggregatorTypes)
-                );
-                Log.Message("Executed 'Add SourceMetric' cb");
-            });
-
-            var disp3 = DerivedTab.OnAddMetricClicked.Subscribe(u =>
-            {
-                Log.Message("Clicked 'Add DerivedMetric' button");
-                Find.WindowStack.Add(new Dialog_AddDerivedMetric());
-                Log.Message("Executed 'Add DerivedMetric' cb");
-            });
-
-            unsubscribes = new List<IDisposable>()
-            {
-                disp1,
-                disp2,
-                disp3
-            };
-        }
+        private List<IDisposable> unsubscribes;
 
         public void PreOpen()
         {
+            SetUpSubscriptions();
+
             LeftActiveTab = TrackersTab;
             RightActiveTab = MetricsTab;
 
@@ -76,6 +43,49 @@ namespace ConfigurableGrowZone
         public void PostClose()
         {
             unsubscribes.ForEach(u => u.Dispose());
+        }
+
+        private void SetUpSubscriptions()
+        {
+            var disp1 = Observable.Merge(TrackersTab.OnListItemClick, SignalsTab.OnListItemClick).Subscribe(compStatTracker =>
+            {
+                Log.Message("Clicked TrackersTab item or SignalsTab item");
+                MetricsTab.SetSource(compStatTracker.Data.SourceMetrics, compStatTracker.Data.History);
+                DerivedTab.SetSource(compStatTracker.Data.DerivedMetrics, compStatTracker.Data.History);
+            });
+
+            var disp2 = MetricsTab.OnAddMetricClicked.Subscribe(u =>
+            {
+                var dialog = new Dialog_AddSourceMetric(
+                    StatTypesHelper.DomainTypes,
+                    StatTypesHelper.SourceTypes,
+                    StatTypesHelper.AggregatorTypes);
+
+                Find.WindowStack.Add(dialog);
+
+                var disp4 = dialog.OnSubmit.Subscribe(v =>
+                {
+                    Log.Message($"Name: {v.Name}");
+                    Log.Message($"Key: {v.Key}");
+                    Log.Message($"Domain: {v.DomainType.Name}");
+                    Log.Message($"Source: {v.SourceType.Name}");
+                    Log.Message($"Aggregator: {v.AggregatorType?.Name}");
+                });
+
+                unsubscribes.Add(disp4);
+            });
+
+            var disp3 = DerivedTab.OnAddMetricClicked.Subscribe(u =>
+            {
+                Find.WindowStack.Add(new Dialog_AddDerivedMetric());
+            });
+
+            unsubscribes = new List<IDisposable>()
+            {
+                disp1,
+                disp2,
+                disp3
+            };
         }
     }
 }

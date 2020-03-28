@@ -19,6 +19,7 @@ namespace ConfigurableGrowZone
             this.doCloseX = true;
             this.focusWhenOpened = true;
             this.absorbInputAroundWindow = true;
+            this.forcePause = true;
         }
 
         public override void DoWindowContents(Rect inRect)

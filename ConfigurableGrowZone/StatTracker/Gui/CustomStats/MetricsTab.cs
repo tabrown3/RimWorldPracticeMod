@@ -46,6 +46,7 @@ namespace ConfigurableGrowZone
                 if (Widgets.ButtonText(addMetricButtonRect, "Add metric"))
                 {
                     onAddMetricClicked.OnNext(true); // TODO: Hmm, just sending true? That's weird...
+                    //onAddMetricClicked.OnCompleted();
                 }
             }
         }

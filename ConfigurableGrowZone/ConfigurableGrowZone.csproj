@@ -75,6 +75,7 @@
     <Compile Include="StatTracker\DataPoint.cs" />
     <Compile Include="StatTracker\DataVolume.cs" />
     <Compile Include="StatTracker\Gui\CustomStats\ActiveTab.cs" />
+    <Compile Include="StatTracker\Gui\CustomStats\AddMetric\AddSourceMetricForm.cs" />
     <Compile Include="StatTracker\Gui\CustomStats\AddMetric\Dialog_AddDerivedMetric.cs" />
     <Compile Include="StatTracker\Gui\CustomStats\CustomStatTabs.cs" />
     <Compile Include="StatTracker\Gui\CustomStats\DerivedTab.cs" />
