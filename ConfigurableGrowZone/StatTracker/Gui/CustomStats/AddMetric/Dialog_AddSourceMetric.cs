@@ -54,7 +54,7 @@ namespace ConfigurableGrowZone
                     () => StatTypesHelper.IsSetMetric(form.MetricType),
                     u => DrawTextButton(u, "Aggregator", aggregators, form.AggregatorType, v => form.AggregatorType = v)
                 )
-                .Then(u => DrawSubmitButton(u));
+                .Then(u => DrawSubmitButton(u, form, onSubmit));
         }
 
         private Rect DrawRadioButton(Rect inRect, string label, Type metricType)
@@ -70,20 +70,9 @@ namespace ConfigurableGrowZone
             return radioButtonRect;
         }
 
-        private Rect DrawSubmitButton(Rect inRect)
+        private Rect DrawTextButton(Rect inRect, string label, List<Type> typeList, Type selectedType, Action<Type> typeCb)
         {
-            Rect submitButtonRect = new Rect(inRect);
-            submitButtonRect.width = 150f;
-            submitButtonRect.height = 40f;
-
-            if (Widgets.ButtonText(submitButtonRect, "Submit") && form.IsValid())
-            {
-                onSubmit.OnNext(Tuple.Create(tracker, form));
-                onSubmit.OnCompleted();
-                Close();
-            }
-
-            return submitButtonRect;
+            return DrawTextButton(inRect, label, typeList, u => u.Name, selectedType, typeCb);
         }
     }
 }

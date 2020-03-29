@@ -39,7 +39,7 @@ namespace ConfigurableGrowZone
             return nameEntryRect;
         }
 
-        protected Rect DrawTextButton(Rect inRect, string label, List<Type> typeList, Type selectedType, Action<Type> typeCb)
+        protected Rect DrawTextButton<T>(Rect inRect, string label, List<T> objectList, Func<T,string> labelFunc, T selectedObject, Action<T> objectCb)
         {
             Rect outerRect = new Rect(inRect);
             outerRect.height = 35f;
@@ -49,20 +49,38 @@ namespace ConfigurableGrowZone
 
             if (Widgets.ButtonText(textButtonRect, label))
             {
-                List<FloatMenuOption> list = typeList.Select(v => new FloatMenuOption(v.Name, () => typeCb(v))).ToList();
+                List<FloatMenuOption> list = objectList.Select(v => new FloatMenuOption(labelFunc(v), () => objectCb(v))).ToList();
 
                 Find.WindowStack.Add(new FloatMenu(list));
             }
 
-            if (selectedType != null)
+            if (selectedObject != null)
             {
+                string selectedObjectLabel = labelFunc(selectedObject);
+
                 Rect typeNameRect = new Rect(outerRect);
                 typeNameRect.x = textButtonRect.x + textButtonRect.width;
-                typeNameRect.width = Text.CalcSize(selectedType.Name).x;
-                Widgets.Label(typeNameRect, selectedType.Name);
+                typeNameRect.width = Text.CalcSize(selectedObjectLabel).x;
+                Widgets.Label(typeNameRect, selectedObjectLabel);
             }
 
             return outerRect;
+        }
+
+        protected Rect DrawSubmitButton<T>(Rect inRect, T form, Subject<Tuple<CompStatTracker, T>> onSubmit) where T : IValidatable
+        {
+            Rect submitButtonRect = new Rect(inRect);
+            submitButtonRect.width = 150f;
+            submitButtonRect.height = 40f;
+
+            if (Widgets.ButtonText(submitButtonRect, "Submit") && form.IsValid())
+            {
+                onSubmit.OnNext(Tuple.Create(tracker, form));
+                onSubmit.OnCompleted();
+                Close();
+            }
+
+            return submitButtonRect;
         }
     }
 }

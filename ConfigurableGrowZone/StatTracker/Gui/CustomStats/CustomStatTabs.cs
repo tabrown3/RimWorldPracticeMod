@@ -84,7 +84,7 @@ namespace ConfigurableGrowZone
                 var tracker = u.Item1;
                 var form = u.Item2;
 
-                tracker.AddDerivedMetric(form.Key, form.Name, form.SourceMetrics, form.Operators);
+                tracker.AddDerivedMetric(form.Key, form.Name, form.SourceMetrics.ToList(), form.Operators);
             });
 
             unsubscribes = new List<IDisposable>()

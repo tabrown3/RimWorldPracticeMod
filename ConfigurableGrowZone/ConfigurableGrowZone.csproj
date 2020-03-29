@@ -79,6 +79,7 @@
     <Compile Include="StatTracker\Gui\CustomStats\AddMetric\AddSourceMetricForm.cs" />
     <Compile Include="StatTracker\Gui\CustomStats\AddMetric\Dialog_AddDerivedMetric.cs" />
     <Compile Include="StatTracker\Gui\CustomStats\AddMetric\Dialog_AddMetric.cs" />
+    <Compile Include="StatTracker\Gui\CustomStats\AddMetric\IValidatable.cs" />
     <Compile Include="StatTracker\Gui\CustomStats\CustomStatTabs.cs" />
     <Compile Include="StatTracker\Gui\CustomStats\DerivedTab.cs" />
     <Compile Include="StatTracker\Gui\CustomStats\ITabDrawable.cs" />

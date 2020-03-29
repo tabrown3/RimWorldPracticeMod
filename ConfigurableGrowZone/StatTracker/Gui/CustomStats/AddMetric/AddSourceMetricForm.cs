@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ConfigurableGrowZone
 {
-    public class AddSourceMetricForm
+    public class AddSourceMetricForm : IValidatable
     {
         public string Name { get; set; } = "";
         public string Key { get; set; } = "";

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RimWorld;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,6 @@ namespace ConfigurableGrowZone
     public class Dialog_AddDerivedMetric : Dialog_AddMetric
     {
         private readonly AddDerivedMetricForm form = new AddDerivedMetricForm();
-
         private Subject<Tuple<CompStatTracker, AddDerivedMetricForm>> onSubmit { get; } = new Subject<Tuple<CompStatTracker, AddDerivedMetricForm>>();
         public IObservable<Tuple<CompStatTracker, AddDerivedMetricForm>> OnSubmit => onSubmit;
 
@@ -28,23 +28,13 @@ namespace ConfigurableGrowZone
             new RectStacker(inRect).Then(u => DrawTextEntry(u, "Name", form.Name, v => form.Name = v))
                 .ThenGap(15f)
                 .Then(u => DrawTextEntry(u, "Key", form.Key, v => form.Key = v))
-                .ThenGap(15f);
+                .ThenGap(15f)
+                .Then(u => DrawTextButton(u, "Source", tracker.Data.SourceMetrics, form.AnchorMetric, v => form.AnchorMetric = v));
         }
 
-        private Rect DrawSubmitButton(Rect inRect)
+        private Rect DrawTextButton(Rect inRect, string label, List<SourceMetric> metricList, SourceMetric selectedMetric, Action<SourceMetric> metricCb)
         {
-            Rect submitButtonRect = new Rect(inRect);
-            submitButtonRect.width = 150f;
-            submitButtonRect.height = 40f;
-
-            if (Widgets.ButtonText(submitButtonRect, "Submit") && form.IsValid())
-            {
-                onSubmit.OnNext(Tuple.Create(tracker, form));
-                onSubmit.OnCompleted();
-                Close();
-            }
-
-            return submitButtonRect;
+            return DrawTextButton(inRect, label, metricList, u => u.Name, selectedMetric, metricCb);
         }
     }
 }
