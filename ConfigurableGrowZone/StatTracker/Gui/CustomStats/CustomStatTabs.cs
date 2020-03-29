@@ -23,6 +23,8 @@ namespace ConfigurableGrowZone
 
         private List<IDisposable> unsubscribes;
 
+        private MapStatTracker mapStatTracker => Find.CurrentMap.GetComponent<MapStatTracker>();
+
         public void PreOpen()
         {
             SetUpSubscriptions();
@@ -74,7 +76,7 @@ namespace ConfigurableGrowZone
 
             var disp3 = DerivedTab.OnAddMetricClicked.SelectMany(tracker =>
             {
-                var dialog = new Dialog_AddDerivedMetric(tracker);
+                var dialog = new Dialog_AddDerivedMetric(tracker, mapStatTracker.GetMetrics(), StatTypesHelper.OperatorTypes);
 
                 Find.WindowStack.Add(dialog);
 

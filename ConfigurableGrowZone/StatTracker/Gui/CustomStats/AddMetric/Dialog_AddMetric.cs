@@ -39,34 +39,6 @@ namespace ConfigurableGrowZone
             return nameEntryRect;
         }
 
-        protected Rect DrawTextButton<T>(Rect inRect, string label, List<T> objectList, Func<T,string> labelFunc, T selectedObject, Action<T> objectCb)
-        {
-            Rect outerRect = new Rect(inRect);
-            outerRect.height = 35f;
-
-            Rect textButtonRect = new Rect(outerRect);
-            textButtonRect.width = 100f;
-
-            if (Widgets.ButtonText(textButtonRect, label))
-            {
-                List<FloatMenuOption> list = objectList.Select(v => new FloatMenuOption(labelFunc(v), () => objectCb(v))).ToList();
-
-                Find.WindowStack.Add(new FloatMenu(list));
-            }
-
-            if (selectedObject != null)
-            {
-                string selectedObjectLabel = labelFunc(selectedObject);
-
-                Rect typeNameRect = new Rect(outerRect);
-                typeNameRect.x = textButtonRect.x + textButtonRect.width;
-                typeNameRect.width = Text.CalcSize(selectedObjectLabel).x;
-                Widgets.Label(typeNameRect, selectedObjectLabel);
-            }
-
-            return outerRect;
-        }
-
         protected Rect DrawSubmitButton<T>(Rect inRect, T form, Subject<Tuple<CompStatTracker, T>> onSubmit) where T : IValidatable
         {
             Rect submitButtonRect = new Rect(inRect);

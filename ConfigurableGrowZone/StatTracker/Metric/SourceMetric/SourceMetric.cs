@@ -8,6 +8,7 @@ namespace ConfigurableGrowZone
 {
     public abstract class SourceMetric : IMetric
     {
+        public string ParentName { get; }
         public string Key { get; }
         public string Name { get; }
         public string Unit { get; }
@@ -19,8 +20,9 @@ namespace ConfigurableGrowZone
 
         private Subject<DataPoint> valuePushed = new Subject<DataPoint>();
 
-        public SourceMetric(string key, string name, IPullable<float> source, string unit, TimeDomain domain)
+        public SourceMetric(string parentName, string key, string name, IPullable<float> source, string unit, TimeDomain domain)
         {
+            this.ParentName = parentName;
             this.Key = key;
             this.Name = name;
             this.Unit = unit;

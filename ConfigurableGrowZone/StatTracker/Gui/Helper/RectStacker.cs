@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -86,6 +87,16 @@ namespace ConfigurableGrowZone
         {
             curY += gapSize;
             curHeight += gapSize;
+
+            return this;
+        }
+
+        public RectStacker ThenForEach<T>(List<T> inList, Func<Rect, T, int, RectStacker> thenFunc)
+        {
+            for (var i = 0; i < inList.Count; i++)
+            {
+                Then(u => thenFunc(u, inList[i], i));
+            }
 
             return this;
         }

@@ -7,7 +7,7 @@ namespace ConfigurableGrowZone
 {
     public class PollSourceMetric : SourceMetric
     {
-        public PollSourceMetric(string key, string name, IPullable<float> source, string unit, TimeDomain domain) : base(key, name, source, unit, domain)
+        public PollSourceMetric(string parentName, string key, string name, IPullable<float> source, string unit, TimeDomain domain) : base(parentName, key, name, source, unit, domain)
         {
         }
 

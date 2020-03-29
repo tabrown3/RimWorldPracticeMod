@@ -10,7 +10,7 @@ namespace ConfigurableGrowZone
         private LinkedList<float> values = new LinkedList<float>();
         private readonly int windowSize;
 
-        public WindowSourceMetric(string key, string name, IPullable<float> source, string unit, TimeDomain domain, IAggregator<float> aggregator = null, int? windowSize = null) : base(key, name, source, unit, domain, aggregator)
+        public WindowSourceMetric(string parentName, string key, string name, IPullable<float> source, string unit, TimeDomain domain, IAggregator<float> aggregator = null, int? windowSize = null) : base(parentName, key, name, source, unit, domain, aggregator)
         {
             if(windowSize.HasValue)
             {

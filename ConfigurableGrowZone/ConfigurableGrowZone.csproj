@@ -75,9 +75,11 @@
     <Compile Include="StatTracker\DataPoint.cs" />
     <Compile Include="StatTracker\DataVolume.cs" />
     <Compile Include="StatTracker\Gui\CustomStats\ActiveTab.cs" />
-    <Compile Include="StatTracker\Gui\CustomStats\AddMetric\AddDerivedMetricForm.cs" />
-    <Compile Include="StatTracker\Gui\CustomStats\AddMetric\AddSourceMetricForm.cs" />
-    <Compile Include="StatTracker\Gui\CustomStats\AddMetric\Dialog_AddDerivedMetric.cs" />
+    <Compile Include="StatTracker\Gui\CustomStats\AddMetric\Derived\AddDerivedMetricForm.cs" />
+    <Compile Include="StatTracker\Gui\CustomStats\AddMetric\Derived\AddOperatorListComponent.cs" />
+    <Compile Include="StatTracker\Gui\CustomStats\AddMetric\Derived\AddOperatorRowComponent.cs" />
+    <Compile Include="StatTracker\Gui\CustomStats\AddMetric\Source\AddSourceMetricForm.cs" />
+    <Compile Include="StatTracker\Gui\CustomStats\AddMetric\Derived\Dialog_AddDerivedMetric.cs" />
     <Compile Include="StatTracker\Gui\CustomStats\AddMetric\Dialog_AddMetric.cs" />
     <Compile Include="StatTracker\Gui\CustomStats\AddMetric\IValidatable.cs" />
     <Compile Include="StatTracker\Gui\CustomStats\CustomStatTabs.cs" />
@@ -86,7 +88,7 @@
     <Compile Include="StatTracker\Gui\CustomStats\MetricsTab.cs" />
     <Compile Include="StatTracker\Gui\CustomStats\SignalsTab.cs" />
     <Compile Include="StatTracker\Gui\CustomStats\TrackersTab.cs" />
-    <Compile Include="StatTracker\Gui\CustomStats\AddMetric\Dialog_AddSourceMetric.cs" />
+    <Compile Include="StatTracker\Gui\CustomStats\AddMetric\Source\Dialog_AddSourceMetric.cs" />
     <Compile Include="StatTracker\Gui\Dialog_BarChart.cs" />
     <Compile Include="StatTracker\Domain\Domain.cs" />
     <Compile Include="StatTracker\Domain\QuarterHourDomain.cs" />
@@ -95,6 +97,7 @@
     <Compile Include="StatTracker\GameTime.cs" />
     <Compile Include="StatTracker\Gui\CustomStats\MainTabWindow_CustomStats.cs" />
     <Compile Include="StatTracker\Gui\Helper\RectStacker.cs" />
+    <Compile Include="StatTracker\Gui\Helper\StatWidgets.cs" />
     <Compile Include="StatTracker\Metric\DerivedMetric\DerivedMetric.cs" />
     <Compile Include="StatTracker\Metric\IMetric.cs" />
     <Compile Include="StatTracker\Operator\BinaryOperator.cs" />

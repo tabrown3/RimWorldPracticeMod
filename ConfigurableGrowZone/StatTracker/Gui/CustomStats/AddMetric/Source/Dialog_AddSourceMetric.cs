@@ -72,7 +72,7 @@ namespace ConfigurableGrowZone
 
         private Rect DrawTextButton(Rect inRect, string label, List<Type> typeList, Type selectedType, Action<Type> typeCb)
         {
-            return DrawTextButton(inRect, label, typeList, u => u.Name, selectedType, typeCb);
+            return StatWidgets.DrawTextButton(inRect, label, typeList, u => u.Name, selectedType, typeCb);
         }
     }
 }

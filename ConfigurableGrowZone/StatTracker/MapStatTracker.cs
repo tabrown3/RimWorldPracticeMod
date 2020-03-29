@@ -49,6 +49,11 @@ namespace ConfigurableGrowZone
             return TrackerComps.SingleOrDefault(u => u.Name == trackerName)?.Data.SourceMetrics.ToList();
         }
 
+        public List<SourceMetric> GetMetrics()
+        {
+            return TrackerComps.SelectMany(u => u.Data.SourceMetrics).ToList();
+        }
+
         public List<string> GetTrackerNames()
         {
             return TrackerComps.Select(u => u.Name).ToList();
@@ -57,6 +62,11 @@ namespace ConfigurableGrowZone
         public CompStatTracker GetTrackerByName(string trackerName)
         {
             return TrackerComps.SingleOrDefault(u => u.Name == trackerName);
+        }
+
+        public Dictionary<string, List<SourceMetric>> GetMetricDict()
+        {
+            return TrackerComps.ToDictionary(u => u.Name, u => u.Data.SourceMetrics);
         }
     }
 }

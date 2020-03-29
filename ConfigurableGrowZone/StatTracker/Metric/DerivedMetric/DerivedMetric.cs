@@ -10,6 +10,7 @@ namespace ConfigurableGrowZone
 {
     public class DerivedMetric : IMetric
     {
+        public string ParentName { get; }
         public string Key { get; }
         public string Name { get; }
         public string Unit { get; }
@@ -21,8 +22,9 @@ namespace ConfigurableGrowZone
 
         private readonly Subject<DataPoint> valuePushed = new Subject<DataPoint>();
 
-        public DerivedMetric(string key, string name, List<SourceMetric> sources, List<IOperator<float>> operators)
+        public DerivedMetric(string parentName, string key, string name, List<SourceMetric> sources, List<IOperator<float>> operators)
         {
+            ParentName = parentName;
             Key = sources[0].Key + "." + key;
             Name = name;
             Unit = sources[0].Unit;

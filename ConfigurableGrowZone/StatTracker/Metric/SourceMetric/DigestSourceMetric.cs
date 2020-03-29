@@ -11,7 +11,7 @@ namespace ConfigurableGrowZone
         private bool isInitialTick = true;
         private int indexPos;
         
-        public DigestSourceMetric(string key, string name, IPullable<float> source, string unit, TimeDomain domain, IAggregator<float> aggregator = null) : base(key, name, source, unit, domain, aggregator)
+        public DigestSourceMetric(string parentName, string key, string name, IPullable<float> source, string unit, TimeDomain domain, IAggregator<float> aggregator = null) : base(parentName, key, name, source, unit, domain, aggregator)
         {
         }
 

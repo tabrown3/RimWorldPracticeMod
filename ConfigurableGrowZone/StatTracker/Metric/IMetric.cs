@@ -5,6 +5,7 @@ namespace ConfigurableGrowZone
 {
     public interface IMetric
     {
+        string ParentName { get; }
         string Key { get; }
         string Name { get; }
         string Unit { get; }

@@ -78,6 +78,7 @@ namespace ConfigurableGrowZone
             if (metricType == typeof(PollSourceMetric))
             {
                 metric = new PollSourceMetric(
+                    Name,
                     key,
                     name,
                     (IPullable<float>)Activator.CreateInstance(sourceType, new object[] { parent }),
@@ -88,6 +89,7 @@ namespace ConfigurableGrowZone
             else if (metricType == typeof(DigestSourceMetric))
             {
                 metric = new DigestSourceMetric(
+                    Name,
                     key,
                     name,
                     (IPullable<float>)Activator.CreateInstance(sourceType, new object[] { parent }),
@@ -99,6 +101,7 @@ namespace ConfigurableGrowZone
             else if (metricType == typeof(WindowSourceMetric))
             {
                 metric = new WindowSourceMetric(
+                    Name,
                     key,
                     name,
                     (IPullable<float>)Activator.CreateInstance(sourceType, new object[] { parent }),
@@ -126,6 +129,7 @@ namespace ConfigurableGrowZone
         protected DerivedMetric DeriveMetric(string key, string name, List<SourceMetric> sourceMetrics, List<IOperator<float>> operators)
         {
             var derivedMetric = new DerivedMetric(
+                Name,
                 key,
                 name,
                 sourceMetrics,
