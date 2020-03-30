@@ -1,20 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlTypes;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
 namespace ConfigurableGrowZone
 {
-    public class RectStacker : RectConnector
+    public class RectSpanner : RectConnector
     {
-        public RectStacker(float startingY) : base(startingY)
+        public RectSpanner(float startingX) : base(startingX)
         {
         }
-        public RectStacker(Rect outerRect) : base(outerRect.y)
+        public RectSpanner(Rect outerRect) : base(outerRect.x)
         {
         }
 
@@ -22,13 +20,13 @@ namespace ConfigurableGrowZone
         {
             return new Rect()
             {
-                y = inPos
+                x = inPos
             };
         }
 
         protected override float GetRectPos(Rect inRect)
         {
-            return inRect.y;
+            return inRect.x;
         }
     }
 }

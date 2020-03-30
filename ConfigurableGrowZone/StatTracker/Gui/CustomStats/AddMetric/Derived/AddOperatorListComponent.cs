@@ -25,7 +25,7 @@ namespace ConfigurableGrowZone
 
         public RectStacker Draw(Rect inRect)
         {
-            return new RectStacker(inRect).ThenForEach(rows, (u, v, w) => v.Draw(u));
+            return new RectStacker(inRect).ThenForEach(rows, (u, row, ind) => row.Draw(u));
         }
     }
 }

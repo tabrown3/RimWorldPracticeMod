@@ -96,6 +96,8 @@
     <Compile Include="StatTracker\Domain\TwentyFourHourDomain.cs" />
     <Compile Include="StatTracker\GameTime.cs" />
     <Compile Include="StatTracker\Gui\CustomStats\MainTabWindow_CustomStats.cs" />
+    <Compile Include="StatTracker\Gui\Helper\RectConnector.cs" />
+    <Compile Include="StatTracker\Gui\Helper\RectSpanner.cs" />
     <Compile Include="StatTracker\Gui\Helper\RectStacker.cs" />
     <Compile Include="StatTracker\Gui\Helper\StatWidgets.cs" />
     <Compile Include="StatTracker\Metric\DerivedMetric\DerivedMetric.cs" />
