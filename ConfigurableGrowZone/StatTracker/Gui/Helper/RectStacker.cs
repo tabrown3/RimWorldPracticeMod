@@ -25,14 +25,14 @@ namespace ConfigurableGrowZone
             };
         }
 
-        protected override Vector2 GetRectPos(Rect inRect)
+        protected override Vector2 SelectivePosSum(Vector2 inLength, Vector2 curPos)
         {
-            return new Vector2(0f, inRect.y);
+            return new Vector2(curPos.x, inLength.y + curPos.y);
         }
 
-        protected override Vector2 GetRectLength(Rect inRect)
+        protected override Vector2 SelectiveLengthSum(Vector2 inLength, Vector2 curLength)
         {
-            return new Vector2(0f, inRect.height);
+            return new Vector2(Mathf.Max(inLength.x, curLength.x), inLength.y + curLength.y);
         }
 
         protected override Vector2 FloatToVec2(float inFloat)

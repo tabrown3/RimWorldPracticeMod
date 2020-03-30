@@ -101,17 +101,27 @@ namespace ConfigurableGrowZone
             return this;
         }
 
+        public Rect GetRect()
+        {
+            return new Rect(CurPos, CurLength);
+        }
+
         protected abstract Rect RectAtPos();
-        protected abstract Vector2 GetRectPos(Rect inRect);
-        protected abstract Vector2 GetRectLength(Rect inRect);
         protected abstract Vector2 FloatToVec2(float inFloat);
+        protected abstract Vector2 SelectivePosSum(Vector2 inLength, Vector2 curPos);
+        protected abstract Vector2 SelectiveLengthSum(Vector2 inLength, Vector2 curLength);
 
         private RectConnector ThenInt(Vector2 length)
         {
-            CurPos += length;
-            CurLength += length;
+            CurPos = SelectivePosSum(length, CurPos);
+            CurLength = SelectiveLengthSum(length, CurLength);
 
             return this;
+        }
+
+        private Vector2 GetRectLength(Rect inRect)
+        {
+            return new Vector2(inRect.width, inRect.height);
         }
     }
 }

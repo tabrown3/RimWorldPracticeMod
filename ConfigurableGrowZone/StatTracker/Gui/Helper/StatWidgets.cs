@@ -12,7 +12,7 @@ namespace ConfigurableGrowZone
     {
         public static Rect DrawTextButton<T>(Rect inRect, string label, List<T> objectList, Func<T, string> labelFunc, T selectedObject, Action<T> objectCb)
         {
-            var lolol = new RectSpanner(inRect)
+            return new RectSpanner(inRect)
                 .Then(u =>
                 {
                     Rect textButtonRect = new Rect(u);
@@ -39,9 +39,8 @@ namespace ConfigurableGrowZone
                     Widgets.Label(typeNameRect, selectedObjectLabel);
 
                     return typeNameRect;
-                });
-
-            return new Rect(lolol.CurPos.x, lolol.CurPos.y, lolol.CurLength.x, 35f); // TODO: figure out how to make RectSpanner know its height and RectStacker know its width... maybe?
+                })
+                .GetRect();
         }
     }
 }
