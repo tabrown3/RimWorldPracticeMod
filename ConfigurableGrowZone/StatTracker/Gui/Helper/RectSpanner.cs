@@ -25,5 +25,10 @@ namespace ConfigurableGrowZone
         {
             return inRect.x;
         }
+
+        protected override float GetRectLength(Rect inRect)
+        {
+            return inRect.width;
+        }
     }
 }

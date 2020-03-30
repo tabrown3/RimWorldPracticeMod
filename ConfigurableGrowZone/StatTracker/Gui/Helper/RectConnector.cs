@@ -13,6 +13,7 @@ namespace ConfigurableGrowZone
         private float curLength = 0f;
         protected abstract Rect CreateRectAtPos(float inPos);
         protected abstract float GetRectPos(Rect inRect);
+        protected abstract float GetRectLength(Rect inRect);
 
         public RectConnector(float startingPos)
         {
@@ -21,18 +22,18 @@ namespace ConfigurableGrowZone
 
         public RectConnector Then(Func<Rect, Rect> thenFunc)
         {
-            var newRect = CreateRectAtPos(curPos);
-            var bob = thenFunc(newRect);
+            var currentRect = CreateRectAtPos(curPos);
+            var newRect = thenFunc(currentRect);
 
-            return ThenInt(bob.height);
+            return ThenInt(GetRectLength(newRect));
         }
 
         public RectConnector Then(Func<Rect, RectConnector> thenFunc)
         {
-            var newRect = CreateRectAtPos(curPos);
-            var bob = thenFunc(newRect);
+            var currentRect = CreateRectAtPos(curPos);
+            var newRect = thenFunc(currentRect);
 
-            return ThenInt(bob.curLength);
+            return ThenInt(newRect.curLength);
         }
 
         public RectConnector Then(RectConnector rectStacker)
