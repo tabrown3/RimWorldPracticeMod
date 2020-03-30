@@ -32,29 +32,29 @@ namespace ConfigurableGrowZone
             base.DoWindowContents(inRect);
 
             new RectStacker(inRect)
-                .Then<RectStacker>(u => DrawTextEntry(u, "Name", form.Name, v => form.Name = v))
-                .ThenGap<RectStacker>(15f)
-                .Then<RectStacker>(u => DrawTextEntry(u, "Key", form.Key, v => form.Key = v))
-                .ThenGap<RectStacker>(15f)
-                .Then<RectStacker>(u => DrawTextEntry(u, "Unit", form.Unit, v => form.Unit = v))
-                .ThenGap<RectStacker>(15f)
-                .Then<RectStacker>(u =>
+                .Then(u => DrawTextEntry(u, "Name", form.Name, v => form.Name = v))
+                .ThenGap(15f)
+                .Then(u => DrawTextEntry(u, "Key", form.Key, v => form.Key = v))
+                .ThenGap(15f)
+                .Then(u => DrawTextEntry(u, "Unit", form.Unit, v => form.Unit = v))
+                .ThenGap(15f)
+                .Then(u =>
                 {
                     return new RectStacker(u)
-                        .Then<RectStacker>(v => DrawRadioButton(v, "Poll", typeof(PollSourceMetric)))
-                        .ThenGap<RectStacker>(10f)
-                        .Then<RectStacker>(v => DrawRadioButton(v, "Digest", typeof(DigestSourceMetric)))
-                        .ThenGap<RectStacker>(10f)
-                        .Then<RectStacker>(v => DrawRadioButton(v, "Window", typeof(WindowSourceMetric)));
+                        .Then(v => DrawRadioButton(v, "Poll", typeof(PollSourceMetric)))
+                        .ThenGap(10f)
+                        .Then(v => DrawRadioButton(v, "Digest", typeof(DigestSourceMetric)))
+                        .ThenGap(10f)
+                        .Then(v => DrawRadioButton(v, "Window", typeof(WindowSourceMetric)));
                 })
-                .ThenGap<RectStacker>(15f)
-                .Then<RectStacker>(u => DrawTextButton(u, "Domain", domains, form.DomainType, v => form.DomainType = v))
-                .Then<RectStacker>(u => DrawTextButton(u, "Source", sources, form.SourceType, v => form.SourceType = v))
-                .IfThen<RectStacker>(
+                .ThenGap(15f)
+                .Then(u => DrawTextButton(u, "Domain", domains, form.DomainType, v => form.DomainType = v))
+                .Then(u => DrawTextButton(u, "Source", sources, form.SourceType, v => form.SourceType = v))
+                .IfThen(
                     () => StatTypesHelper.IsSetMetric(form.MetricType),
                     u => DrawTextButton(u, "Aggregator", aggregators, form.AggregatorType, v => form.AggregatorType = v)
                 )
-                .Then<RectStacker>(u => DrawSubmitButton(u, form, onSubmit));
+                .Then(u => DrawSubmitButton(u, form, onSubmit));
         }
 
         private Rect DrawRadioButton(Rect inRect, string label, Type metricType)

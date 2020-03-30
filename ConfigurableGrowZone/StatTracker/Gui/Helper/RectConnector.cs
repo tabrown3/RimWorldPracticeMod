@@ -19,89 +19,89 @@ namespace ConfigurableGrowZone
             curPos = startingPos;
         }
 
-        public T Then<T>(Func<Rect, Rect> thenFunc) where T : RectConnector
+        public RectConnector Then(Func<Rect, Rect> thenFunc)
         {
             var newRect = CreateRectAtPos(curPos);
             var bob = thenFunc(newRect);
 
-            return ThenInt<T>(bob.height);
+            return ThenInt(bob.height);
         }
 
-        public T Then<T>(Func<Rect, RectConnector> thenFunc) where T : RectConnector
+        public RectConnector Then(Func<Rect, RectConnector> thenFunc)
         {
             var newRect = CreateRectAtPos(curPos);
             var bob = thenFunc(newRect);
 
-            return ThenInt<T>(bob.curLength);
+            return ThenInt(bob.curLength);
         }
 
-        public T Then<T>(T rectStacker) where T : RectConnector
+        public RectConnector Then(RectConnector rectStacker)
         {
-            return ThenInt<T>(rectStacker.curLength);
+            return ThenInt(rectStacker.curLength);
         }
 
-        public T IfThen<T>(Func<bool> isTrue, Func<Rect, Rect> thenFunc, Func<Rect, Rect> elseFunc = null) where T : RectConnector
+        public RectConnector IfThen(Func<bool> isTrue, Func<Rect, Rect> thenFunc, Func<Rect, Rect> elseFunc = null)
         {
             if (isTrue())
             {
-                return Then<T>(thenFunc);
+                return Then(thenFunc);
             }
             else
             {
                 if (elseFunc != null)
                 {
-                    return Then<T>(elseFunc);
+                    return Then(elseFunc);
                 }
                 else
                 {
-                    return (T)this;
+                    return this;
                 }
             }
         }
 
-        public T IfThen<T>(Func<bool> isTrue, Func<Rect, RectConnector> thenFunc, Func<Rect, RectConnector> elseFunc = null) where T : RectConnector
+        public RectConnector IfThen(Func<bool> isTrue, Func<Rect, RectConnector> thenFunc, Func<Rect, RectConnector> elseFunc = null)
         {
             if (isTrue())
             {
-                return Then<T>(thenFunc);
+                return Then(thenFunc);
             }
             else
             {
                 if (elseFunc != null)
                 {
-                    return Then<T>(elseFunc);
+                    return Then(elseFunc);
                 }
                 else
                 {
-                    return (T)this;
+                    return this;
                 }
             }
         }
 
-        public T ThenGap<T>(float gapSize) where T : RectConnector
+        public RectConnector ThenGap(float gapSize)
         {
             curPos += gapSize;
             curLength += gapSize;
 
-            return (T)this;
+            return this;
         }
 
-        public T ThenForEach<T, T2>(List<T2> inList, Func<Rect, T2, int, T> thenFunc) where T : RectConnector
+        public RectConnector ThenForEach<T>(List<T> inList, Func<Rect, T, int, RectConnector> thenFunc)
         {
             for (var i = 0; i < inList.Count; i++)
             {
-                Then<T>(u => thenFunc(u, inList[i], i));
+                Then(u => thenFunc(u, inList[i], i));
             }
 
-            return (T)this;
+            return this;
         }
 
-        private T ThenInt<T>(float length) where T : RectConnector
+        private RectConnector ThenInt(float length)
         {
             curPos += length;
             curLength += length;
 
-            return (T)this;
+            return this;
         }
     }
 }

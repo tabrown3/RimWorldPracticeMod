@@ -28,13 +28,13 @@ namespace ConfigurableGrowZone
         {
             base.DoWindowContents(inRect);
 
-            new RectStacker(inRect).Then<RectStacker>(u => DrawTextEntry(u, "Name", form.Name, v => form.Name = v))
-                .ThenGap<RectStacker>(15f)
-                .Then<RectStacker>(u => DrawTextEntry(u, "Key", form.Key, v => form.Key = v))
-                .ThenGap<RectStacker>(15f)
-                .Then<RectStacker>(u => DrawTextButton(u, "Source", tracker.Data.SourceMetrics, form.AnchorMetric, v => form.AnchorMetric = v))
-                .Then<RectStacker>(u => DrawSectionHeader(u, "Operators"))
-                .Then<RectStacker>(u => addOperatorComponent.Draw(u));
+            new RectStacker(inRect).Then(u => DrawTextEntry(u, "Name", form.Name, v => form.Name = v))
+                .ThenGap(15f)
+                .Then(u => DrawTextEntry(u, "Key", form.Key, v => form.Key = v))
+                .ThenGap(15f)
+                .Then(u => DrawTextButton(u, "Source", tracker.Data.SourceMetrics, form.AnchorMetric, v => form.AnchorMetric = v))
+                .Then(u => DrawSectionHeader(u, "Operators"))
+                .Then(u => addOperatorComponent.Draw(u));
         }
 
         private Rect DrawTextButton(Rect inRect, string label, List<SourceMetric> metricList, SourceMetric selectedMetric, Action<SourceMetric> metricCb)

@@ -26,10 +26,10 @@ namespace ConfigurableGrowZone
             this.allSourceMetrics = allSourceMetrics;
         }
 
-        public RectStacker Draw(Rect inRect)
+        public RectConnector Draw(Rect inRect)
         {
             return new RectStacker(inRect)
-                .Then<RectStacker>(
+                .Then(
                     u => StatWidgets.DrawTextButton(u, "Operator", allOperatorTypes, v => v.Name, chosenOperator,
                         v => {
                             chosenOperator = v;
@@ -38,7 +38,7 @@ namespace ConfigurableGrowZone
                             chosenOperatorIsBinary = typeof(BinaryOperator<float>).IsAssignableFrom(chosenOperator);
                         })
                 )
-                .IfThen<RectStacker>(
+                .IfThen(
                     () => chosenOperator != null && chosenOperatorIsBinary,
                     u => StatWidgets.DrawTextButton(u, "Tracker", allTrackerNames, v => v, chosenTrackerName,
                         v => {
@@ -47,7 +47,7 @@ namespace ConfigurableGrowZone
                             availableMetrics = allSourceMetrics.Where(w => w.ParentName == v).ToList();
                         })
                 )
-                .IfThen<RectStacker>(
+                .IfThen(
                     () => !string.IsNullOrEmpty(chosenTrackerName),
                     u => StatWidgets.DrawTextButton(u, "Metric", availableMetrics, v => v.Name, chosenSourceMetric, v => chosenSourceMetric = v)
                 );
