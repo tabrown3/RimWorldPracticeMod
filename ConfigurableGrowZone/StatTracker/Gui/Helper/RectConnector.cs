@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace ConfigurableGrowZone
@@ -32,39 +29,7 @@ namespace ConfigurableGrowZone
             return ThenInt(GetRectLength(newRect));
         }
 
-        public RectConnector Then(Func<Rect, RectConnector> thenFunc)
-        {
-            var currentRect = RectAtPos();
-            var outConnector = thenFunc(currentRect);
-
-            return ThenInt(outConnector.CurLength);
-        }
-
-        public RectConnector Then(RectConnector rectStacker)
-        {
-            return ThenInt(rectStacker.CurLength);
-        }
-
         public RectConnector IfThen(Func<bool> isTrue, Func<Rect, Rect> thenFunc, Func<Rect, Rect> elseFunc = null)
-        {
-            if (isTrue())
-            {
-                return Then(thenFunc);
-            }
-            else
-            {
-                if (elseFunc != null)
-                {
-                    return Then(elseFunc);
-                }
-                else
-                {
-                    return this;
-                }
-            }
-        }
-
-        public RectConnector IfThen(Func<bool> isTrue, Func<Rect, RectConnector> thenFunc, Func<Rect, RectConnector> elseFunc = null)
         {
             if (isTrue())
             {

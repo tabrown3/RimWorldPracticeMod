@@ -45,7 +45,8 @@ namespace ConfigurableGrowZone
                         .ThenGap(10f)
                         .Then(v => DrawRadioButton(v, "Digest", typeof(DigestSourceMetric)))
                         .ThenGap(10f)
-                        .Then(v => DrawRadioButton(v, "Window", typeof(WindowSourceMetric)));
+                        .Then(v => DrawRadioButton(v, "Window", typeof(WindowSourceMetric)))
+                        .GetRect();
                 })
                 .ThenGap(15f)
                 .Then(u => DrawTextButton(u, "Domain", domains, form.DomainType, v => form.DomainType = v))

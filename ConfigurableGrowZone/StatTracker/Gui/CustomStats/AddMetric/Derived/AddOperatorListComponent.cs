@@ -23,9 +23,9 @@ namespace ConfigurableGrowZone
             rows.Add(new AddOperatorRowComponent(allOperatorTypes, allTrackerNames, allSourceMetrics));
         }
 
-        public RectConnector Draw(Rect inRect)
+        public Rect Draw(Rect inRect)
         {
-            return new RectStacker(inRect).ThenForEach(rows, (u, row, ind) => row.Draw(u));
+            return new RectStacker(inRect).ThenForEach(rows, (u, row, ind) => row.Draw(u)).GetRect();
         }
     }
 }
