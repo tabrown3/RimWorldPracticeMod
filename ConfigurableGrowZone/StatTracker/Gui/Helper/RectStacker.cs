@@ -11,9 +11,6 @@ namespace ConfigurableGrowZone
 {
     public class RectStacker : RectConnector
     {
-        public RectStacker(float startingY) : base(startingY)
-        {
-        }
         public RectStacker(Rect outerRect) : base(outerRect.y)
         {
         }

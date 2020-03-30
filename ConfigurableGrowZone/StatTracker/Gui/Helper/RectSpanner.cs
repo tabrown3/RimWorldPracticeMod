@@ -9,9 +9,6 @@ namespace ConfigurableGrowZone
 {
     public class RectSpanner : RectConnector
     {
-        public RectSpanner(float startingX) : base(startingX)
-        {
-        }
         public RectSpanner(Rect outerRect) : base(outerRect.x)
         {
         }
