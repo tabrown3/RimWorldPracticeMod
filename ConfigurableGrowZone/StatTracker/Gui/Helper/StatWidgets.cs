@@ -15,27 +15,37 @@ namespace ConfigurableGrowZone
             Rect outerRect = new Rect(inRect);
             outerRect.height = 35f;
 
-            Rect textButtonRect = new Rect(outerRect);
-            textButtonRect.width = 100f;
+            var lolol = new RectSpanner(outerRect)
+                .Then(u =>
+                {
+                    Rect textButtonRect = new Rect(u);
+                    textButtonRect.width = 100f;
+                    textButtonRect.height = 35f;
 
-            if (Widgets.ButtonText(textButtonRect, label))
-            {
-                List<FloatMenuOption> list = objectList.Select(v => new FloatMenuOption(labelFunc(v), () => objectCb(v))).ToList();
+                    if (Widgets.ButtonText(textButtonRect, label))
+                    {
+                        List<FloatMenuOption> list = objectList.Select(v => new FloatMenuOption(labelFunc(v), () => objectCb(v))).ToList();
 
-                Find.WindowStack.Add(new FloatMenu(list));
-            }
+                        Find.WindowStack.Add(new FloatMenu(list));
+                    }
 
-            if (selectedObject != null)
-            {
-                string selectedObjectLabel = labelFunc(selectedObject);
+                    return textButtonRect;
+                })
+                .IfThen(() => selectedObject != null, u =>
+                {
+                    string selectedObjectLabel = labelFunc(selectedObject);
 
-                Rect typeNameRect = new Rect(outerRect);
-                typeNameRect.x = textButtonRect.x + textButtonRect.width;
-                typeNameRect.width = Text.CalcSize(selectedObjectLabel).x;
-                Widgets.Label(typeNameRect, selectedObjectLabel);
-            }
+                    Rect typeNameRect = new Rect(u);
+                    typeNameRect.width = Text.CalcSize(selectedObjectLabel).x;
+                    typeNameRect.height = 35f;
 
-            return outerRect;
+                    Widgets.Label(typeNameRect, selectedObjectLabel);
+
+                    return typeNameRect;
+                });
+
+            //return outerRect;
+            return new Rect(lolol.CurPos.x, lolol.CurPos.y, lolol.CurLength.x, 35f);
         }
     }
 }

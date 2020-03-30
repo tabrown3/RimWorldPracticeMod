@@ -9,24 +9,24 @@ namespace ConfigurableGrowZone
 {
     public abstract class RectConnector
     {
-        private Vector2 curPos = Vector2.zero;
-        private Vector2 curLength = Vector2.zero;
+        public Vector2 CurPos = Vector2.zero;
+        public Vector2 CurLength = Vector2.zero;
 
         public RectConnector() { }
 
         public RectConnector(Vector2 startingPos)
         {
-            curPos = startingPos;
+            CurPos = startingPos;
         }
 
         public RectConnector(Rect inRect)
         {
-            curPos = new Vector2(inRect.x, inRect.y);
+            CurPos = new Vector2(inRect.x, inRect.y);
         }
 
         public RectConnector Then(Func<Rect, Rect> thenFunc)
         {
-            var currentRect = CreateRectAtPos(curPos);
+            var currentRect = RectAtPos();
             var newRect = thenFunc(currentRect);
 
             return ThenInt(GetRectLength(newRect));
@@ -34,15 +34,15 @@ namespace ConfigurableGrowZone
 
         public RectConnector Then(Func<Rect, RectConnector> thenFunc)
         {
-            var currentRect = CreateRectAtPos(curPos);
+            var currentRect = RectAtPos();
             var outConnector = thenFunc(currentRect);
 
-            return ThenInt(outConnector.curLength);
+            return ThenInt(outConnector.CurLength);
         }
 
         public RectConnector Then(RectConnector rectStacker)
         {
-            return ThenInt(rectStacker.curLength);
+            return ThenInt(rectStacker.CurLength);
         }
 
         public RectConnector IfThen(Func<bool> isTrue, Func<Rect, Rect> thenFunc, Func<Rect, Rect> elseFunc = null)
@@ -85,8 +85,8 @@ namespace ConfigurableGrowZone
 
         public RectConnector ThenGap(float gapSize)
         {
-            curPos += FloatToVec2(gapSize);
-            curLength += FloatToVec2(gapSize);
+            CurPos += FloatToVec2(gapSize);
+            CurLength += FloatToVec2(gapSize);
 
             return this;
         }
@@ -101,15 +101,15 @@ namespace ConfigurableGrowZone
             return this;
         }
 
-        protected abstract Rect CreateRectAtPos(Vector2 inPos);
+        protected abstract Rect RectAtPos();
         protected abstract Vector2 GetRectPos(Rect inRect);
         protected abstract Vector2 GetRectLength(Rect inRect);
         protected abstract Vector2 FloatToVec2(float inFloat);
 
         private RectConnector ThenInt(Vector2 length)
         {
-            curPos += length;
-            curLength += length;
+            CurPos += length;
+            CurLength += length;
 
             return this;
         }

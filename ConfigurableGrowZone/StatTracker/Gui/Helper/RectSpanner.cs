@@ -11,13 +11,15 @@ namespace ConfigurableGrowZone
     {
         public RectSpanner() : base() { }
         public RectSpanner(Vector2 startingPos) : base(startingPos) { }
-        public RectSpanner(Rect inRect) : base(inRect) { }
+        public RectSpanner(Rect inRect) : base(inRect) { /*CurLength.y = inRect.height;*/ }
 
-        protected override Rect CreateRectAtPos(Vector2 inPos)
+        protected override Rect RectAtPos()
         {
             return new Rect()
             {
-                x = inPos.x
+                x = this.CurPos.x,
+                y = this.CurPos.y,
+                height = this.CurLength.y
             };
         }
 

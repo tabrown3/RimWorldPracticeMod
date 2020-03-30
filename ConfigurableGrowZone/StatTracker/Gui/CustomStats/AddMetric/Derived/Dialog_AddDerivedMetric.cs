@@ -40,6 +40,40 @@ namespace ConfigurableGrowZone
                 .Then(u => DrawTextButton(u, "Source", tracker.Data.SourceMetrics, form.AnchorMetric, v => form.AnchorMetric = v))
                 .Then(u => DrawTextButton(u, "Source", tracker.Data.SourceMetrics, form.AnchorMetric, v => form.AnchorMetric = v))
                 .Then(u => DrawTextButton(u, "Source", tracker.Data.SourceMetrics, form.AnchorMetric, v => form.AnchorMetric = v));
+
+            //new RectSpanner(inRect)
+            //    .Then(u =>
+            //    {
+            //        var myBox = new Rect(u);
+            //        myBox.width = 100f;
+            //        myBox.height = 100f;
+
+            //        Widgets.DrawBoxSolid(myBox, Color.green);
+
+            //        return myBox;
+            //    })
+            //    .ThenGap(10f)
+            //    .Then(u =>
+            //    {
+            //        var myBox = new Rect(u);
+            //        myBox.width = 100f;
+            //        myBox.height = 100f;
+
+            //        Widgets.DrawBoxSolid(myBox, Color.red);
+
+            //        return myBox;
+            //    })
+            //    .ThenGap(10f)
+            //    .Then(u =>
+            //    {
+            //        var myBox = new Rect(u);
+            //        myBox.width = 100f;
+            //        myBox.height = 100f;
+
+            //        Widgets.DrawBoxSolid(myBox, Color.blue);
+
+            //        return myBox;
+            //    });
         }
 
         private Rect DrawTextButton(Rect inRect, string label, List<SourceMetric> metricList, SourceMetric selectedMetric, Action<SourceMetric> metricCb)

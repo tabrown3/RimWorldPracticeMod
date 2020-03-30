@@ -13,13 +13,15 @@ namespace ConfigurableGrowZone
     {
         public RectStacker() : base() { }
         public RectStacker(Vector2 startingPos) : base(startingPos) { }
-        public RectStacker(Rect inRect) : base(inRect) { }
+        public RectStacker(Rect inRect) : base(inRect) { /*CurLength.x = inRect.width;*/ }
 
-        protected override Rect CreateRectAtPos(Vector2 inPos)
+        protected override Rect RectAtPos()
         {
             return new Rect()
             {
-                y = inPos.y
+                x = this.CurPos.x,
+                y = this.CurPos.y,
+                width = this.CurLength.x
             };
         }
 
