@@ -9,15 +9,19 @@ namespace ConfigurableGrowZone
 {
     public abstract class RectConnector
     {
-        private float curPos = 0f;
-        private float curLength = 0f;
-        protected abstract Rect CreateRectAtPos(float inPos);
-        protected abstract float GetRectPos(Rect inRect);
-        protected abstract float GetRectLength(Rect inRect);
+        private Vector2 curPos = Vector2.zero;
+        private Vector2 curLength = Vector2.zero;
 
-        public RectConnector(float startingPos)
+        public RectConnector() { }
+
+        public RectConnector(Vector2 startingPos)
         {
             curPos = startingPos;
+        }
+
+        public RectConnector(Rect inRect)
+        {
+            curPos = new Vector2(inRect.x, inRect.y);
         }
 
         public RectConnector Then(Func<Rect, Rect> thenFunc)
@@ -31,9 +35,9 @@ namespace ConfigurableGrowZone
         public RectConnector Then(Func<Rect, RectConnector> thenFunc)
         {
             var currentRect = CreateRectAtPos(curPos);
-            var newRect = thenFunc(currentRect);
+            var outConnector = thenFunc(currentRect);
 
-            return ThenInt(newRect.curLength);
+            return ThenInt(outConnector.curLength);
         }
 
         public RectConnector Then(RectConnector rectStacker)
@@ -81,8 +85,8 @@ namespace ConfigurableGrowZone
 
         public RectConnector ThenGap(float gapSize)
         {
-            curPos += gapSize;
-            curLength += gapSize;
+            curPos += FloatToVec2(gapSize);
+            curLength += FloatToVec2(gapSize);
 
             return this;
         }
@@ -97,7 +101,12 @@ namespace ConfigurableGrowZone
             return this;
         }
 
-        private RectConnector ThenInt(float length)
+        protected abstract Rect CreateRectAtPos(Vector2 inPos);
+        protected abstract Vector2 GetRectPos(Rect inRect);
+        protected abstract Vector2 GetRectLength(Rect inRect);
+        protected abstract Vector2 FloatToVec2(float inFloat);
+
+        private RectConnector ThenInt(Vector2 length)
         {
             curPos += length;
             curLength += length;

@@ -9,26 +9,31 @@ namespace ConfigurableGrowZone
 {
     public class RectSpanner : RectConnector
     {
-        public RectSpanner(Rect outerRect) : base(outerRect.x)
-        {
-        }
+        public RectSpanner() : base() { }
+        public RectSpanner(Vector2 startingPos) : base(startingPos) { }
+        public RectSpanner(Rect inRect) : base(inRect) { }
 
-        protected override Rect CreateRectAtPos(float inPos)
+        protected override Rect CreateRectAtPos(Vector2 inPos)
         {
             return new Rect()
             {
-                x = inPos
+                x = inPos.x
             };
         }
 
-        protected override float GetRectPos(Rect inRect)
+        protected override Vector2 GetRectPos(Rect inRect)
         {
-            return inRect.x;
+            return new Vector2(inRect.x, 0f);
         }
 
-        protected override float GetRectLength(Rect inRect)
+        protected override Vector2 GetRectLength(Rect inRect)
         {
-            return inRect.width;
+            return new Vector2(inRect.width, 0f);
+        }
+
+        protected override Vector2 FloatToVec2(float inFloat)
+        {
+            return new Vector2(inFloat, 0f);
         }
     }
 }

@@ -11,26 +11,31 @@ namespace ConfigurableGrowZone
 {
     public class RectStacker : RectConnector
     {
-        public RectStacker(Rect outerRect) : base(outerRect.y)
-        {
-        }
+        public RectStacker() : base() { }
+        public RectStacker(Vector2 startingPos) : base(startingPos) { }
+        public RectStacker(Rect inRect) : base(inRect) { }
 
-        protected override Rect CreateRectAtPos(float inPos)
+        protected override Rect CreateRectAtPos(Vector2 inPos)
         {
             return new Rect()
             {
-                y = inPos
+                y = inPos.y
             };
         }
 
-        protected override float GetRectPos(Rect inRect)
+        protected override Vector2 GetRectPos(Rect inRect)
         {
-            return inRect.y;
+            return new Vector2(0f, inRect.y);
         }
 
-        protected override float GetRectLength(Rect inRect)
+        protected override Vector2 GetRectLength(Rect inRect)
         {
-            return inRect.height;
+            return new Vector2(0f, inRect.height);
+        }
+
+        protected override Vector2 FloatToVec2(float inFloat)
+        {
+            return new Vector2(0f, inFloat);
         }
     }
 }
