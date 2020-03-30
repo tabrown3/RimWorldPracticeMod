@@ -26,9 +26,9 @@ namespace ConfigurableGrowZone
             this.allSourceMetrics = allSourceMetrics;
         }
 
-        public RectConnector Draw(Rect inRect)
+        public Rect Draw(Rect inRect)
         {
-            return new RectStacker(inRect)
+            return new RectSpanner(inRect)
                 .Then(
                     u => StatWidgets.DrawTextButton(u, "Operator", allOperatorTypes, v => v.Name, chosenOperator,
                         v => {
@@ -50,7 +50,7 @@ namespace ConfigurableGrowZone
                 .IfThen(
                     () => !string.IsNullOrEmpty(chosenTrackerName),
                     u => StatWidgets.DrawTextButton(u, "Metric", availableMetrics, v => v.Name, chosenSourceMetric, v => chosenSourceMetric = v)
-                );
+                ).GetRect();
         }
 
         public bool IsValid()

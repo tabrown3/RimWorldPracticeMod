@@ -91,7 +91,7 @@ namespace ConfigurableGrowZone
             return this;
         }
 
-        public RectConnector ThenForEach<T>(List<T> inList, Func<Rect, T, int, RectConnector> thenFunc)
+        public RectConnector ThenForEach<T>(List<T> inList, Func<Rect, T, int, Rect> thenFunc)
         {
             for (var i = 0; i < inList.Count; i++)
             {
