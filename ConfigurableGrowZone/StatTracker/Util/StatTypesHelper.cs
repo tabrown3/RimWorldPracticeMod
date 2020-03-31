@@ -33,5 +33,11 @@ namespace ConfigurableGrowZone
         {
             return inType == typeof(DigestSourceMetric) || inType == typeof(WindowSourceMetric);
         }
+
+        public static bool IsUnaryOperator(Type inType)
+        {
+            // TODO: this would benefit from a cache
+            return typeof(UnaryOperator<float>).IsAssignableFrom(inType);
+        }
     }
 }

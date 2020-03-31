@@ -124,7 +124,7 @@
     <Compile Include="StatTracker\Metric\SourceMetric\SourceMetric.cs" />
     <Compile Include="StatTracker\Aggregator\IAggregator.cs" />
     <Compile Include="StatTracker\Metric\SourceMetric\WindowSourceMetric.cs" />
-    <Compile Include="StatTracker\StatTypesHelper.cs" />
+    <Compile Include="StatTracker\Util\StatTypesHelper.cs" />
     <Compile Include="StatTracker\Util\DialogHelper.cs" />
     <Compile Include="StatTracker\Gui\GuiGroup.cs" />
   </ItemGroup>

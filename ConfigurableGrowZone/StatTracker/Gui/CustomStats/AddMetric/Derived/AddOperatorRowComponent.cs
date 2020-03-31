@@ -30,26 +30,28 @@ namespace ConfigurableGrowZone
         {
             return new RectSpanner(inRect)
                 .Then(
-                    u => StatWidgets.DrawTextButton(u, "Operator", allOperatorTypes, v => v.Name, chosenOperator,
+                    u => StatWidgets.DrawTextButtonBottomLabel(u, "Operator", allOperatorTypes, v => v.Name, chosenOperator,
                         v => {
                             chosenOperator = v;
                             chosenTrackerName = "";
                             chosenSourceMetric = null;
-                            chosenOperatorIsBinary = typeof(BinaryOperator<float>).IsAssignableFrom(chosenOperator);
+                            chosenOperatorIsBinary = !StatTypesHelper.IsUnaryOperator(chosenOperator);
                         })
                 )
+                .ThenGap(50f)
                 .IfThen(
                     () => chosenOperator != null && chosenOperatorIsBinary,
-                    u => StatWidgets.DrawTextButton(u, "Tracker", allTrackerNames, v => v, chosenTrackerName,
+                    u => StatWidgets.DrawTextButtonBottomLabel(u, "Tracker", allTrackerNames, v => v, chosenTrackerName,
                         v => {
                             chosenTrackerName = v;
                             chosenSourceMetric = null;
                             availableMetrics = allSourceMetrics.Where(w => w.ParentName == v).ToList();
                         })
                 )
+                .ThenGap(50f)
                 .IfThen(
                     () => !string.IsNullOrEmpty(chosenTrackerName),
-                    u => StatWidgets.DrawTextButton(u, "Metric", availableMetrics, v => v.Name, chosenSourceMetric, v => chosenSourceMetric = v)
+                    u => StatWidgets.DrawTextButtonBottomLabel(u, "Metric", availableMetrics, v => v.Name, chosenSourceMetric, v => chosenSourceMetric = v)
                 ).GetRect();
         }
 

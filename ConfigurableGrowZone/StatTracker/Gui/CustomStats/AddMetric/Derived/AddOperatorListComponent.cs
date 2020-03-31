@@ -25,7 +25,18 @@ namespace ConfigurableGrowZone
 
         public Rect Draw(Rect inRect)
         {
-            return new RectStacker(inRect).ThenForEach(rows, (u, row, ind) => row.Draw(u)).GetRect();
+            return new RectStacker(inRect)
+                .Then(u =>
+                {
+                    return new RectSpanner(u)
+                        .Then(v => StatWidgets.DrawSectionHeader(v, "Operator"))
+                        .ThenGap(50f)
+                        .Then(v => StatWidgets.DrawSectionHeader(v, "Tracker"))
+                        .ThenGap(50f)
+                        .Then(v => StatWidgets.DrawSectionHeader(v, "Metric"))
+                        .GetRect();
+                })
+                .ThenForEach(rows, (u, row, ind) => row.Draw(u)).GetRect();
         }
     }
 }

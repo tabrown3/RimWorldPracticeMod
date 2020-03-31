@@ -33,24 +33,12 @@ namespace ConfigurableGrowZone
                 .Then(u => DrawTextEntry(u, "Key", form.Key, v => form.Key = v))
                 .ThenGap(15f)
                 .Then(u => DrawTextButton(u, "Source", tracker.Data.SourceMetrics, form.AnchorMetric, v => form.AnchorMetric = v))
-                .Then(u => DrawSectionHeader(u, "Operators"))
                 .Then(u => addOperatorListComponent.Draw(u));
         }
 
         private Rect DrawTextButton(Rect inRect, string label, List<SourceMetric> metricList, SourceMetric selectedMetric, Action<SourceMetric> metricCb)
         {
-            return StatWidgets.DrawTextButton(inRect, label, metricList, u => u.Name, selectedMetric, metricCb);
-        }
-
-        private Rect DrawSectionHeader(Rect inRect, string heading)
-        {
-            Rect headerRect = new Rect(inRect);
-            headerRect.height = 35f;
-            headerRect.width = Text.CalcSize(heading).x;
-
-            Widgets.Label(headerRect, heading);
-
-            return headerRect;
+            return StatWidgets.DrawTextButtonSideLabel(inRect, label, metricList, u => u.Name, selectedMetric, metricCb);
         }
     }
 }

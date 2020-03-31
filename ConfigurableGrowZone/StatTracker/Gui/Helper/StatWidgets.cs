@@ -10,9 +10,19 @@ namespace ConfigurableGrowZone
 {
     static public class StatWidgets
     {
-        public static Rect DrawTextButton<T>(Rect inRect, string label, List<T> objectList, Func<T, string> labelFunc, T selectedObject, Action<T> objectCb)
+        public static Rect DrawTextButtonSideLabel<T>(Rect inRect, string label, List<T> objectList, Func<T, string> labelFunc, T selectedObject, Action<T> objectCb)
         {
-            return new RectSpanner(inRect)
+            return DrawTextButton(inRect, label, objectList, labelFunc, selectedObject, objectCb, u => new RectSpanner(u));
+        }
+
+        public static Rect DrawTextButtonBottomLabel<T>(Rect inRect, string label, List<T> objectList, Func<T, string> labelFunc, T selectedObject, Action<T> objectCb)
+        {
+            return DrawTextButton(inRect, label, objectList, labelFunc, selectedObject, objectCb, u => new RectStacker(u));
+        }
+
+        private static Rect DrawTextButton<T>(Rect inRect, string label, List<T> objectList, Func<T, string> labelFunc, T selectedObject, Action<T> objectCb, Func<Rect, RectConnector> connectorFunc)
+        {
+            return connectorFunc(inRect)
                 .Then(u =>
                 {
                     Rect textButtonRect = new Rect(u);
@@ -41,6 +51,17 @@ namespace ConfigurableGrowZone
                     return typeNameRect;
                 })
                 .GetRect();
+        }
+
+        public static Rect DrawSectionHeader(Rect inRect, string heading)
+        {
+            Rect headerRect = new Rect(inRect);
+            headerRect.height = 35f;
+            headerRect.width = 100f;//Text.CalcSize(heading).x;
+
+            Widgets.Label(headerRect, heading);
+
+            return headerRect;
         }
     }
 }

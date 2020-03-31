@@ -73,7 +73,9 @@ namespace ConfigurableGrowZone
 
         protected abstract Rect RectAtPos();
         protected abstract Vector2 FloatToVec2(float inFloat);
+        // add one diminsion but not the other
         protected abstract Vector2 SelectivePosSum(Vector2 inLength, Vector2 curPos);
+        // add one diminsion and take max of the other
         protected abstract Vector2 SelectiveLengthSum(Vector2 inLength, Vector2 curLength);
 
         private RectConnector ThenInt(Vector2 length)
