@@ -21,7 +21,7 @@ namespace ConfigurableGrowZone
 
         public Dialog_AddDerivedMetric(CompStatTracker tracker, List<SourceMetric> allSourceMetrics, List<Type> allOperatorTypes) : base(tracker)
         {
-            addOperatorListComponent = new AddOperatorListComponent(allSourceMetrics, allOperatorTypes);
+            addOperatorListComponent = new AddOperatorListComponent(allSourceMetrics, allOperatorTypes, form.OperatorList);
         }
 
         public override void DoWindowContents(Rect inRect)
@@ -33,7 +33,8 @@ namespace ConfigurableGrowZone
                 .Then(u => DrawTextEntry(u, "Key", form.Key, v => form.Key = v))
                 .ThenGap(15f)
                 .Then(u => DrawTextButton(u, "Source", tracker.Data.SourceMetrics, form.AnchorMetric, v => form.AnchorMetric = v))
-                .Then(u => addOperatorListComponent.Draw(u));
+                .Then(u => addOperatorListComponent.Draw(u))
+                .Then(u => DrawSubmitButton(u, form, onSubmit));
         }
 
         private Rect DrawTextButton(Rect inRect, string label, List<SourceMetric> metricList, SourceMetric selectedMetric, Action<SourceMetric> metricCb)

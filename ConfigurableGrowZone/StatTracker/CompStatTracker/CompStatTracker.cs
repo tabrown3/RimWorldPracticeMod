@@ -46,7 +46,7 @@ namespace ConfigurableGrowZone
             Data.AddSourceMetric(metric);
         }
 
-        public void AddDerivedMetric(string key, string name, List<SourceMetric> sourceMetrics, List<IOperator<float>> operators)
+        public void AddDerivedMetric(string key, string name, List<SourceMetric> sourceMetrics, List<Type> operators)
         {
             var derivedMetric = DeriveMetric(key, name, sourceMetrics, operators);
             AddDerivedMetric(derivedMetric);
@@ -123,6 +123,12 @@ namespace ConfigurableGrowZone
             var sourceMetrics = trackerMetricKv.Select(u => MapStatTracker.GetMetric(u.Item1, u.Item2)).ToList();
             var operators = operatorTypeNames.Select(u => (IOperator<float>)Activator.CreateInstance(Type.GetType(u))).ToList();
 
+            return DeriveMetric(key, name, sourceMetrics, operators);
+        }
+
+        protected DerivedMetric DeriveMetric(string key, string name, List<SourceMetric> sourceMetrics, List<Type> operatorTypes)
+        {
+            var operators = operatorTypes.Select(u => (IOperator<float>)Activator.CreateInstance(u)).ToList();
             return DeriveMetric(key, name, sourceMetrics, operators);
         }
 

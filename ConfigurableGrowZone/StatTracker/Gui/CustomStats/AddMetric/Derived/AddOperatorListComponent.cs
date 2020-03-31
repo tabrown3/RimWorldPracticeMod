@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ConfigurableGrowZone.StatTracker.Gui.CustomStats.AddMetric.Derived;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,47 +10,19 @@ using Verse;
 
 namespace ConfigurableGrowZone
 {
-    public class AddOperatorListComponent : IValidatable
+    public class AddOperatorListComponent
     {
         private readonly List<string> allTrackerNames;
         private readonly List<AddOperatorRowComponent> rows = new List<AddOperatorRowComponent>();
-
-        private List<AddOperatorRowComponent> TopRows => rows.Take(rows.Count - 1).ToList();
-        private AddOperatorRowComponent BottomRow => rows.Count > 0 ? rows.Last() : null;
         private IObservable<bool> rowsBecameValid;
 
-        public List<Type> Operators
-        {
-            get
-            {
-                var operators = rows.Select(u => u.Model.ChosenOperator).ToList();
-                if (BottomRow.IsEmpty())
-                {
-                    operators.Pop();
-                }
+        public readonly AddOperatorListModel Model;
 
-                return operators;
-            }
-        }
-
-        public List<SourceMetric> SourceMetrics
-        {
-            get
-            {
-                var sourceMetrics = rows.Select(u => u.Model.ChosenSourceMetric).ToList();
-                if (BottomRow.IsEmpty())
-                {
-                    sourceMetrics.Pop();
-                }
-
-                return sourceMetrics;
-            }
-        }
-
-        public AddOperatorListComponent(List<SourceMetric> allSourceMetrics, List<Type> allOperatorTypes)
+        public AddOperatorListComponent(List<SourceMetric> allSourceMetrics, List<Type> allOperatorTypes, AddOperatorListModel model)
         {
             allTrackerNames = allSourceMetrics.Select(u => u.ParentName).Distinct().ToList();
 
+            Model = model;
             AddRow(allOperatorTypes, allTrackerNames, allSourceMetrics);
         }
 
@@ -69,21 +42,10 @@ namespace ConfigurableGrowZone
                 .ThenForEach(rows, (u, row, ind) => row.Draw(u)).GetRect();
         }
 
-        public bool IsValid()
-        {
-            if(BottomRow.IsEmpty())
-            {
-                return TopRows.All(u => u.IsValid());
-            }
-            else
-            {
-                return rows.All(u => u.IsValid());
-            }
-        }
-
         private void AddRow(List<Type> allOperatorTypes, List<string> allTrackerNames, List<SourceMetric> allSourceMetrics)
         {
-            var newRow = new AddOperatorRowComponent(allOperatorTypes, allTrackerNames, allSourceMetrics);
+            Model.Rows.Add(new AddOperatorRowModel());
+            var newRow = new AddOperatorRowComponent(allOperatorTypes, allTrackerNames, allSourceMetrics, Model.Rows.Last());
             rows.Add(newRow);
 
             rowsBecameValid = RowsBecameValidFactory();
@@ -100,7 +62,7 @@ namespace ConfigurableGrowZone
             // observable that emits when the list's rows go from "not all being valid" to "all being valid"
             return rows.ToObservable()
                 .SelectMany(u => u.RowBecameValid)
-                .Select(u => rows.All(v => v.IsValid()))
+                .Select(u => rows.All(v => v.Model.IsValid()))
                 .Where(isValid =>
                 {
                     bool validityStateChanged = isValid != wasValid;

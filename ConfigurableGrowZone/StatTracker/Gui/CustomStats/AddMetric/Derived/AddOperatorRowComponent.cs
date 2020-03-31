@@ -8,14 +8,14 @@ using UnityEngine;
 
 namespace ConfigurableGrowZone
 {
-    public class AddOperatorRowComponent : IValidatable
+    public class AddOperatorRowComponent
     {
         private readonly List<Type> allOperatorTypes;
         private readonly List<string> allTrackerNames;
         private readonly List<SourceMetric> allSourceMetrics;
         private List<SourceMetric> availableMetrics = new List<SourceMetric>();
 
-        public AddOperatorRowModel Model = new AddOperatorRowModel();
+        public readonly AddOperatorRowModel Model;// = new AddOperatorRowModel();
 
         private readonly Subject<Type> operatorChosen = new Subject<Type>();
         private readonly Subject<string> trackerNameChosen = new Subject<string>();
@@ -23,13 +23,14 @@ namespace ConfigurableGrowZone
 
         public readonly IObservable<bool> RowBecameValid;
 
-        public AddOperatorRowComponent(List<Type> allOperatorTypes, List<string> allTrackerNames, List<SourceMetric> allSourceMetrics)
+        public AddOperatorRowComponent(List<Type> allOperatorTypes, List<string> allTrackerNames, List<SourceMetric> allSourceMetrics, AddOperatorRowModel model)
         {
             this.allOperatorTypes = allOperatorTypes;
             this.allTrackerNames = allTrackerNames;
             this.allSourceMetrics = allSourceMetrics;
 
             RowBecameValid = RowBecameValidFactory();
+            Model = model;
         }
 
         public Rect Draw(Rect inRect)
@@ -48,11 +49,6 @@ namespace ConfigurableGrowZone
                     () => !string.IsNullOrEmpty(Model.ChosenTrackerName),
                     u => StatWidgets.DrawTextButtonBottomLabel(u, "Metric", availableMetrics, v => v.Name, Model.ChosenSourceMetric, SourceMetricChosen)
                 ).GetRect();
-        }
-
-        public bool IsValid()
-        {
-            return Model.IsValid();
         }
 
         public bool IsEmpty()
