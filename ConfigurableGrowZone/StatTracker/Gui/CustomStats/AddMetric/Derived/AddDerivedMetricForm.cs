@@ -14,7 +14,6 @@ namespace ConfigurableGrowZone
         public string Name { get; set; } = "";
         public string Key { get; set; } = "";
         public SourceMetric AnchorMetric { get; set; }
-        //public List<SourceMetric> Inputs { get; } = new List<SourceMetric>();
         public IEnumerable<SourceMetric> SourceMetrics
         {
             get
@@ -24,7 +23,6 @@ namespace ConfigurableGrowZone
                     yield return metric;
             }
         }
-        //public List<IOperator<float>> Operators { get; set; }
 
         public List<Type> Operators
         {

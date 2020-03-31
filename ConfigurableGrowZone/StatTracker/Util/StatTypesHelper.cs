@@ -22,11 +22,6 @@ namespace ConfigurableGrowZone
             SourceTypes = GenTypes.AllTypes.Where(u => typeof(IPullable<float>).IsAssignableFrom(u) && u.IsClass && !u.IsAbstract).ToList();
             AggregatorTypes = GenTypes.AllTypes.Where(u => typeof(IAggregator<float>).IsAssignableFrom(u) && u.IsClass && !u.IsAbstract).ToList();
             OperatorTypes = GenTypes.AllTypes.Where(u => typeof(IOperator<float>).IsAssignableFrom(u) && u.IsClass && !u.IsAbstract).ToList();
-
-            DomainTypes.ForEach(u => Log.Message($"From DomainTypes: {u.Name}"));
-            SourceTypes.ForEach(u => Log.Message($"From SourceTypes: {u.Name}"));
-            AggregatorTypes.ForEach(u => Log.Message($"From AggregatorTypes: {u.Name}"));
-            OperatorTypes.ForEach(u => Log.Message($"From OperatorTypes: {u.Name}"));
         }
 
         public static bool IsSetMetric(Type inType)

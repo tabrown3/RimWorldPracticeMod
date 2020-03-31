@@ -60,7 +60,6 @@ namespace ConfigurableGrowZone
         private void OperatorChosen(Type chosenOperator)
         {
             Model.ChosenOperator = chosenOperator;
-            Log.Message($"Chose: {chosenOperator.Name}");
             Model.ChosenTrackerName = "";
             Model.ChosenSourceMetric = null;
             Model.ChosenOperatorIsBinary = !StatTypesHelper.IsUnaryOperator(chosenOperator);
