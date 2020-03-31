@@ -30,11 +30,7 @@ namespace ConfigurableGrowZone
         {
             get
             {
-                var operators = OperatorList.Rows.Select(u => u.ChosenOperator).ToList();
-                if (OperatorList.BottomRow.IsEmpty())
-                {
-                    operators.Pop();
-                }
+                var operators = OperatorList.Rows.Select(u => u.ChosenOperator).Where(u => u != null).ToList();
 
                 return operators;
             }
@@ -44,11 +40,7 @@ namespace ConfigurableGrowZone
         {
             get
             {
-                var sourceMetrics = OperatorList.Rows.Select(u => u.ChosenSourceMetric).ToList();
-                if (OperatorList.BottomRow.IsEmpty())
-                {
-                    sourceMetrics.Pop();
-                }
+                var sourceMetrics = OperatorList.Rows.Select(u => u.ChosenSourceMetric).Where(u => u != null).ToList();
 
                 return sourceMetrics;
             }

@@ -129,6 +129,7 @@ namespace ConfigurableGrowZone
         protected DerivedMetric DeriveMetric(string key, string name, List<SourceMetric> sourceMetrics, List<Type> operatorTypes)
         {
             var operators = operatorTypes.Select(u => (IOperator<float>)Activator.CreateInstance(u)).ToList();
+
             return DeriveMetric(key, name, sourceMetrics, operators);
         }
 
