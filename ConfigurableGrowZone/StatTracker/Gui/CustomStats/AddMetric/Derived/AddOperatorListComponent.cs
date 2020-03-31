@@ -9,15 +9,42 @@ using Verse;
 
 namespace ConfigurableGrowZone
 {
-    public class AddOperatorListComponent
+    public class AddOperatorListComponent : IValidatable
     {
         private readonly List<string> allTrackerNames;
         private readonly List<AddOperatorRowComponent> rows = new List<AddOperatorRowComponent>();
-        //private AddOperatorRowComponent bottomRow => rows.Count > 0 ? rows[rows.Count - 1] : null;
+
+        private List<AddOperatorRowComponent> TopRows => rows.Take(rows.Count - 1).ToList();
+        private AddOperatorRowComponent BottomRow => rows.Count > 0 ? rows.Last() : null;
         private IObservable<bool> rowsBecameValid;
 
-        public List<Type> Operators { get; } = new List<Type>();
-        public List<SourceMetric> SourceMetrics { get; } = new List<SourceMetric>();
+        public List<Type> Operators
+        {
+            get
+            {
+                var operators = rows.Select(u => u.Model.ChosenOperator).ToList();
+                if (BottomRow.IsEmpty())
+                {
+                    operators.Pop();
+                }
+
+                return operators;
+            }
+        }
+
+        public List<SourceMetric> SourceMetrics
+        {
+            get
+            {
+                var sourceMetrics = rows.Select(u => u.Model.ChosenSourceMetric).ToList();
+                if (BottomRow.IsEmpty())
+                {
+                    sourceMetrics.Pop();
+                }
+
+                return sourceMetrics;
+            }
+        }
 
         public AddOperatorListComponent(List<SourceMetric> allSourceMetrics, List<Type> allOperatorTypes)
         {
@@ -42,6 +69,18 @@ namespace ConfigurableGrowZone
                 .ThenForEach(rows, (u, row, ind) => row.Draw(u)).GetRect();
         }
 
+        public bool IsValid()
+        {
+            if(BottomRow.IsEmpty())
+            {
+                return TopRows.All(u => u.IsValid());
+            }
+            else
+            {
+                return rows.All(u => u.IsValid());
+            }
+        }
+
         private void AddRow(List<Type> allOperatorTypes, List<string> allTrackerNames, List<SourceMetric> allSourceMetrics)
         {
             var newRow = new AddOperatorRowComponent(allOperatorTypes, allTrackerNames, allSourceMetrics);
@@ -51,23 +90,22 @@ namespace ConfigurableGrowZone
             rowsBecameValid.Subscribe(u =>
             {
                 AddRow(allOperatorTypes, allTrackerNames, allSourceMetrics);
-                Log.Message("Rows all valid!");
             });
         }
 
         private IObservable<bool> RowsBecameValidFactory()
         {
-            bool lastValidityState = false; // can start false because after a new row is added, it will always be invalid
+            bool wasValid = false; // can start false because after a new row is added, it will always be invalid
 
             // observable that emits when the list's rows go from "not all being valid" to "all being valid"
             return rows.ToObservable()
                 .SelectMany(u => u.RowBecameValid)
                 .Select(u => rows.All(v => v.IsValid()))
-                .Where(curValidityState =>
+                .Where(isValid =>
                 {
-                    bool validityStateChanged = curValidityState != lastValidityState;
-                    lastValidityState = curValidityState;
-                    return validityStateChanged && curValidityState;
+                    bool validityStateChanged = isValid != wasValid;
+                    wasValid = isValid;
+                    return validityStateChanged && isValid;
                 }
             );
         }

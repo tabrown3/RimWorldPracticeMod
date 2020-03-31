@@ -78,6 +78,7 @@
     <Compile Include="StatTracker\Gui\CustomStats\AddMetric\Derived\AddDerivedMetricForm.cs" />
     <Compile Include="StatTracker\Gui\CustomStats\AddMetric\Derived\AddOperatorListComponent.cs" />
     <Compile Include="StatTracker\Gui\CustomStats\AddMetric\Derived\AddOperatorRowComponent.cs" />
+    <Compile Include="StatTracker\Gui\CustomStats\AddMetric\Derived\AddOperatorRowModel.cs" />
     <Compile Include="StatTracker\Gui\CustomStats\AddMetric\Source\AddSourceMetricForm.cs" />
     <Compile Include="StatTracker\Gui\CustomStats\AddMetric\Derived\Dialog_AddDerivedMetric.cs" />
     <Compile Include="StatTracker\Gui\CustomStats\AddMetric\Dialog_AddMetric.cs" />

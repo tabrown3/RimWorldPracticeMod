@@ -15,11 +15,7 @@ namespace ConfigurableGrowZone
         private readonly List<SourceMetric> allSourceMetrics;
         private List<SourceMetric> availableMetrics = new List<SourceMetric>();
 
-        private Type chosenOperator = null;
-        private string chosenTrackerName = "";
-        private SourceMetric chosenSourceMetric = null;
-
-        private bool chosenOperatorIsBinary = false;
+        public AddOperatorRowModel Model = new AddOperatorRowModel();
 
         private readonly Subject<Type> operatorChosen = new Subject<Type>();
         private readonly Subject<string> trackerNameChosen = new Subject<string>();
@@ -40,57 +36,50 @@ namespace ConfigurableGrowZone
         {
             return new RectSpanner(inRect)
                 .Then(
-                    u => StatWidgets.DrawTextButtonBottomLabel(u, "Operator", allOperatorTypes, v => v.Name, chosenOperator, OperatorChosen)
+                    u => StatWidgets.DrawTextButtonBottomLabel(u, "Operator", allOperatorTypes, v => v.Name, Model.ChosenOperator, OperatorChosen)
                 )
                 .ThenGap(50f)
                 .IfThen(
-                    () => chosenOperator != null && chosenOperatorIsBinary,
-                    u => StatWidgets.DrawTextButtonBottomLabel(u, "Tracker", allTrackerNames, v => v, chosenTrackerName, TrackerNameChosen)
+                    () => Model.ChosenOperator != null && Model.ChosenOperatorIsBinary,
+                    u => StatWidgets.DrawTextButtonBottomLabel(u, "Tracker", allTrackerNames, v => v, Model.ChosenTrackerName, TrackerNameChosen)
                 )
                 .ThenGap(50f)
                 .IfThen(
-                    () => !string.IsNullOrEmpty(chosenTrackerName),
-                    u => StatWidgets.DrawTextButtonBottomLabel(u, "Metric", availableMetrics, v => v.Name, chosenSourceMetric, SourceMetricChosen)
+                    () => !string.IsNullOrEmpty(Model.ChosenTrackerName),
+                    u => StatWidgets.DrawTextButtonBottomLabel(u, "Metric", availableMetrics, v => v.Name, Model.ChosenSourceMetric, SourceMetricChosen)
                 ).GetRect();
         }
 
         public bool IsValid()
         {
-            bool hasOperator = chosenOperator != null;
+            return Model.IsValid();
+        }
 
-            bool isValid;
-            if (hasOperator && chosenOperatorIsBinary)
-            {
-                isValid = !string.IsNullOrEmpty(chosenTrackerName) && chosenSourceMetric != null;
-            }
-            else
-            {
-                isValid = hasOperator;
-            }
-
-            return isValid;
+        public bool IsEmpty()
+        {
+            return Model.IsEmpty();
         }
 
         private void OperatorChosen(Type chosenOperator)
         {
-            this.chosenOperator = chosenOperator;
-            chosenTrackerName = "";
-            chosenSourceMetric = null;
-            chosenOperatorIsBinary = !StatTypesHelper.IsUnaryOperator(chosenOperator);
+            Model.ChosenOperator = chosenOperator;
+            Model.ChosenTrackerName = "";
+            Model.ChosenSourceMetric = null;
+            Model.ChosenOperatorIsBinary = !StatTypesHelper.IsUnaryOperator(chosenOperator);
             operatorChosen.OnNext(chosenOperator);
         }
 
         private void TrackerNameChosen(string chosenTrackerName)
         {
-            this.chosenTrackerName = chosenTrackerName;
-            chosenSourceMetric = null;
+            Model.ChosenTrackerName = chosenTrackerName;
+            Model.ChosenSourceMetric = null;
             availableMetrics = allSourceMetrics.Where(w => w.ParentName == chosenTrackerName).ToList();
             trackerNameChosen.OnNext(chosenTrackerName);
         }
 
         private void SourceMetricChosen(SourceMetric chosenSourceMetric)
         {
-            this.chosenSourceMetric = chosenSourceMetric;
+            Model.ChosenSourceMetric = chosenSourceMetric;
             sourceMetricChosen.OnNext(chosenSourceMetric);
         }
 
@@ -100,9 +89,9 @@ namespace ConfigurableGrowZone
 
             // observable that emits when rows's validity changes from invalid to valid
             return Observable.Merge(
-                    operatorChosen.Select(u => IsValid()),
-                    trackerNameChosen.Select(u => IsValid()),
-                    sourceMetricChosen.Select(u => IsValid())
+                    operatorChosen.Select(u => Model.IsValid()),
+                    trackerNameChosen.Select(u => Model.IsValid()),
+                    sourceMetricChosen.Select(u => Model.IsValid())
                 )
                 .Where(curValidityState =>
                     {
