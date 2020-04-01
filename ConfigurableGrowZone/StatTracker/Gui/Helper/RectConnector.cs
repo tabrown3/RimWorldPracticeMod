@@ -29,6 +29,11 @@ namespace ConfigurableGrowZone
             return ThenInt(GetRectLength(newRect));
         }
 
+        public RectConnector Then(Func<Rect, RectConnector> thenFunc)
+        {
+            return Then(u => thenFunc(u).GetRect());
+        }
+
         public RectConnector IfThen(Func<bool> isTrue, Func<Rect, Rect> thenFunc, Func<Rect, Rect> elseFunc = null)
         {
             if (isTrue())
@@ -48,12 +53,24 @@ namespace ConfigurableGrowZone
             }
         }
 
+        public RectConnector IfThen(Func<bool> isTrue, Func<Rect, RectConnector> thenFunc, Func<Rect, RectConnector> elseFunc = null)
+        {
+            Func<Rect, Rect> modifiedElseFunc = null;
+            if(elseFunc != null)
+            {
+                modifiedElseFunc = u => elseFunc(u).GetRect();
+            }
+            return IfThen(isTrue, u => thenFunc(u).GetRect(), modifiedElseFunc);
+        }
+
+        public RectConnector IfThen(Func<bool> isTrue, Func<Rect, RectConnector> thenFunc, Func<Rect, Rect> elseFunc = null)
+        {
+            return IfThen(isTrue, u => thenFunc(u).GetRect(), elseFunc);
+        }
+
         public RectConnector ThenGap(float gapSize)
         {
-            CurPos += FloatToVec2(gapSize);
-            CurLength += FloatToVec2(gapSize);
-
-            return this;
+            return ThenInt(FloatToVec2(gapSize));
         }
 
         public RectConnector ThenForEach<T>(List<T> inList, Func<Rect, T, int, Rect> thenFunc)
@@ -64,6 +81,11 @@ namespace ConfigurableGrowZone
             }
 
             return this;
+        }
+
+        public RectConnector ThenForEach<T>(List<T> inList, Func<Rect, T, int, RectConnector> thenFunc)
+        {
+            return ThenForEach(inList, (u, v, w) => thenFunc(u, v, w).GetRect());
         }
 
         public Rect GetRect()

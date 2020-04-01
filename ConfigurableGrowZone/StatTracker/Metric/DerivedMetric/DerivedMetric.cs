@@ -94,6 +94,8 @@ namespace ConfigurableGrowZone
             return runningValue;
         }
 
+        // This method returns an observable that will emit to completion immediately after subscription;
+        //  it passes historical data through the derivation metric and emits it as if it were occurring in real-time
         public IObservable<DataPoint> RetroactivelyDerivedHistoricalData()
         {
             var anchorMetric = Sources[0];
