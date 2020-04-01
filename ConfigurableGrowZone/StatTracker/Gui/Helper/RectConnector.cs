@@ -26,7 +26,7 @@ namespace ConfigurableGrowZone
             var currentRect = RectAtPos();
             var newRect = thenFunc(currentRect);
 
-            return ThenInt(GetRectLength(newRect));
+            return ThenInt(newRect);
         }
 
         public RectConnector Then(Func<Rect, RectConnector> thenFunc)
@@ -90,17 +90,17 @@ namespace ConfigurableGrowZone
         // add one diminsion and take max of the other
         protected abstract Vector2 SelectiveLengthSum(Vector2 inLength, Vector2 curLength);
 
+        private RectConnector ThenInt(Rect inRect)
+        {
+            return ThenInt(new Vector2(inRect.width, inRect.height));
+        }
+
         private RectConnector ThenInt(Vector2 length)
         {
             CurPos = SelectivePosSum(length, CurPos);
             CurLength = SelectiveLengthSum(length, CurLength);
 
             return this;
-        }
-
-        private Vector2 GetRectLength(Rect inRect)
-        {
-            return new Vector2(inRect.width, inRect.height);
         }
     }
 }
