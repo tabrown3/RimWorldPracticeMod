@@ -37,7 +37,7 @@ namespace ConfigurableGrowZone
                 .Then(u => DrawSubmitButton(u, form, onSubmit));
         }
 
-        private Rect DrawTextButton(Rect inRect, string label, List<SourceMetric> metricList, SourceMetric selectedMetric, Action<SourceMetric> metricCb)
+        private RectConnector DrawTextButton(Rect inRect, string label, List<SourceMetric> metricList, SourceMetric selectedMetric, Action<SourceMetric> metricCb)
         {
             return StatWidgets.DrawTextButtonSideLabel(inRect, label, metricList, u => u.Name, selectedMetric, metricCb);
         }

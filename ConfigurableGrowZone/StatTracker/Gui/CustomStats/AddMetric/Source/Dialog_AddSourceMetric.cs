@@ -45,8 +45,7 @@ namespace ConfigurableGrowZone
                         .ThenGap(10f)
                         .Then(v => DrawRadioButton(v, "Digest", typeof(DigestSourceMetric)))
                         .ThenGap(10f)
-                        .Then(v => DrawRadioButton(v, "Window", typeof(WindowSourceMetric)))
-                        .GetRect();
+                        .Then(v => DrawRadioButton(v, "Window", typeof(WindowSourceMetric)));
                 })
                 .ThenGap(15f)
                 .Then(u => DrawTextButton(u, "Domain", domains, form.DomainType, v => form.DomainType = v))
@@ -71,7 +70,7 @@ namespace ConfigurableGrowZone
             return radioButtonRect;
         }
 
-        private Rect DrawTextButton(Rect inRect, string label, List<Type> typeList, Type selectedType, Action<Type> typeCb)
+        private RectConnector DrawTextButton(Rect inRect, string label, List<Type> typeList, Type selectedType, Action<Type> typeCb)
         {
             return StatWidgets.DrawTextButtonSideLabel(inRect, label, typeList, u => u.Name, selectedType, typeCb);
         }

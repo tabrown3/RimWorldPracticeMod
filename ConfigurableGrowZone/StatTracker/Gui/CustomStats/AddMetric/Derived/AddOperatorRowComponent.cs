@@ -34,7 +34,7 @@ namespace ConfigurableGrowZone
             Model = model;
         }
 
-        public Rect Draw(Rect inRect)
+        public RectConnector Draw(Rect inRect)
         {
             return new RectSpanner(inRect)
                 .Then(
@@ -49,7 +49,7 @@ namespace ConfigurableGrowZone
                 .IfThen(
                     () => !string.IsNullOrEmpty(Model.ChosenTrackerName),
                     u => StatWidgets.DrawTextButtonBottomLabel(u, "Metric", availableMetrics, v => v.Name, Model.ChosenSourceMetric, SourceMetricChosen)
-                ).GetRect();
+                );
         }
 
         public bool IsEmpty()

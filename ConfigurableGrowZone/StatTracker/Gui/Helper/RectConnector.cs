@@ -53,16 +53,6 @@ namespace ConfigurableGrowZone
             }
         }
 
-        public RectConnector IfThen(Func<bool> isTrue, Func<Rect, RectConnector> thenFunc, Func<Rect, RectConnector> elseFunc = null)
-        {
-            Func<Rect, Rect> modifiedElseFunc = null;
-            if(elseFunc != null)
-            {
-                modifiedElseFunc = u => elseFunc(u).GetRect();
-            }
-            return IfThen(isTrue, u => thenFunc(u).GetRect(), modifiedElseFunc);
-        }
-
         public RectConnector IfThen(Func<bool> isTrue, Func<Rect, RectConnector> thenFunc, Func<Rect, Rect> elseFunc = null)
         {
             return IfThen(isTrue, u => thenFunc(u).GetRect(), elseFunc);

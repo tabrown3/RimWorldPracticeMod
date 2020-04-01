@@ -10,17 +10,17 @@ namespace ConfigurableGrowZone
 {
     static public class StatWidgets
     {
-        public static Rect DrawTextButtonSideLabel<T>(Rect inRect, string label, List<T> objectList, Func<T, string> labelFunc, T selectedObject, Action<T> objectCb)
+        public static RectConnector DrawTextButtonSideLabel<T>(Rect inRect, string label, List<T> objectList, Func<T, string> labelFunc, T selectedObject, Action<T> objectCb)
         {
             return DrawTextButton(inRect, label, objectList, labelFunc, selectedObject, objectCb, u => new RectSpanner(u));
         }
 
-        public static Rect DrawTextButtonBottomLabel<T>(Rect inRect, string label, List<T> objectList, Func<T, string> labelFunc, T selectedObject, Action<T> objectCb)
+        public static RectConnector DrawTextButtonBottomLabel<T>(Rect inRect, string label, List<T> objectList, Func<T, string> labelFunc, T selectedObject, Action<T> objectCb)
         {
             return DrawTextButton(inRect, label, objectList, labelFunc, selectedObject, objectCb, u => new RectStacker(u));
         }
 
-        private static Rect DrawTextButton<T>(Rect inRect, string label, List<T> objectList, Func<T, string> labelFunc, T selectedObject, Action<T> objectCb, Func<Rect, RectConnector> connectorFunc)
+        private static RectConnector DrawTextButton<T>(Rect inRect, string label, List<T> objectList, Func<T, string> labelFunc, T selectedObject, Action<T> objectCb, Func<Rect, RectConnector> connectorFunc)
         {
             return connectorFunc(inRect)
                 .Then(u =>
@@ -49,8 +49,7 @@ namespace ConfigurableGrowZone
                     Widgets.Label(typeNameRect, selectedObjectLabel);
 
                     return typeNameRect;
-                })
-                .GetRect();
+                });
         }
 
         public static Rect DrawSectionHeader(Rect inRect, string heading)

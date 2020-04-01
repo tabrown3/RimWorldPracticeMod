@@ -26,7 +26,7 @@ namespace ConfigurableGrowZone
             AddRow(allOperatorTypes, allTrackerNames, allSourceMetrics);
         }
 
-        public Rect Draw(Rect inRect)
+        public RectConnector Draw(Rect inRect)
         {
             return new RectStacker(inRect)
                 .Then(u =>
@@ -36,10 +36,9 @@ namespace ConfigurableGrowZone
                         .ThenGap(50f)
                         .Then(v => StatWidgets.DrawSectionHeader(v, "Tracker"))
                         .ThenGap(50f)
-                        .Then(v => StatWidgets.DrawSectionHeader(v, "Metric"))
-                        .GetRect();
+                        .Then(v => StatWidgets.DrawSectionHeader(v, "Metric"));
                 })
-                .ThenForEach(rows, (u, row, ind) => row.Draw(u)).GetRect();
+                .ThenForEach(rows, (u, row, ind) => row.Draw(u));
         }
 
         private void AddRow(List<Type> allOperatorTypes, List<string> allTrackerNames, List<SourceMetric> allSourceMetrics)
