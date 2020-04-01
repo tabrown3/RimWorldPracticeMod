@@ -72,7 +72,7 @@ namespace ConfigurableGrowZone
 
             foreach (DerivedMetric derivedMetric in Data.DerivedMetrics)
             {
-                derivedMetric.Tick(ticksGame, Data.History.History);
+                derivedMetric.Tick(ticksGame);
             }
         }
 

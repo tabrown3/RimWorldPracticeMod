@@ -140,7 +140,8 @@ namespace ConfigurableGrowZone
                 key,
                 name,
                 sourceMetrics,
-                operators
+                operators,
+                Data.History.History
             );
 
             return derivedMetric;

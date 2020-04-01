@@ -10,76 +10,93 @@ namespace ConfigurableGrowZone
 {
     public class DerivedMetric : IMetric
     {
+        private readonly Subject<DataPoint> valuePushed = new Subject<DataPoint>();
+        private readonly IObservable<DataPoint> retroactiveDerivation;
+        private readonly Dictionary<string, DataVolume> history;
+
         public string ParentName { get; }
         public string Key { get; }
         public string Name { get; }
         public string Unit { get; }
         public TimeDomain Domain { get; }
-        public IObservable<DataPoint> ValuePushed => valuePushed;
+        public IObservable<DataPoint> ValuePushed => Observable.Concat(retroactiveDerivation, valuePushed);
 
         public List<SourceMetric> Sources { get; }
         public List<IOperator<float>> Operators { get; }
 
-        private readonly Subject<DataPoint> valuePushed = new Subject<DataPoint>();
 
-        public DerivedMetric(string parentName, string key, string name, List<SourceMetric> sources, List<IOperator<float>> operators)
+        public DerivedMetric(string parentName, string key, string name, List<SourceMetric> sources, List<IOperator<float>> operators, Dictionary<string, DataVolume> history)
         {
+            var anchorMetric = sources[0];
+
             ParentName = parentName;
-            Key = sources[0].Key + "." + key;
+            Key = anchorMetric.Key + "." + key;
             Name = name;
-            Unit = sources[0].Unit;
-            Domain = sources[0].Domain;
+            Unit = anchorMetric.Unit;
+            Domain = anchorMetric.Domain;
 
             Sources = sources;
             Operators = operators;
+
+            this.history = history;
+
+            retroactiveDerivation = history[anchorMetric.Key].DataPoints
+                .Select(u => new DataPoint(u.TimeStampGameTicks, TickInt(u.TimeStampGameTicks)))
+                .ToObservable();
         }
 
-        public virtual void Tick(int gameTick, Dictionary<string, DataVolume> history)
+        public virtual void Tick(int gameTick)
         {
-            if(Domain.IsResolutionBoundary(gameTick))
+            if (Domain.IsResolutionBoundary(gameTick))
             {
-                var argumentList = new List<float>();
-                foreach (var source in Sources)
-                {
-                    if (history.ContainsKey(source.Key))
-                    {
-                        // TODO: refactor to make this not garbage
-                        argumentList.Add(history[source.Key].DataPoints.Single(u => u.TimeStampGameTicks == gameTick).Value);
-                    }
-                    else
-                    {
-                        argumentList.Add(0f);
-                    }
-                }
-
-                float runningValue = argumentList[0];
-                int argNum = 1;
-                for(var i = 0; i < Operators.Count; i++)
-                {
-                    var op = Operators[i];
-                    if (op is UnaryOperator<float>)
-                    {
-                        var unaryOp = op as UnaryOperator<float>; // TODO: see if I can prevent having to do this cast every time
-                        unaryOp.First = runningValue;
-                        runningValue = unaryOp.Call();
-                    }
-                    else if(op is BinaryOperator<float>)
-                    {
-                        var binaryOp = op as BinaryOperator<float>; // TODO: see if I can prevent having to do this cast every time
-                        binaryOp.First = runningValue;
-                        binaryOp.Second = argumentList[argNum];
-                        runningValue = binaryOp.Call();
-
-                        argNum++;
-                    }
-                    else
-                    {
-                        throw new Exception("Operator must be of type UnaryOperator<float> or BinaryOperator<float>");
-                    }
-                }
-
-                valuePushed.OnNext(new DataPoint(gameTick, runningValue));
+                float dataPointValue = TickInt(gameTick);
+                valuePushed.OnNext(new DataPoint(gameTick, dataPointValue));
             }
+        }
+
+        private float TickInt(int gameTick)
+        {
+            var argumentList = new List<float>();
+            foreach (var source in Sources)
+            {
+                if (history.ContainsKey(source.Key))
+                {
+                    // TODO: refactor to make this not garbage
+                    argumentList.Add(history[source.Key].DataPoints.Single(u => u.TimeStampGameTicks == gameTick).Value);
+                }
+                else
+                {
+                    argumentList.Add(0f);
+                }
+            }
+
+            float runningValue = argumentList[0];
+            int argNum = 1;
+            for (var i = 0; i < Operators.Count; i++)
+            {
+                var op = Operators[i];
+                if (op is UnaryOperator<float>)
+                {
+                    var unaryOp = op as UnaryOperator<float>; // TODO: see if I can prevent having to do this cast every time
+                    unaryOp.First = runningValue;
+                    runningValue = unaryOp.Call();
+                }
+                else if (op is BinaryOperator<float>)
+                {
+                    var binaryOp = op as BinaryOperator<float>; // TODO: see if I can prevent having to do this cast every time
+                    binaryOp.First = runningValue;
+                    binaryOp.Second = argumentList[argNum];
+                    runningValue = binaryOp.Call();
+
+                    argNum++;
+                }
+                else
+                {
+                    throw new Exception("Operator must be of type UnaryOperator<float> or BinaryOperator<float>");
+                }
+            }
+
+            return runningValue;
         }
     }
 }
