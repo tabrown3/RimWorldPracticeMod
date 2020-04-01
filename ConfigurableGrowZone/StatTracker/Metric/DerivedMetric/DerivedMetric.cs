@@ -11,7 +11,6 @@ namespace ConfigurableGrowZone
     public class DerivedMetric : IMetric
     {
         private readonly Subject<DataPoint> valuePushed = new Subject<DataPoint>();
-        private readonly IObservable<DataPoint> retroactiveDerivation;
         private readonly Dictionary<string, DataVolume> history;
 
         public string ParentName { get; }
@@ -19,7 +18,7 @@ namespace ConfigurableGrowZone
         public string Name { get; }
         public string Unit { get; }
         public TimeDomain Domain { get; }
-        public IObservable<DataPoint> ValuePushed => Observable.Concat(retroactiveDerivation, valuePushed);
+        public IObservable<DataPoint> ValuePushed => Observable.Concat(RetroactivelyDerivedHistoricalData(), valuePushed);
 
         public List<SourceMetric> Sources { get; }
         public List<IOperator<float>> Operators { get; }
@@ -39,10 +38,6 @@ namespace ConfigurableGrowZone
             Operators = operators;
 
             this.history = history;
-
-            retroactiveDerivation = history[anchorMetric.Key].DataPoints
-                .Select(u => new DataPoint(u.TimeStampGameTicks, TickInt(u.TimeStampGameTicks)))
-                .ToObservable();
         }
 
         public virtual void Tick(int gameTick)
@@ -97,6 +92,17 @@ namespace ConfigurableGrowZone
             }
 
             return runningValue;
+        }
+
+        public IObservable<DataPoint> RetroactivelyDerivedHistoricalData()
+        {
+            var anchorMetric = Sources[0];
+
+            return Observable.Start(() =>
+            {
+                return history[anchorMetric.Key].DataPoints
+                .Select(u => new DataPoint(u.TimeStampGameTicks, TickInt(u.TimeStampGameTicks)));
+            }).SelectMany(u => u);
         }
     }
 }
