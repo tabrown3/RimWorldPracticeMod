@@ -23,30 +23,32 @@ namespace ConfigurableGrowZone
             Text.Font = GameFont.Small;
             GUI.color = Color.white;
 
-            float trackerRectHeight = 20f;
-            for (int i = 0; i < metrics.Count; i++)
-            {
-                var sourceMetric = metrics[i];
+            float metricRectHeight = 25f;
 
-                Rect metricRect = new Rect(pane);
-                metricRect.y = i * trackerRectHeight;
-                metricRect.height = trackerRectHeight;
-
-                Widgets.Label(metricRect, sourceMetric.Name);
-            }
-            float curY = trackerRectHeight * metrics.Count;
-
-            if (metrics.Count > 0)
-            {
-                float addMetricButtonHeight = 35f;
-                Rect addMetricButtonRect = new Rect(0f, curY, 80f, addMetricButtonHeight);
-                curY += addMetricButtonHeight;
-
-                if (Widgets.ButtonText(addMetricButtonRect, "Add metric"))
+            new RectStacker()
+                .ThenForEach(metrics, (u, v, w) =>
                 {
-                    onAddMetricClicked.OnNext(tracker); // TODO: Hmm, just sending true? That's weird...
-                }
-            }
+                    Rect metricRect = new Rect(u);
+                    metricRect.height = metricRectHeight;
+                    metricRect.width = Text.CalcSize(v.Name).x;
+
+                    Widgets.Label(metricRect, v.Name);
+
+                    return metricRect;
+                })
+                .IfThen(() => metrics.Count > 0, u =>
+                {
+                    Rect addMetricButtonRect = new Rect(u);
+                    addMetricButtonRect.height = 35f;
+                    addMetricButtonRect.width = 80f;
+
+                    if (Widgets.ButtonText(addMetricButtonRect, "Add metric"))
+                    {
+                        onAddMetricClicked.OnNext(tracker);
+                    }
+
+                    return addMetricButtonRect;
+                });
         }
 
         public void SetSource(CompStatTracker tracker)

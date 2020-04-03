@@ -22,22 +22,23 @@ namespace ConfigurableGrowZone
             Text.Font = GameFont.Small;
             GUI.color = Color.white;
 
-            float trackerRectHeight = 20f;
-            for(int i = 0; i < StatTrackers.Count; i++)
-            {
-                var statTracker = StatTrackers[i];
+            float trackerRectHeight = 25f;
 
-                Rect trackerRect = new Rect(pane);
-                trackerRect.y = i * trackerRectHeight;
-                trackerRect.height = trackerRectHeight;
-
-                Widgets.Label(trackerRect, statTracker.Name);
-
-                if(Event.current.type == EventType.MouseDown && Event.current.button == 0 && Mouse.IsOver(trackerRect))
+            new RectStacker()
+                .ThenForEach(StatTrackers, (u, v, w) =>
                 {
-                    onListItemClick.OnNext(statTracker);
-                }
-            }
+                    Rect trackerRect = new Rect(u);
+                    trackerRect.height = trackerRectHeight;
+                    trackerRect.width = Text.CalcSize(v.Name).x;
+                    Widgets.Label(trackerRect, v.Name);
+
+                    if (Event.current.type == EventType.MouseDown && Event.current.button == 0 && Mouse.IsOver(trackerRect))
+                    {
+                        onListItemClick.OnNext(v);
+                    }
+
+                    return trackerRect;
+                });
         }
     }
 }

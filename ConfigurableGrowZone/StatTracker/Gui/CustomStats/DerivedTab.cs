@@ -23,30 +23,32 @@ namespace ConfigurableGrowZone
             Text.Font = GameFont.Small;
             GUI.color = Color.white;
 
-            float trackerRectHeight = 20f;
-            for (int i = 0; i < metrics.Count; i++)
-            {
-                var derivedMetric = metrics[i];
+            float derivedRectHeight = 25f;
 
-                Rect metricRect = new Rect(pane);
-                metricRect.y = i * trackerRectHeight;
-                metricRect.height = trackerRectHeight;
-
-                Widgets.Label(metricRect, derivedMetric.Name);
-            }
-            float curY = trackerRectHeight * metrics.Count;
-
-            if (metrics.Count > 0)
-            {
-                float addMetricButtonHeight = 35f;
-                Rect addMetricButtonRect = new Rect(0f, curY, 80f, addMetricButtonHeight);
-                curY += addMetricButtonHeight;
-
-                if (Widgets.ButtonText(addMetricButtonRect, "Add metric"))
+            new RectStacker()
+                .ThenForEach(metrics, (u, v, w) =>
                 {
-                    onAddMetricClicked.OnNext(tracker); // TODO: Hmm, just sending true? That's weird...
-                }
-            }
+                    Rect derivedRect = new Rect(u);
+                    derivedRect.height = derivedRectHeight;
+                    derivedRect.width = Text.CalcSize(v.Name).x;
+
+                    Widgets.Label(derivedRect, v.Name);
+
+                    return derivedRect;
+                })
+                .IfThen(() => metrics.Count > 0, u =>
+                {
+                    Rect addDerivedButtonRect = new Rect(u);
+                    addDerivedButtonRect.height = 35f;
+                    addDerivedButtonRect.width = 80f;
+
+                    if (Widgets.ButtonText(addDerivedButtonRect, "Add derived"))
+                    {
+                        onAddMetricClicked.OnNext(tracker);
+                    }
+
+                    return addDerivedButtonRect;
+                });
         }
 
         public void SetSource(CompStatTracker tracker)
