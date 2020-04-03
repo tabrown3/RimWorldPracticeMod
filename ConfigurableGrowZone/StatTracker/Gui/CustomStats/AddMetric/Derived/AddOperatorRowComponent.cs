@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UniRx;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 using Verse;
 
 namespace ConfigurableGrowZone
@@ -26,6 +27,8 @@ namespace ConfigurableGrowZone
             RowBecameValid = RowBecameValidFactory();
             Model = model;
             this.optionsManager = optionsManager;
+
+            optionsManager.DomainChanged.Subscribe(OnDomainChanged);
         }
 
         public RectConnector Draw(Rect inRect)
@@ -90,6 +93,19 @@ namespace ConfigurableGrowZone
                         return validityStateChanged && curValidityState;
                     }
                 );
+        }
+
+        private void OnDomainChanged(TimeDomain newDomain)
+        {
+            if (!optionsManager.TrackerHasChildOfCurrentDomain(Model.ChosenTrackerName))
+            {
+                Model.ChosenTrackerName = "";
+            }
+
+            if (!optionsManager.SourceMetricIsOfCurrentDomain(Model.ChosenSourceMetric))
+            {
+                Model.ChosenSourceMetric = null;
+            }
         }
     }
 }

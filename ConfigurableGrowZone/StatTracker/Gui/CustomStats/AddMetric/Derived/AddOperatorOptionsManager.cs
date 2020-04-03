@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UniRx;
 
 namespace ConfigurableGrowZone
 {
@@ -13,6 +14,9 @@ namespace ConfigurableGrowZone
         private readonly List<SourceMetric> allSourceMetrics;
         private readonly Dictionary<GameTime.InTicks, List<string>> trackerNamesCache;
         private readonly Dictionary<TrackerDomain, List<SourceMetric>> metricsCache;
+        private readonly Subject<TimeDomain> domainChanged = new Subject<TimeDomain>();
+
+        public IObservable<TimeDomain> DomainChanged => domainChanged;
 
         public AddOperatorOptionsManager(List<SourceMetric> allSourceMetrics, List<Type> allOperatorTypes, TimeDomain initDomain)
         {
@@ -45,6 +49,17 @@ namespace ConfigurableGrowZone
             }
         }
 
+        public bool TrackerHasChildOfCurrentDomain(string trackerName)
+        {
+            if (!string.IsNullOrEmpty(trackerName))
+            {
+                return allSourceMetrics.Where(u => u.Domain.Resolution == domain.Resolution && u.ParentName == trackerName).Count() > 0;
+
+            }
+
+            return false;
+        }
+
         public List<SourceMetric> GetAvailableSourceMetrics(string trackerName)
         {
             TrackerDomain trackerDomain = new TrackerDomain(trackerName, domain);
@@ -65,9 +80,20 @@ namespace ConfigurableGrowZone
             }
         }
 
+        public bool SourceMetricIsOfCurrentDomain(SourceMetric sourceMetric)
+        {
+            if (sourceMetric != null)
+            {
+                return sourceMetric.Domain.Resolution == domain.Resolution;
+            }
+
+            return false;
+        }
+
         public void ChangeDomain(TimeDomain inDomain)
         {
             domain = inDomain;
+            domainChanged.OnNext(inDomain);
         }
     }
 }
