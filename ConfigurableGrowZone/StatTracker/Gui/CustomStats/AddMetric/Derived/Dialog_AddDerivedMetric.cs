@@ -14,14 +14,18 @@ namespace ConfigurableGrowZone
     {
         private readonly AddDerivedMetricForm form = new AddDerivedMetricForm();
         private Subject<Tuple<CompStatTracker, AddDerivedMetricForm>> onSubmit { get; } = new Subject<Tuple<CompStatTracker, AddDerivedMetricForm>>();
-
         private readonly AddOperatorListComponent addOperatorListComponent;
+        private readonly AddOperatorOptionsManager optionsManager;
 
         public IObservable<Tuple<CompStatTracker, AddDerivedMetricForm>> OnSubmit => onSubmit;
 
         public Dialog_AddDerivedMetric(CompStatTracker tracker, List<SourceMetric> allSourceMetrics, List<Type> allOperatorTypes) : base(tracker)
         {
-            addOperatorListComponent = new AddOperatorListComponent(allSourceMetrics, allOperatorTypes, form.OperatorList);
+            SourceMetric initAnchor = tracker.Data.SourceMetrics.First();
+            optionsManager = new AddOperatorOptionsManager(allSourceMetrics, allOperatorTypes, initAnchor.Domain);
+            addOperatorListComponent = new AddOperatorListComponent(optionsManager, form.OperatorList);
+
+            AnchorMetricChosen(initAnchor);
         }
 
         public override void DoWindowContents(Rect inRect)
@@ -32,9 +36,15 @@ namespace ConfigurableGrowZone
                 .ThenGap(15f)
                 .Then(u => DrawTextEntry(u, "Key", form.Key, v => form.Key = v))
                 .ThenGap(15f)
-                .Then(u => DrawTextButton(u, "Source", tracker.Data.SourceMetrics, form.AnchorMetric, v => form.AnchorMetric = v))
-                .Then(u => addOperatorListComponent.Draw(u))
+                .Then(u => DrawTextButton(u, "Source", tracker.Data.SourceMetrics, form.AnchorMetric, AnchorMetricChosen))
+                .IfThen(() => form.AnchorMetric != null,u => addOperatorListComponent.Draw(u))
                 .Then(u => DrawSubmitButton(u, form, onSubmit));
+        }
+
+        private void AnchorMetricChosen(SourceMetric anchorMetric)
+        {
+            form.AnchorMetric = anchorMetric;
+            optionsManager.ChangeDomain(anchorMetric.Domain);
         }
 
         private RectConnector DrawTextButton(Rect inRect, string label, List<SourceMetric> metricList, SourceMetric selectedMetric, Action<SourceMetric> metricCb)

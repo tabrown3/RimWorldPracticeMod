@@ -12,18 +12,15 @@ namespace ConfigurableGrowZone
 {
     public class AddOperatorListComponent
     {
-        private readonly List<string> allTrackerNames;
         private readonly List<AddOperatorRowComponent> rows = new List<AddOperatorRowComponent>();
         private IObservable<bool> rowsBecameValid;
 
         public readonly AddOperatorListModel Model;
 
-        public AddOperatorListComponent(List<SourceMetric> allSourceMetrics, List<Type> allOperatorTypes, AddOperatorListModel model)
+        public AddOperatorListComponent(AddOperatorOptionsManager optionsManager, AddOperatorListModel model)
         {
-            allTrackerNames = allSourceMetrics.Select(u => u.ParentName).Distinct().ToList();
-
             Model = model;
-            AddRow(allOperatorTypes, allTrackerNames, allSourceMetrics);
+            AddRow(optionsManager);
         }
 
         public RectConnector Draw(Rect inRect)
@@ -41,16 +38,16 @@ namespace ConfigurableGrowZone
                 .ThenForEach(rows, (u, row, ind) => row.Draw(u));
         }
 
-        private void AddRow(List<Type> allOperatorTypes, List<string> allTrackerNames, List<SourceMetric> allSourceMetrics)
+        private void AddRow(AddOperatorOptionsManager optionsManager)
         {
             Model.Rows.Add(new AddOperatorRowModel());
-            var newRow = new AddOperatorRowComponent(allOperatorTypes, allTrackerNames, allSourceMetrics, Model.Rows.Last());
+            var newRow = new AddOperatorRowComponent(optionsManager, Model.Rows.Last());
             rows.Add(newRow);
 
             rowsBecameValid = RowsBecameValidFactory();
             rowsBecameValid.Subscribe(u =>
             {
-                AddRow(allOperatorTypes, allTrackerNames, allSourceMetrics);
+                AddRow(optionsManager);
             });
         }
 

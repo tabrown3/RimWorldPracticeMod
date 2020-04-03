@@ -11,12 +11,9 @@ namespace ConfigurableGrowZone
 {
     public class AddOperatorRowComponent
     {
-        private readonly List<Type> allOperatorTypes;
-        private readonly List<string> allTrackerNames;
-        private readonly List<SourceMetric> allSourceMetrics;
-        private List<SourceMetric> availableMetrics = new List<SourceMetric>();
+        private readonly AddOperatorOptionsManager optionsManager;
 
-        public readonly AddOperatorRowModel Model;// = new AddOperatorRowModel();
+        public readonly AddOperatorRowModel Model;
 
         private readonly Subject<Type> operatorChosen = new Subject<Type>();
         private readonly Subject<string> trackerNameChosen = new Subject<string>();
@@ -24,31 +21,28 @@ namespace ConfigurableGrowZone
 
         public readonly IObservable<bool> RowBecameValid;
 
-        public AddOperatorRowComponent(List<Type> allOperatorTypes, List<string> allTrackerNames, List<SourceMetric> allSourceMetrics, AddOperatorRowModel model)
+        public AddOperatorRowComponent(AddOperatorOptionsManager optionsManager, AddOperatorRowModel model)
         {
-            this.allOperatorTypes = allOperatorTypes;
-            this.allTrackerNames = allTrackerNames;
-            this.allSourceMetrics = allSourceMetrics;
-
             RowBecameValid = RowBecameValidFactory();
             Model = model;
+            this.optionsManager = optionsManager;
         }
 
         public RectConnector Draw(Rect inRect)
         {
             return new RectSpanner(inRect)
                 .Then(
-                    u => StatWidgets.DrawTextButtonBottomLabel(u, "Operator", allOperatorTypes, v => v.Name, Model.ChosenOperator, OperatorChosen)
+                    u => StatWidgets.DrawTextButtonBottomLabel(u, "Operator", optionsManager.GetAvailableOperatorTypes(), v => v.Name, Model.ChosenOperator, OperatorChosen)
                 )
                 .ThenGap(50f)
                 .IfThen(
                     () => Model.ChosenOperator != null && Model.ChosenOperatorIsBinary,
-                    u => StatWidgets.DrawTextButtonBottomLabel(u, "Tracker", allTrackerNames, v => v, Model.ChosenTrackerName, TrackerNameChosen)
+                    u => StatWidgets.DrawTextButtonBottomLabel(u, "Tracker", optionsManager.GetAvailableTrackerNames(), v => v, Model.ChosenTrackerName, TrackerNameChosen)
                 )
                 .ThenGap(50f)
                 .IfThen(
                     () => !string.IsNullOrEmpty(Model.ChosenTrackerName),
-                    u => StatWidgets.DrawTextButtonBottomLabel(u, "Metric", availableMetrics, v => v.Name, Model.ChosenSourceMetric, SourceMetricChosen)
+                    u => StatWidgets.DrawTextButtonBottomLabel(u, "Metric", optionsManager.GetAvailableSourceMetrics(Model.ChosenTrackerName), v => v.Name, Model.ChosenSourceMetric, SourceMetricChosen)
                 );
         }
 
@@ -70,7 +64,6 @@ namespace ConfigurableGrowZone
         {
             Model.ChosenTrackerName = chosenTrackerName;
             Model.ChosenSourceMetric = null;
-            availableMetrics = allSourceMetrics.Where(w => w.ParentName == chosenTrackerName).ToList();
             trackerNameChosen.OnNext(chosenTrackerName);
         }
 
