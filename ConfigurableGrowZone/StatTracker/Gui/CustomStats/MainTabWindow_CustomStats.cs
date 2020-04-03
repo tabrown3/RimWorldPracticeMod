@@ -49,7 +49,6 @@ namespace ConfigurableGrowZone
             using (new GuiGroup(outerPane))
             {
                 outerPane = outerPane.AtZero();
-                Widgets.DrawBox(outerPane);
 
                 Rect innerPane = new Rect(outerPane);
                 innerPane.width -= 10f;

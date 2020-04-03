@@ -18,7 +18,6 @@ namespace ConfigurableGrowZone
 
         public void DrawTab(Rect pane)
         {
-            Widgets.DrawBoxSolid(pane, Color.blue);
         }
     }
 }
