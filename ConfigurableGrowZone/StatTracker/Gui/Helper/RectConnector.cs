@@ -85,10 +85,13 @@ namespace ConfigurableGrowZone
 
         protected abstract Rect RectAtPos();
         protected abstract Vector2 FloatToVec2(float inFloat);
-        // add one diminsion but not the other
-        protected abstract Vector2 SelectivePosSum(Vector2 inLength, Vector2 curPos);
-        // add one diminsion and take max of the other
-        protected abstract Vector2 SelectiveLengthSum(Vector2 inLength, Vector2 curLength);
+
+        protected abstract Vector2 ToPrimaryDim(Vector2 vec1, Func<float, float> opFunc);
+        protected abstract Vector2 ToPrimaryDim(Vector2 vec1, Vector2 vec2, Func<float, float, float> opFunc);
+        protected abstract Vector2 ToSecondaryDim(Vector2 vec1, Func<float, float> opFunc);
+        protected abstract Vector2 ToSecondaryDim(Vector2 vec1, Vector2 vec2, Func<float, float, float> opFunc);
+        protected abstract Vector2 GetPrimaryDim(Vector2 inVec);
+        protected abstract Vector2 GetSecondaryDim(Vector2 inVec);
 
         private RectConnector ThenInt(Rect inRect)
         {
@@ -97,8 +100,13 @@ namespace ConfigurableGrowZone
 
         private RectConnector ThenInt(Vector2 length)
         {
-            CurPos = SelectivePosSum(length, CurPos);
-            CurLength = SelectiveLengthSum(length, CurLength);
+            // add primary dimensions of CurPos and length and take the secondary dimension of CurPos unaltered
+            //  e.g. for RectStacker, evaluates to: new Vector2(CurPos.x, CurPos.y + length.y)
+            CurPos = ToPrimaryDim(CurPos, length, (u, v) => u + v) + GetSecondaryDim(CurPos);
+
+            // add primary dimensions of CurLength and length and take the max of CurLength and length's secondary dimension
+            //  e.g. for RectStacker, evaluates to: new Vector2(Mathf.Max(CurLength.x, length.x), CurLength.y + length.y)
+            CurLength = ToPrimaryDim(CurLength, length, (u, v) => u + v) + ToSecondaryDim(CurLength, length, (u, v) => Mathf.Max(u, v));
 
             return this;
         }
