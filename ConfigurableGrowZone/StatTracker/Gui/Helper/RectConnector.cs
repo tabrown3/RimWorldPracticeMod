@@ -19,6 +19,7 @@ namespace ConfigurableGrowZone
         public RectConnector(Rect inRect)
         {
             CurPos = new Vector2(inRect.x, inRect.y);
+            CurLength = SelectiveLengthSum();
         }
 
         public RectConnector Then(Func<Rect, Rect> thenFunc)

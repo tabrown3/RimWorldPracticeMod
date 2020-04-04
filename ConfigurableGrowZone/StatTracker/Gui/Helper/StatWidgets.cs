@@ -20,6 +20,46 @@ namespace ConfigurableGrowZone
             return DrawTextButton(inRect, label, objectList, labelFunc, selectedObject, objectCb, u => new RectStacker(u));
         }
 
+        public static Rect DrawSectionHeader(Rect inRect, string heading)
+        {
+            Rect headerRect = new Rect(inRect);
+            headerRect.height = 35f;
+            headerRect.width = 100f;//Text.CalcSize(heading).x;
+
+            Widgets.Label(headerRect, heading);
+
+            return headerRect;
+        }
+
+        public static Rect DrawListItem<T>(Rect inRect, T selectedObj, T obj, int ind, Action<Rect, T, int> drawFunc, Action<T> onClick) where T : class
+        {
+            Rect trackerRect = new Rect(inRect);
+
+            if (ind % 2 == 0)
+            {
+                Widgets.DrawAltRect(trackerRect);
+            }
+
+            ///////////////
+
+            drawFunc(trackerRect, obj, ind);
+
+            if (Event.current.type == EventType.MouseDown && Event.current.button == 0 && Mouse.IsOver(trackerRect))
+            {
+                onClick(obj);
+            }
+            ///////////////
+
+            Widgets.DrawHighlightIfMouseover(trackerRect);
+
+            if (selectedObj == obj)
+            {
+                Widgets.DrawHighlightSelected(trackerRect);
+            }
+
+            return trackerRect;
+        }
+
         private static RectConnector DrawTextButton<T>(Rect inRect, string label, List<T> objectList, Func<T, string> labelFunc, T selectedObject, Action<T> objectCb, Func<Rect, RectConnector> connectorFunc)
         {
             return connectorFunc(inRect)
@@ -50,17 +90,6 @@ namespace ConfigurableGrowZone
 
                     return typeNameRect;
                 });
-        }
-
-        public static Rect DrawSectionHeader(Rect inRect, string heading)
-        {
-            Rect headerRect = new Rect(inRect);
-            headerRect.height = 35f;
-            headerRect.width = 100f;//Text.CalcSize(heading).x;
-
-            Widgets.Label(headerRect, heading);
-
-            return headerRect;
         }
     }
 }

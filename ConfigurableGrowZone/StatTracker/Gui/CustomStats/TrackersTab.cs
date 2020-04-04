@@ -16,28 +16,34 @@ namespace ConfigurableGrowZone
         public IObservable<CompStatTracker> OnListItemClick => onListItemClick;
 
         private readonly Subject<CompStatTracker> onListItemClick = new Subject<CompStatTracker>();
+        private CompStatTracker selectedTracker = null;
 
         public void DrawTab(Rect pane)
         {
             Text.Font = GameFont.Small;
             GUI.color = Color.white;
 
-            float trackerRectHeight = 25f;
+            float trackerRectHeight = 45f;
+            float trackerRectWidth = pane.width;
 
             new RectStacker()
                 .ThenForEach(StatTrackers, (u, v, w) =>
                 {
                     Rect trackerRect = new Rect(u);
                     trackerRect.height = trackerRectHeight;
-                    trackerRect.width = Text.CalcSize(v.Name).x;
-                    Widgets.Label(trackerRect, v.Name);
+                    trackerRect.width = trackerRectWidth;
 
-                    if (Event.current.type == EventType.MouseDown && Event.current.button == 0 && Mouse.IsOver(trackerRect))
-                    {
-                        onListItemClick.OnNext(v);
-                    }
-
-                    return trackerRect;
+                    return StatWidgets.DrawListItem(trackerRect, selectedTracker, v, w,
+                        (drawRect, curItem, ind) =>
+                        {
+                            Widgets.Label(drawRect, curItem.Name);
+                        },
+                        clickedObj =>
+                        {
+                            selectedTracker = clickedObj;
+                            onListItemClick.OnNext(clickedObj);
+                        }
+                    );
                 });
         }
     }
