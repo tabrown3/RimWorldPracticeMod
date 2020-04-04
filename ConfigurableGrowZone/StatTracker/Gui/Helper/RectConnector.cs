@@ -86,10 +86,10 @@ namespace ConfigurableGrowZone
         protected abstract Rect RectAtPos();
         protected abstract Vector2 FloatToVec2(float inFloat);
 
-        protected abstract Vector2 ToPrimaryDim(Vector2 vec1, Func<float, float> opFunc);
-        protected abstract Vector2 ToPrimaryDim(Vector2 vec1, Vector2 vec2, Func<float, float, float> opFunc);
-        protected abstract Vector2 ToSecondaryDim(Vector2 vec1, Func<float, float> opFunc);
-        protected abstract Vector2 ToSecondaryDim(Vector2 vec1, Vector2 vec2, Func<float, float, float> opFunc);
+        protected abstract Vector2 PerformOnPrimaryDim(Vector2 vec1, Func<float, float> opFunc);
+        protected abstract Vector2 PerformOnPrimaryDim(Vector2 vec1, Vector2 vec2, Func<float, float, float> opFunc);
+        protected abstract Vector2 PerformOnSecondaryDim(Vector2 vec1, Func<float, float> opFunc);
+        protected abstract Vector2 PerformOnSecondaryDim(Vector2 vec1, Vector2 vec2, Func<float, float, float> opFunc);
         protected abstract Vector2 GetPrimaryDim(Vector2 inVec);
         protected abstract Vector2 GetSecondaryDim(Vector2 inVec);
 
@@ -102,11 +102,11 @@ namespace ConfigurableGrowZone
         {
             // add primary dimensions of CurPos and length and take the secondary dimension of CurPos unaltered
             //  e.g. for RectStacker, evaluates to: new Vector2(CurPos.x, CurPos.y + length.y)
-            CurPos = ToPrimaryDim(CurPos, length, (u, v) => u + v) + GetSecondaryDim(CurPos);
+            CurPos = PerformOnPrimaryDim(CurPos, length, (u, v) => u + v) + GetSecondaryDim(CurPos);
 
             // add primary dimensions of CurLength and length and take the max of CurLength and length's secondary dimension
             //  e.g. for RectStacker, evaluates to: new Vector2(Mathf.Max(CurLength.x, length.x), CurLength.y + length.y)
-            CurLength = ToPrimaryDim(CurLength, length, (u, v) => u + v) + ToSecondaryDim(CurLength, length, (u, v) => Mathf.Max(u, v));
+            CurLength = PerformOnPrimaryDim(CurLength, length, (u, v) => u + v) + PerformOnSecondaryDim(CurLength, length, (u, v) => Mathf.Max(u, v));
 
             return this;
         }

@@ -38,22 +38,22 @@ namespace ConfigurableGrowZone
             return new Vector2(inFloat, 0f);
         }
 
-        protected override Vector2 ToPrimaryDim(Vector2 vec1, Func<float, float> opFunc)
+        protected override Vector2 PerformOnPrimaryDim(Vector2 vec1, Func<float, float> opFunc)
         {
             return new Vector2(opFunc(vec1.x), 0f);
         }
 
-        protected override Vector2 ToPrimaryDim(Vector2 vec1, Vector2 vec2, Func<float, float, float> opFunc)
+        protected override Vector2 PerformOnPrimaryDim(Vector2 vec1, Vector2 vec2, Func<float, float, float> opFunc)
         {
             return new Vector2(opFunc(vec1.x, vec2.x), 0f);
         }
 
-        protected override Vector2 ToSecondaryDim(Vector2 vec1, Func<float, float> opFunc)
+        protected override Vector2 PerformOnSecondaryDim(Vector2 vec1, Func<float, float> opFunc)
         {
             return new Vector2(0f, opFunc(vec1.y));
         }
 
-        protected override Vector2 ToSecondaryDim(Vector2 vec1, Vector2 vec2, Func<float, float, float> opFunc)
+        protected override Vector2 PerformOnSecondaryDim(Vector2 vec1, Vector2 vec2, Func<float, float, float> opFunc)
         {
             return new Vector2(0f, opFunc(vec1.y, vec2.y));
         }
