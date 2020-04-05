@@ -103,7 +103,8 @@
     <Compile Include="StatTracker\Gui\Helper\RectConnector.cs" />
     <Compile Include="StatTracker\Gui\Helper\RectSpanner.cs" />
     <Compile Include="StatTracker\Gui\Helper\RectStacker.cs" />
-    <Compile Include="StatTracker\Gui\Helper\StatWidgets.cs" />
+    <Compile Include="StatTracker\Gui\Helper\StatWidgets\StatTabList.cs" />
+    <Compile Include="StatTracker\Gui\Helper\StatWidgets\StatWidgets.cs" />
     <Compile Include="StatTracker\Metric\DerivedMetric\DerivedMetric.cs" />
     <Compile Include="StatTracker\Metric\IMetric.cs" />
     <Compile Include="StatTracker\Operator\BinaryOperator.cs" />

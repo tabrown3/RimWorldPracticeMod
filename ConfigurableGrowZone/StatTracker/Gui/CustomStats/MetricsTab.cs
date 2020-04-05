@@ -18,6 +18,7 @@ namespace ConfigurableGrowZone
         private CompStatTracker tracker;
         private List<SourceMetric> metrics = new List<SourceMetric>();
         private SourceMetric selectedMetric = null;
+        private StatTabList statTabList = StatWidgets.StatTabListFactory();
 
         public void DrawTab(Rect pane)
         {
@@ -27,7 +28,7 @@ namespace ConfigurableGrowZone
             new RectStacker(pane)
                 .ThenForEach(metrics, (u, v, w) =>
                 {
-                    return StatWidgets.DrawListItem(u, selectedMetric, v, w,
+                    return statTabList.DrawItem(u, selectedMetric, v, w,
                         (drawRect, curItem, ind) =>
                         {
                             Widgets.Label(drawRect, curItem.Name);
@@ -58,6 +59,7 @@ namespace ConfigurableGrowZone
         {
             this.tracker = tracker;
             metrics = tracker.Data.SourceMetrics;
+            selectedMetric = metrics.FirstOrDefault();
         }
     }
 }

@@ -17,6 +17,7 @@ namespace ConfigurableGrowZone
 
         private readonly Subject<CompStatTracker> onListItemClick = new Subject<CompStatTracker>();
         private CompStatTracker selectedTracker = null;
+        private StatTabList statTabList = StatWidgets.StatTabListFactory();
 
         public void DrawTab(Rect pane)
         {
@@ -26,7 +27,7 @@ namespace ConfigurableGrowZone
             new RectStacker(pane)
                 .ThenForEach(StatTrackers, (u, v, w) =>
                 {
-                    return StatWidgets.DrawListItem(u, selectedTracker, v, w,
+                    return statTabList.DrawItem(u, selectedTracker, v, w,
                         (drawRect, curItem, ind) =>
                         {
                             Widgets.Label(drawRect, curItem.Name);
