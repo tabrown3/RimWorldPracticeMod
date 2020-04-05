@@ -17,24 +17,27 @@ namespace ConfigurableGrowZone
         private readonly Subject<CompStatTracker> onAddMetricClicked = new Subject<CompStatTracker>();
         private CompStatTracker tracker;
         private List<SourceMetric> metrics = new List<SourceMetric>();
+        private SourceMetric selectedMetric = null;
 
         public void DrawTab(Rect pane)
         {
             Text.Font = GameFont.Small;
             GUI.color = Color.white;
 
-            float metricRectHeight = 25f;
-
-            new RectStacker()
+            new RectStacker(pane)
                 .ThenForEach(metrics, (u, v, w) =>
                 {
-                    Rect metricRect = new Rect(u);
-                    metricRect.height = metricRectHeight;
-                    metricRect.width = Text.CalcSize(v.Name).x;
-
-                    Widgets.Label(metricRect, v.Name);
-
-                    return metricRect;
+                    return StatWidgets.DrawListItem(u, selectedMetric, v, w,
+                        (drawRect, curItem, ind) =>
+                        {
+                            Widgets.Label(drawRect, curItem.Name);
+                        },
+                        clickedObj =>
+                        {
+                            selectedMetric = clickedObj;
+                            //onListItemClick.OnNext(clickedObj);
+                        }
+                    );
                 })
                 .IfThen(() => metrics.Count > 0, u =>
                 {

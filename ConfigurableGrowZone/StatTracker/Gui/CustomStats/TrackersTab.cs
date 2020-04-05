@@ -23,17 +23,10 @@ namespace ConfigurableGrowZone
             Text.Font = GameFont.Small;
             GUI.color = Color.white;
 
-            //float trackerRectHeight = 45f;
-            //float trackerRectWidth = pane.width;
-
             new RectStacker(pane)
                 .ThenForEach(StatTrackers, (u, v, w) =>
                 {
-                    Rect trackerRect = new Rect(u);
-                    //trackerRect.height = trackerRectHeight;
-                    //trackerRect.width = trackerRectWidth;
-
-                    return StatWidgets.DrawListItem(trackerRect, selectedTracker, v, w,
+                    return StatWidgets.DrawListItem(u, selectedTracker, v, w,
                         (drawRect, curItem, ind) =>
                         {
                             Widgets.Label(drawRect, curItem.Name);
