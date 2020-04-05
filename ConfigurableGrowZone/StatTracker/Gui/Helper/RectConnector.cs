@@ -18,7 +18,10 @@ namespace ConfigurableGrowZone
 
         public RectConnector(Rect inRect)
         {
+            // starts at same location as inRect
             CurPos = new Vector2(inRect.x, inRect.y);
+            // if RectStacker, starts with same width as inRect; if RectSpanner, starts with same height as inRect
+            CurLength = GetSecondaryDim(new Vector2(inRect.width, inRect.height));
         }
 
         public RectConnector Then(Func<Rect, Rect> thenFunc)

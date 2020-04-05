@@ -33,31 +33,32 @@ namespace ConfigurableGrowZone
 
         public static Rect DrawListItem<T>(Rect inRect, T selectedObj, T obj, int ind, Action<Rect, T, int> drawFunc, Action<T> onClick) where T : class
         {
-            Rect trackerRect = new Rect(inRect);
+            Rect listItemRect = new Rect(inRect);
+            listItemRect.height = 45f;
 
             if (ind % 2 == 0)
             {
-                Widgets.DrawAltRect(trackerRect);
+                Widgets.DrawAltRect(listItemRect);
             }
 
             ///////////////
 
-            drawFunc(trackerRect, obj, ind);
+            drawFunc(listItemRect, obj, ind);
 
-            if (Event.current.type == EventType.MouseDown && Event.current.button == 0 && Mouse.IsOver(trackerRect))
+            if (Event.current.type == EventType.MouseDown && Event.current.button == 0 && Mouse.IsOver(listItemRect))
             {
                 onClick(obj);
             }
             ///////////////
 
-            Widgets.DrawHighlightIfMouseover(trackerRect);
+            Widgets.DrawHighlightIfMouseover(listItemRect);
 
             if (selectedObj == obj)
             {
-                Widgets.DrawHighlightSelected(trackerRect);
+                Widgets.DrawHighlightSelected(listItemRect);
             }
 
-            return trackerRect;
+            return listItemRect;
         }
 
         private static RectConnector DrawTextButton<T>(Rect inRect, string label, List<T> objectList, Func<T, string> labelFunc, T selectedObject, Action<T> objectCb, Func<Rect, RectConnector> connectorFunc)
