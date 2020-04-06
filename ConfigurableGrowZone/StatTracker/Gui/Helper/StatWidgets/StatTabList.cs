@@ -39,6 +39,11 @@ namespace ConfigurableGrowZone
                 lastMouseoverObj = obj;
             }
 
+            if (!Mouse.IsOver(listItemRect) && lastMouseoverObj == obj)
+            {
+                lastMouseoverObj = null;
+            }
+
             if (selectedObj == obj)
             {
                 Widgets.DrawHighlightSelected(listItemRect);
